@@ -8,3 +8,4 @@ mail/*
 config/*
 command/*
 vendor/*
+.idea/*
