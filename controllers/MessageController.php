@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Message;
+use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -17,6 +18,16 @@ class MessageController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'except' => ['login', 'logout'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [

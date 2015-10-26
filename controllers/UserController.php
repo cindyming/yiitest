@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\User;
+use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -17,6 +18,16 @@ class UserController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'except' => ['login', 'logout'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -32,12 +43,20 @@ class UserController extends Controller
      */
     public function actionAdminindex()
     {
+        $role_id = Yii::$app->request->get('role_id');
+
+        $query = User::find()->where(['!=','role_id',1]);
+
+        if ($role_id) {
+            $query->andWhere(['=','role_id',$role_id]);
+        }
         $dataProvider = new ActiveDataProvider([
-            'query' => User::find()->where(['!=','role_id',1]),
+            'query' => $query,
             'pagination' => [
                 'pageSize' => 20,
             ],
         ]);
+
 
         return $this->render('adminindex', [
             'dataProvider' => $dataProvider,
@@ -49,7 +68,7 @@ class UserController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
+    public function actionAdminview($id)
     {
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -61,14 +80,14 @@ class UserController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionAdmincreate()
     {
         $model = new User();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
-            return $this->render('create', [
+            return $this->render('admincreate', [
                 'model' => $model,
             ]);
         }

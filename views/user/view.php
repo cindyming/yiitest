@@ -8,36 +8,19 @@ use yii\widgets\DetailView;
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $this->title;
+$this->params['breadcrumbs'][] = $model->username;
 ?>
 <div class="user-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h1><?= Html::encode($model->username) ?></h1>
 
     <?= $this->render('_adminmenu', []) ?>
-
-    <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
-            'class' => 'btn btn-danger',
-            'data' => [
-                'confirm' => 'Are you sure you want to delete this item?',
-                'method' => 'post',
-            ],
-        ]) ?>
-    </p>
 
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
             'id',
-            'number',
-            'auth_key',
-            'access_token',
-            'role_id',
             'username',
-            'password',
-            'password2',
             'identity',
             'phone',
             'title',
@@ -49,8 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'bankaddress',
             'email:email',
             'qq',
-            'created_at',
-            'updated_at',
         ],
     ]) ?>
 

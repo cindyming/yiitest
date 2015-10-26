@@ -2,13 +2,49 @@
 
 namespace app\models;
 
+use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\Security;
 use yii\web\IdentityInterface;
+use yii\behaviors\AttributeBehavior;
 
 class User extends ActiveRecord implements IdentityInterface
 {
-    public $id;
+    public $password1;
+    public $password3;
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'referer',
+                ],
+                'value' => function ($event) {
+                        return Yii::$app->user->id;
+                    },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'auth_key',
+                ],
+                'value' => function ($event) {
+                        return sha1(rand());
+                    },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'access_token',
+                ],
+                'value' => function ($event) {
+                        return sha1(rand());
+                    },
+            ],
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -16,8 +52,10 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password', 'number', 'password', 'password1', 'password2', 'password3', 'identity', 'phone', 'referer', 'investment', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'required'],
-            [['username', 'password'], 'string', 'max' => 100]
+            [['username', 'password', 'password','title', 'password1', 'password2', 'password3', 'identity', 'phone', 'referer', 'investment', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'required'],
+            [['username', 'password'], 'string', 'max' => 100],
+            [['password1'], 'compare', 'compareAttribute' => 'password'],
+            [['password3'], 'compare', 'compareAttribute' => 'password2'],
         ];
     }
 
@@ -83,6 +121,17 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findByUsername($username)
     {
         return static::findOne(['username' => $username]);
+    }
+
+    /**
+     * Finds user by Id
+     *
+     * @param  string      Id
+     * @return static|null
+     */
+    public static function findById($username)
+    {
+        return static::findOne(['id' => $username]);
     }
 
     /**

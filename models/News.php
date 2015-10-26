@@ -6,7 +6,6 @@ use yii\db\ActiveRecord;
 
 class News extends ActiveRecord
 {
-    public $id;
 
     /**
      * @inheritdoc
