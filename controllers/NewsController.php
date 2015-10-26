@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\News;
+use app\models\Newssearch;
 use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -139,5 +140,25 @@ class NewsController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+
+    public function actionIndex()
+    {
+      //  $searchModel = new Newssearch();
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => News::find(),
+            'pagination' => [
+                'pageSize' => 5,
+            ],
+        ]);
+
+    //    $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+           // 'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 }

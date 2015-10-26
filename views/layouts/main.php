@@ -24,34 +24,66 @@ AppAsset::register($this);
 <body>
 <?php $this->beginBody() ?>
 
-<div class="wrap">
+<div class="wrap member">
+    <div class="top">
+        <?php
+        $h=date('G');
+        $welcome = ($h<11) ? '早上好' : (($h<13) ? '中午好' : (($h<17) ? '下午好' : '晚上好'));
+        $welcome .= ', ' . Yii::$app->user->identity->username;
+        $welcome .= ', 欢迎回来.';
+        ?>
+        <h3>在线办公平台</h3>
+        <div>
+            会员ID: <?php echo Yii::$app->user->id?>
+            分红余额:
+            绩效工资余额:
+        </div>
+
+    </div>
+    <div class="left sidebar">
     <?php
-    NavBar::begin([
-        'brandLabel' => 'My Company',
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
-        ],
-    ]);
+    NavBar::begin();
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
+        'options' => ['class' => 'navbar-nav navbar-left'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ?
-                ['label' => 'Login', 'url' => ['/site/login']] :
-                [
-                    'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-                    'url' => ['/site/logout'],
-                    'linkOptions' => ['data-method' => 'post']
-                ],
+            ['label' => '信息管理', 'url' => ['/site/index']],
+            ['label' => '会员专区', 'url' => ['/site/about']],
+            ['label' => '业务中心', 'url' => ['/site/contact']],
+            ['label' => '财务中心', 'url' => ['/site/contact']],
+            ['label' => '电子账户', 'url' => ['/site/contact']],
         ],
     ]);
     NavBar::end();
     ?>
 
+    </div>
+
     <div class="container">
+        <div class="top nav">
+            <?php
+            NavBar::begin();
+            echo Nav::widget([
+                'options' => ['class' => 'navbar-nav navbar-left'],
+                'items' => [
+                    ['label' => '首页', 'url' => ['/news/index']],
+                    ['label' => '系统公告', 'url' => ['/news/index']],
+                    ['label' => '注册会员', 'url' => ['/user/create']],
+                    ['label' => '奖金明细', 'url' => ['/site/contact']],
+                    ['label' => '奖金统计', 'url' => ['/site/contact']],
+                    ['label' => '申请提现', 'url' => ['/site/contact']],
+                    ['label' => '添加留言', 'url' => ['/message/add']],
+                    Yii::$app->user->isGuest ?
+                        ['label' => '安全退出', 'url' => ['/site/login']] :
+                        [
+                            'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                            'url' => ['/site/logout'],
+                            'linkOptions' => ['data-method' => 'post']
+                        ],
+                ],
+            ]);
+            NavBar::end();
+            ?>
+        </div>
         <!-- Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) -->

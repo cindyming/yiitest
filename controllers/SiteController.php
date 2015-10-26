@@ -50,25 +50,27 @@ class SiteController extends Controller
         if (Yii::$app->user->isGuest) {
             $this->redirect(array('/site/login'));
         }
+        $this->userRedirect();
+    }
 
-        if (Yii::$app->user->getId()) {
+    public function userRedirect()
+    {
+        if (Yii::$app->user->getIdentity()->isAdmin()) {
             $this->redirect(array('/user/adminindex'));
         } else {
-            $this->layout = "main";
-            return $this->render('main');
+            $this->redirect(array('/news/index'));
         }
-
     }
 
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {
-            return $this->goHome();
+            $this->userRedirect();
         }
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            $this->userRedirect();
         }
 
         $this->layout = "login";

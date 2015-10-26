@@ -13,14 +13,11 @@
         "source": "https://github.com/yiisoft/yii2"
     },
     "minimum-stability": "dev",
-    "perfer-table" : true,
     "require": {
         "php": ">=5.4.0",
         "yiisoft/yii2": ">=2.0.5",
         "yiisoft/yii2-bootstrap": "*",
-        "yiisoft/yii2-swiftmailer": "*",
-        "kartik-v/yii2-grid": "@dev",
-        "kartik-v/yii2-krajee-base": "@dev"
+        "yiisoft/yii2-swiftmailer": "*"
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",

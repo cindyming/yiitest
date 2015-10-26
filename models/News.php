@@ -29,4 +29,12 @@ class News extends ActiveRecord
             'public_at' => '发布日期',
         ];
     }
+
+    public function getBetopOptions()
+    {
+            return [
+                0 => '正常',
+                1 => '置顶',
+            ];
+    }
 }

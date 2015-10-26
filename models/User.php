@@ -40,6 +40,26 @@ class User extends ActiveRecord implements IdentityInterface
                     ActiveRecord::EVENT_BEFORE_INSERT => 'access_token',
                 ],
                 'value' => function ($event) {
+                        return sha1($this);
+                    },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'password',
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'password',
+                ],
+                'value' => function ($event) {
+                        return sha1($this);
+                    },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'password2',
+                    ActiveRecord::EVENT_BEFORE_UPDATE => 'password2',
+                ],
+                'value' => function ($event) {
                         return sha1(rand());
                     },
             ],
