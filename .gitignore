@@ -9,3 +9,4 @@ config/*
 command/*
 vendor/*
 .idea/*
+*.bak
