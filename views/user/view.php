@@ -7,14 +7,10 @@ use yii\widgets\DetailView;
 /* @var $model app\models\User */
 
 $this->title = $model->title;
-$this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $model->username;
 ?>
 <div class="user-view">
 
     <h1><?= Html::encode($model->username) ?></h1>
-
-    <?= $this->render('_adminmenu', []) ?>
 
     <?= DetailView::widget([
         'model' => $model,

@@ -30,9 +30,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'investment')->textInput(['maxlength' => true]) ?>
 
-    <?php if (Yii::$app->user->getIdentity()->isAdmin()): ?>
     <?= $form->field($model, 'referer')->textInput(['maxlength' => true]) ?>
-    <?php endif ?>
 
     <?= $form->field($model, 'bank')->dropDownList(['ICBC' => '工商银行', 'ABC' => '农业银行']) ?>
 

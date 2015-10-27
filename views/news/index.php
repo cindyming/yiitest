@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
+use app\models\News;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\Newssearch */
@@ -18,9 +19,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
+            [
+                'attribute' => 'id',
+                'label' => '编号'
+            ],
             [
                 'attribute' => 'be_top',
                 'options' => [
@@ -38,14 +40,15 @@ $this->params['breadcrumbs'][] = $this->title;
                         'placeholder' => 'Select Status ...',
                         'multiple' => false
                     ],
-                    'data' => $searchModel->getStatusOptions()
+                    'data' => [
+                        0 => '正常',
+                        1 => '置顶',
+                    ]
                 ]
             ],
             'title',
-            'content:ntext',
-            'created_at',
             // 'updated_at',
-            // 'public_at',
+            'public_at',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

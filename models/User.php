@@ -12,6 +12,8 @@ class User extends ActiveRecord implements IdentityInterface
 {
     public $password1;
     public $password3;
+    public $password_old;
+    public $password2_old;
 
     public function behaviors()
     {
@@ -40,7 +42,7 @@ class User extends ActiveRecord implements IdentityInterface
                     ActiveRecord::EVENT_BEFORE_INSERT => 'access_token',
                 ],
                 'value' => function ($event) {
-                        return sha1($this);
+                        return sha1(rand());
                     },
             ],
             [
@@ -50,7 +52,7 @@ class User extends ActiveRecord implements IdentityInterface
                     ActiveRecord::EVENT_BEFORE_UPDATE => 'password',
                 ],
                 'value' => function ($event) {
-                        return sha1($this);
+                        return sha1($this->password);
                     },
             ],
             [
@@ -60,7 +62,7 @@ class User extends ActiveRecord implements IdentityInterface
                     ActiveRecord::EVENT_BEFORE_UPDATE => 'password2',
                 ],
                 'value' => function ($event) {
-                        return sha1(rand());
+                        return sha1($this->password2);
                     },
             ],
         ];
@@ -72,7 +74,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password', 'password','title', 'password1', 'password2', 'password3', 'identity', 'phone', 'referer', 'investment', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'required'],
+            [['username', 'password', 'password','title', 'password2', 'identity', 'phone', 'referer', 'investment', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'required'],
             [['username', 'password'], 'string', 'max' => 100],
             [['password1'], 'compare', 'compareAttribute' => 'password'],
             [['password3'], 'compare', 'compareAttribute' => 'password2'],
@@ -105,6 +107,9 @@ class User extends ActiveRecord implements IdentityInterface
             'official' => '是否正式',
             'locked' => '是否锁定',
             'approved_at' => '审核日期',
+            'created_at' => '注册时间',
+            'password_old' => '原一级密码',
+            'password2_old' => '原一级密码'
         ];
     }
 
@@ -217,7 +222,22 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function setPassword($password)
     {
-        $this->password_hash = Security::generatePasswordHash($password);
+        $this->password = Security::generatePasswordHash($password);
+    }
+
+    /**
+     * Generates password hash from password and sets it to the model
+     *
+     * @param string $password
+     */
+    public function setPassword2($password)
+    {
+        $this->password2 = Security::generatePasswordHash($password);
+    }
+
+    public function validatePassword2($password)
+    {
+        return $this->password2 === sha1($password);
     }
 
     /**
@@ -250,4 +270,8 @@ class User extends ActiveRecord implements IdentityInterface
         return 1==$this->role_id;
     }
 
+    public function getStatus()
+    {
+        return ($this->locked) ? '锁定' : ($this->approved_at) ? '非正式' : '正式';
+    }
 }

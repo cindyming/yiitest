@@ -47,8 +47,21 @@ AppAsset::register($this);
         'options' => ['class' => 'navbar-nav navbar-left'],
         'items' => [
             ['label' => '信息管理', 'url' => ['/site/index']],
-            ['label' => '会员专区', 'url' => ['/site/about']],
-            ['label' => '业务中心', 'url' => ['/site/contact']],
+            [
+                'label' => '会员专区', 'url' => ['/site/about'],
+                'items' => [
+                    ['label' => '修改密码', 'url' => ['/user/changepassword']],
+                    ['label' => '会员资料', 'url' => ['/user/view', 'id' => Yii::$app->user->identity->id]]
+                ]
+            ],
+            [
+                'label' => '业务中心', 'url' => ['/user/create'],
+                'items' => [
+                    ['label' => '会员注册', 'url' => ['/user/create']],
+                    ['label' => '我的推荐', 'url' => ['/user/index', 'referer' => Yii::$app->user->identity->id]]
+                ]
+
+            ],
             ['label' => '财务中心', 'url' => ['/site/contact']],
             ['label' => '电子账户', 'url' => ['/site/contact']],
         ],

@@ -140,4 +140,102 @@ class UserController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+
+    /**
+     * Creates a new User model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new User();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * Lists all User models.
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        $referer = Yii::$app->request->get('referer');
+
+        $query = User::find()->where(['!=','role_id',1]);
+
+        if ($referer) {
+            $query->andWhere(['=','referer',$referer]);
+        }
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+        ]);
+
+
+        return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Displays a single User model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
+    }
+
+    /**
+     * Displays a single User model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionChangepassword()
+    {
+        $model = $this->findModel(Yii::$app->user->identity->id);
+        $success = false;
+
+        $data = Yii::$app->request->post('User');
+        if (count($data)) {
+            if (isset($data['password'])) {
+                if ($model->validatePassword($data['password_old'])) {
+                    $model->setAttributes($data);
+                    if ($model->save()) {
+                        $success = true;
+                    }
+                }
+            } else if (isset($data['password2'])){
+                if ($model->validatePassword2($data['password2_old'])) {
+                    $model->setAttributes($data);
+                    if ($model->save()) {
+                        $success = true;
+                    }
+                }
+            }
+        }
+
+        if ($success) {
+            return $this->render('view', [
+                'model' => $this->findModel($model->id),
+            ]);
+        } else {
+            return $this->render('changepassword', [
+                'model' => $model,
+            ]);
+        }
+
+    }
 }
