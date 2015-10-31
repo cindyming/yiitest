@@ -6,6 +6,7 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\Security;
 use yii\web\IdentityInterface;
+use app\models\Revenue;
 use yii\behaviors\AttributeBehavior;
 
 class User extends ActiveRecord implements IdentityInterface
@@ -13,7 +14,21 @@ class User extends ActiveRecord implements IdentityInterface
     public $password1;
     public $password3;
     public $password_old;
+    public $password_check;
     public $password2_old;
+    public $captcha;
+
+    public $dynTableName = '{{%user}}';
+
+
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        $mod = new User();
+        return $mod->dynTableName;
+    }
 
     public function behaviors()
     {
@@ -48,11 +63,26 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'password_check',
+                ],
+                'value' => function ($event) {
+                        if (!Yii::$app->user->identity->isAdmin()) {
+
+                        }
+                    },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'password',
                     ActiveRecord::EVENT_BEFORE_UPDATE => 'password',
                 ],
                 'value' => function ($event) {
-                        return sha1($this->password);
+                        if ($this->password1) {
+                            return sha1($this->password);
+                        } else {
+                            return $this->password;
+                        }
                     },
             ],
             [
@@ -62,7 +92,11 @@ class User extends ActiveRecord implements IdentityInterface
                     ActiveRecord::EVENT_BEFORE_UPDATE => 'password2',
                 ],
                 'value' => function ($event) {
-                        return sha1($this->password2);
+                        if ($this->password3) {
+                            return sha1($this->password2);
+                        } else {
+                            return $this->password2;
+                        }
                     },
             ],
         ];
@@ -78,6 +112,10 @@ class User extends ActiveRecord implements IdentityInterface
             [['username', 'password'], 'string', 'max' => 100],
             [['password1'], 'compare', 'compareAttribute' => 'password'],
             [['password3'], 'compare', 'compareAttribute' => 'password2'],
+            [['approved_at'], 'string'],
+            [['role_id', 'merited', 'level'], 'number'],
+            [['email'], 'email'],
+            [['qq'], 'number']
         ];
     }
 
@@ -87,10 +125,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            'number' => '会员编号',
+            'id' => '会员编号',
             'username' => '网络昵称',
             'password' => '一级密码',
             'password1' => '一级密码确认',
+            'password_check' => '您的二级密码',
             'password2' => '二级密码',
             'password3' => '二级密码确认',
             'identity' => '证件号码',
@@ -222,7 +261,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function setPassword($password)
     {
-        $this->password = Security::generatePasswordHash($password);
+        $this->password = ($password);
     }
 
     /**
@@ -232,7 +271,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function setPassword2($password)
     {
-        $this->password2 = Security::generatePasswordHash($password);
+        $this->password2 = ($password);
     }
 
     public function validatePassword2($password)
@@ -272,6 +311,71 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function getStatus()
     {
-        return ($this->locked) ? '锁定' : ($this->approved_at) ? '非正式' : '正式';
+        return ($this->approved_at) ? '正式' : '非正式';
+    }
+
+    public function getLockedOptions()
+    {
+        return array(
+            '' => '锁定状态',
+            0 => '未锁定',
+            1 => '锁定'
+        );
+    }
+
+    public function getParennt()
+    {
+        return $this->hasOne(User::className(), ['id' => 'referer'])->from(User::tableName().' us');// from设置别名，尽量避免手写表名称，会要求手动添加表前缀
+    }
+
+    public function getBankNames()
+    {
+        return  array('ICBC' => '工商银行', 'ABC' => '农业银行');
+    }
+
+    public function getLevelOptions()
+    {
+        return [
+            1 => '普通会员',
+            2 => 'VIP会员',
+            3 => '主任',
+            4 => '经理',
+            5 => '一级总监',
+            6 => '二级总监',
+            7 => '三级总监',
+        ];
+    }
+
+    public function getMeritRate()
+    {
+        $merits = array(
+            3 => 0.05,
+            4 => 0.1,
+            5 => 0.16,
+            6 => 0.23,
+            7 => 0.31,
+        );
+        return $merits[$this->level];
+    }
+
+    public function calculateLevel()
+    {
+        if ($this->achievements) {
+            $level = 2;
+            if (500000 <= $this->achievements && $this->achievements < 150000) {
+                $level = 3;
+            } elseif ($this->achievements< 4000000) {
+                $level = 4;
+            } elseif ($this->achievements < 10000000) {
+                $level = 5;
+            } elseif ($this->achievements < 20000000) {
+                $level = 6;
+            } else {
+                $level = 7;
+            }
+            return $level;
+        } else {
+            return ($this->investment < 200000) ? '1' : '2';
+        }
     }
 }

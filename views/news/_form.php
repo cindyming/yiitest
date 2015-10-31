@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use dosamigos\ckeditor\CKEditor;  // http://www.yiiframework.com/extension/yii2-ckeditor-widget/
 
 /* @var $this yii\web\View */
 /* @var $model app\models\News */
@@ -16,15 +17,19 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'be_top')->dropDownList(['0' => '正常', '1' => '置顶']) ?>
 
-    <?= $form->field($model, 'content')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'public_at')->widget(\yii\jui\DatePicker::classname(), [
-        // inline too, not bad
-        'inline' => true,
-        'clientOptions' => [
-            'autoclose' => true,
-            'format' => 'dd-M-yyyy'
+    <?= $form->field($model, 'public_at')->widget(\kartik\datetime\DateTimePicker::classname(), [
+        'language' => '',
+        'convertFormat' => true,
+        'pluginOptions' => [
+            'autoclose'=>true,
+            'timePicker'=> false,
+            'format' => 'dd-M-yyyy',
         ]
+    ]) ?>
+
+    <?= $form->field($model, 'content')->widget(CKEditor::className(), [
+        'options' => ['rows' => 6],
+        'preset' => 'basic'
     ]) ?>
 
     <div class="form-group">

@@ -10,9 +10,9 @@ use app\models\News;
 /**
  * Newssearch represents the model behind the search form about `app\models\News`.
  */
-class Newssearch extends News
+class NewsSearch extends News
 {
-    /**
+    /**S
      * @inheritdoc
      */
     public function rules()
@@ -57,10 +57,12 @@ class Newssearch extends News
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'public_at' => $this->public_at,
         ]);
+
+        if ($daterange = $this->public_at) {
+            $dates = explode(' - ', $this->public_at);
+            $query->andFilterWhere(['between', 'public_at', gmdate("Y-m-d h-i-s",strtotime(($dates[0] . ' 00:00:01'))), date("Y-m-d h-i-s",strtotime($dates[1] . ' 24:59:59'))]);
+        }
 
         $query->andFilterWhere(['like', 'be_top', $this->be_top])
             ->andFilterWhere(['like', 'title', $this->title])

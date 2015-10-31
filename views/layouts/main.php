@@ -6,7 +6,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
+use kartik\sidenav\SideNav;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
@@ -42,11 +42,17 @@ AppAsset::register($this);
     </div>
     <div class="left sidebar">
     <?php
-    NavBar::begin();
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-left'],
+        echo SideNav::widget([
+            'encodeLabels' => false,
         'items' => [
-            ['label' => '信息管理', 'url' => ['/site/index']],
+            [
+                'label' => '信息管理', 'url' => ['/news/index'],
+                'items' => [
+                    ['label' => '新闻公告', 'url' => ['/news/index']],
+                    ['label' => '留言列表', 'url' => ['/message/index', 'user_id' => Yii::$app->user->identity->id]],
+                    ['label' => '添加留言', 'url' => ['/message/create']]
+                ]
+            ],
             [
                 'label' => '会员专区', 'url' => ['/site/about'],
                 'items' => [
@@ -62,11 +68,24 @@ AppAsset::register($this);
                 ]
 
             ],
-            ['label' => '财务中心', 'url' => ['/site/contact']],
-            ['label' => '电子账户', 'url' => ['/site/contact']],
+            [
+                'label' => '财务中心', 'url' => ['/site/contact'],
+                'items' => [
+                    ['label' => '奖金明细', 'url' => ['/revenue/index']],
+                    ['label' => '奖金统计', 'url' => ['/revenue/total']]
+                ]
+            ],
+            [
+                'label' => '电子账户', 'url' => ['/site/contact'],
+                'items' => [
+                    ['label' => '入账明细', 'url' => ['/revenue/index']],
+                    ['label' => '出帐明细', 'url' => ['/revenue/total']],
+                    ['label' => '申请提现', 'url' => ['/revenue/index']],
+                    ['label' => '汇款提醒', 'url' => ['/revenue/index']],
+                ]
+            ],
         ],
     ]);
-    NavBar::end();
     ?>
 
     </div>
@@ -81,14 +100,14 @@ AppAsset::register($this);
                     ['label' => '首页', 'url' => ['/news/index']],
                     ['label' => '系统公告', 'url' => ['/news/index']],
                     ['label' => '注册会员', 'url' => ['/user/create']],
-                    ['label' => '奖金明细', 'url' => ['/site/contact']],
-                    ['label' => '奖金统计', 'url' => ['/site/contact']],
-                    ['label' => '申请提现', 'url' => ['/site/contact']],
-                    ['label' => '添加留言', 'url' => ['/message/add']],
+                    ['label' => '奖金明细', 'url' => ['/revenue/index']],
+                    ['label' => '奖金统计', 'url' => ['/revenue/total']],
+                    ['label' => '申请提现', 'url' => ['/revenue/withdraw']],
+                    ['label' => '添加留言', 'url' => ['/message/create']],
                     Yii::$app->user->isGuest ?
                         ['label' => '安全退出', 'url' => ['/site/login']] :
                         [
-                            'label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                            'label' => '安全退出 (' . Yii::$app->user->identity->username . ')',
                             'url' => ['/site/logout'],
                             'linkOptions' => ['data-method' => 'post']
                         ],

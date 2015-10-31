@@ -6,14 +6,12 @@ use yii\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Messages';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = '留言信息';
 ?>
 <div class="message-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $this->render('_adminmenu', []) ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -26,7 +24,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
             ],
             'title',
-            'user_id',
             [
                 'attribute' => 'replied_content',
                 'label' => '是否回复',
@@ -42,18 +39,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
             ],
             [
-                'class' => 'yii\grid\Column',
-                'header' => '删除',
-                'content' => function($model) {
-                        return Html::a('删除', ['admindelete', 'id' => $model->id]);
-                    }
-            ],
-            [
-                'class' => 'yii\grid\Column',
-                'header' => '回复',
-                'content' => function($model) {
-                        return Html::a('回复', ['adminreply', 'id' => $model->id]);
-                    }
+                'class' => 'yii\grid\ActionColumn',
+                'header' => '详情',
+                'template' => '{view}'
             ],
         ],
     ]); ?>

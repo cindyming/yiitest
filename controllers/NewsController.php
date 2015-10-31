@@ -4,7 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\News;
-use app\models\Newssearch;
+use app\models\NewsSearch;
 use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -44,22 +44,16 @@ class NewsController extends Controller
      */
     public function actionAdminindex()
     {
-        $searchModel = new Newssearch();
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => News::find(),
-            'pagination' => [
-                'pageSize' => 5,
-            ],
-        ]);
+        $searchModel = new NewsSearch();
 
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+        $dataProvider->pagination = [
+            'pageSize' => 5,
+        ];
+
         return $this->render('adminindex', [
+            'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -159,6 +153,18 @@ class NewsController extends Controller
         return $this->render('index', [
            // 'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Displays a single News model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionView($id)
+    {
+        return $this->render('view', [
+            'model' => $this->findModel($id),
         ]);
     }
 }

@@ -9,6 +9,7 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\UserSearch;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -43,24 +44,103 @@ class UserController extends Controller
      */
     public function actionAdminindex()
     {
-        $role_id = Yii::$app->request->get('role_id');
+        $searchModel = new UserSearch();
 
-        $query = User::find()->where(['!=','role_id',1]);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        if ($role_id) {
-            $query->andWhere(['=','role_id',$role_id]);
-        }
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => [
-                'pageSize' => 20,
-            ],
-        ]);
+        $dataProvider->pagination = [
+            'pageSize' => 20,
+        ];
 
 
         return $this->render('adminindex', [
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
+    }
+
+    /**
+     * Lists all User models.
+     * @return mixed
+     */
+    public function actionAdminindexapprove()
+    {
+        $searchModel = new UserSearch();
+
+        $data = Yii::$app->request->queryParams;
+
+        $data['UserSearch']['role_id'] =  3;
+
+        $dataProvider = $searchModel->search($data);
+
+        $dataProvider->pagination = [
+            'pageSize' => 20,
+        ];
+
+
+        return $this->render('adminindexapprove', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
+    }
+
+
+    /**
+     * Lists all User models.
+     * @return mixed
+     */
+    public function actionAdminindexunapprove()
+    {
+        $searchModel = new UserSearch();
+
+        $data = Yii::$app->request->queryParams;
+
+        $data['UserSearch']['role_id'] = 2;
+
+        $dataProvider = $searchModel->search($data);
+
+        $dataProvider->pagination = [
+            'pageSize' => 20,
+        ];
+
+
+        return $this->render('adminindexunapprove', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
+    }
+
+    /**
+     * Updates an existing User model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionAdminapprove($id)
+    {
+        $model = $this->findModel($id);
+        $data = array('User' => array('approved_at' => date('Y-m-d h:i:s', time()), 'role_id'=> 3));
+
+        if ($model->load($data) && $model->save()) {
+            return $this->redirect(['adminindexapprove']);
+        } else {var_dump($model->getErrors());die;
+            return $this->redirect(['adminindexunapprove']);
+        }
+    }
+
+    /**
+     * Updates an existing User model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionAutologin($id)
+    {
+        $model = $this->findModel($id);
+
+        Yii::$app->user->login($model, 3600*24*30);
+
+        return $this->redirect(['news/index']);
     }
 
     /**
@@ -99,14 +179,14 @@ class UserController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
+    public function actionAdminupdate($id)
     {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['adminindex', 'id' => $model->id]);
         } else {
-            return $this->render('update', [
+            return $this->render('adminupdate', [
                 'model' => $model,
             ]);
         }

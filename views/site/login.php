@@ -25,6 +25,10 @@ $this->title = '玫瑰家园';
 
     <?= $form->field($model, 'password')->passwordInput() ?>
 
+    <?= $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::classname(), [
+        // configure additional widget properties here
+    ]) ?>
+
     <div class="form-group">
         <div class="col-lg-offset-1 col-lg-11">
             <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>

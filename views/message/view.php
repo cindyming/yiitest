@@ -17,12 +17,19 @@ $this->title = '留言内容';
         'attributes' => [
             'title',
             'content:ntext',
-            'replied_content:ntext'
+            [
+                'attribute' => 'replied_content',
+                'value' => function($model) {
+                        if ($model->replied_content) {
+                            return $model->replied_content;
+                        }
+                    }
+            ]
         ],
     ]) ?>
 
     <p>
-        <?= Html::a('返回', ['adminindex'], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('返回', ['index'], ['class' => 'btn btn-primary']) ?>
     </p>
 
 </div>

@@ -12,6 +12,10 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?php if (!$model->isNewRecord): ?>
+        <?= $form->field($model, 'id')->textInput(['maxlength' => true, 'readonly' => true]) ?>
+    <?php endif ?>
+
     <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
@@ -30,6 +34,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'investment')->textInput(['maxlength' => true]) ?>
 
+    <?php if (!$model->isNewRecord): ?>
+    <?= $form->field($model, 'locked')->dropDownList([0 => '未锁定', 1 => '锁定']) ?>
+    <?php endif ?>
+
     <?= $form->field($model, 'referer')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'bank')->dropDownList(['ICBC' => '工商银行', 'ABC' => '农业银行']) ?>
@@ -45,6 +53,8 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'qq')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
+        <?= $form->field($model, 'password_check')->textInput(['maxlength' => true]) ?>
+
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 

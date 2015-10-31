@@ -8,6 +8,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use kartik\sidenav\SideNav;
 
 AppAsset::register($this);
 ?>
@@ -25,21 +26,19 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <div class="wrap">
-    <div style="width:100px;float:left">
-    <?php
-    NavBar::begin();
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-left'],
-        'items' => [
-            ['label' => '会员管理', 'url' => ['/user/index']],
-            ['label' => '财务管理', 'url' => ['/invest/about']],
-            ['label' => '电子货币', 'url' => ['/site/contact']],
-            ['label' => '信息管理', 'url' => ['/news/index']],
-            ['label' => '系统管理', 'url' => ['/site/contact']],
-        ],
-    ]);
-    NavBar::end();
-    ?>
+    <div style="width:300px;float:left">
+        <?php
+        echo SideNav::widget([
+            'encodeLabels' => false,
+            'heading' => '<div style="margin:20px 5px"> ADMIN </div>',
+            'items' => [
+                ['label' => '会员管理', 'url' => ['/user/adminindex']],
+                ['label' => '财务管理', 'url' => ['/invest/about']],
+                ['label' => '电子货币', 'url' => ['/site/contact']],
+                ['label' => '信息管理', 'url' => ['/news/adminindex']],
+                ['label' => '系统管理', 'url' => ['/site/contact']],
+             ]]);
+        ?>
     </div>
 
     <div class="container">

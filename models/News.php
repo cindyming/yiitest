@@ -7,6 +7,17 @@ use yii\db\ActiveRecord;
 class News extends ActiveRecord
 {
 
+    public $dynTableName = '{{%news}}';
+
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        $mod = new News();
+        return $mod->dynTableName;
+    }
+
     /**
      * @inheritdoc
      */
@@ -23,6 +34,7 @@ class News extends ActiveRecord
     public function attributeLabels()
     {
         return [
+            'id'   => '编号',
             'title' => '公告标题',
             'be_top' => '是否置顶',
             'content' => '信息内容',
@@ -33,6 +45,7 @@ class News extends ActiveRecord
     public function getBetopOptions()
     {
             return [
+                '' => '不限',
                 0 => '正常',
                 1 => '置顶',
             ];

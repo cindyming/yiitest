@@ -9,8 +9,7 @@ use app\models\News;
 /* @var $searchModel app\models\Newssearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'News';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = '新闻公告';
 ?>
 <div class="news-index">
 
@@ -50,7 +49,10 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'updated_at',
             'public_at',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view}'
+            ],
         ],
     ]); ?>
 
