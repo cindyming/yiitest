@@ -28,7 +28,7 @@ AppAsset::register($this);
 <div class="wrap">
     <div class="top-header">
         <div class="container">
-            <div>ADMIN</div>
+            <h2>ADMIN</h2>
             <div class="m-info">
                 <?php echo  '欢迎 (' . Yii::$app->user->identity->username . ')' ?>
             </div>
