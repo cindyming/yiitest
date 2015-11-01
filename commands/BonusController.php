@@ -14,13 +14,10 @@ class BonusController extends Controller
 
     public function actionIndex($message = 'hello world')
     {
-        $query = User::find()->where(['!=','role_id', 1]);
+        $query = User::find()->where(['=','role_id', 3]);
 
         $users = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => [
-                'pageSize' => 20,
-            ],
         ]);
 
         foreach ($users->models as $user) {
