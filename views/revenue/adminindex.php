@@ -23,7 +23,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
             'id',
             'user_id',
-            'approved',
             'bonus',
             'merit',
             [
@@ -33,6 +32,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         return $model->bonus + $model->merit;
                     }
             ],
+            [
+                'attribute' => 'approved',
+                'value' => function($model) {
+                        return $model->getStatus()[$model->approved];
+                    }
+            ],
+            'note',
             'created_at',
             ['class' => 'yii\grid\ActionColumn'],
         ],

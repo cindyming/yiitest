@@ -28,8 +28,7 @@ class Revenue extends ActiveRecord
     {
         return [
             [['user_id'], 'required'],
-            [['bonus'], 'trim'],
-            [['merit'], 'trim'],
+            [['bonus', 'merit', 'note'], 'trim'],
         ];
     }
 
@@ -44,6 +43,7 @@ class Revenue extends ActiveRecord
             'bonus' => '分红',
             'merit' => '绩效',
             'approved' => '状态',
+            'note' => '备注',
             'created_at' => '结算时间',
             'updated_at' => '发放时间',
         ];

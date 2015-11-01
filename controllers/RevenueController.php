@@ -52,7 +52,7 @@ class RevenueController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Revenue::find(),
+            'query' => Revenue::find()->where(['=', 'user_id', Yii::$app->user->identity->id]),
             'pagination' => [
                 'pageSize' => 10,
             ],

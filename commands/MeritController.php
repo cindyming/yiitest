@@ -22,11 +22,11 @@ class MeritController extends Controller
         ]);
 
         foreach ($users->models as $user) {
-            $this->calculateMerit($user, $user->investment);
+            $this->calculateMerit($user, $user->investment, $user->investment, '新增新会员:' . $user->id);
         }
     }
 
-    public function calculateMerit($user, $total)
+    public function calculateMerit($user, $new, $total, $message)
     {
         $parent = $user->getParennt()->one();
         $nextTotal = 0;
@@ -42,12 +42,13 @@ class MeritController extends Controller
 
             if ($parent->level > 2) {
                 $data = array(
-                    'user_id' => $parent->id
+                    'user_id' => $parent->id,
+                    'note' => $message
                 );
                 if ($parent->level == $user->level) {
-                    $data['merit'] = $total * 0.01;
+                    $data['merit'] = $new * 0.01;
                 } else {
-                    $data['merit'] = $total * $parent->getMeritRate();
+                    $data['merit'] = $new * $parent->getMeritRate();
                 }
             }
             $connection=Yii::$app->db;
@@ -58,13 +59,11 @@ class MeritController extends Controller
                     $bonus->load($data, '');
                     $bonus->save();
                 }
-
                 $user->merited = 1;
-
                 $parent->save();
                 $user->save();
                 $transaction->commit();//事物结束
-                $this->calculateMerit($parent, $nextTotal);
+             //   $this->calculateMerit($parent, $nextTotal);
             } catch (Exception $e) {
                 $transaction->rollback();//回滚函数
             }
