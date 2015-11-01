@@ -11,7 +11,7 @@ body {
 }
 
 .wrap > .container {
-    padding: 70px 15px 20px;
+    padding: 20px 15px 20px;
 }
 
 .footer {
@@ -176,6 +176,8 @@ body.login{background: #2E363F}
 .loginbox button{width:100%;}
 
 /* nav  */
+nav.navbar{margin:0;background:transparent;border:none 0;}
+nav.navbar .container{padding:0}
 .sidebar .panel{border:none 0}
 .nav > li{float:left;  margin-top: 2px;}
 .menubar{background:#2E363F;}
@@ -186,11 +188,25 @@ body.login{background: #2E363F}
 .menubar .kv-sidenav a:hover .indicator{color:#fff}
 .navbar-default .navbar-nav > li > a{color:#999}
 .navbar-default .navbar-nav > li > a:hover{color:#fff}
-
+.navbar-collapse {padding-right: 0;padding-left: 0;}
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:hover,
+.navbar-default .navbar-nav > .open > a:focus {
+  color: #fff;
+  background-color: #27a9e3;
+}
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #fff;
+  background-color: #27a9e3;
+}
+.dropdown-menu {border: none 0;box-shadow: none;}
 /* header */
 .top-header{background:#2E363F;color:#fff;padding:1% 0}
+.top-header h2{float:left;margin:0}
 .top-header h3{margin:0}
-.top-header .m-info{color:#999;margin:10px 0 0}
+.top-header .m-info{color:#999;margin:10px 0;text-align: right;}
 .qk-links{}
 .qk-links nav{float:right;background:transparent;border:none 0}
 h1{font-size:25px}
@@ -201,7 +217,7 @@ h1{font-size:25px}
 .user-form .two-cols .form-group{width:100%; vertical-align: top;}
 .filters .form-control{height:26px}
 
-
+.table-bordered > thead > tr > th{background:#efefef}
 
 
 
