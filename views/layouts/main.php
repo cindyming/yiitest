@@ -27,18 +27,45 @@ AppAsset::register($this);
 <div class="wrap member">
     <div class="top-header">
         <div class="container">
-            <?php
-            $h=date('G');
-            $welcome = ($h<11) ? '早上好' : (($h<13) ? '中午好' : (($h<17) ? '下午好' : '晚上好'));
-            $welcome .= ', ' . Yii::$app->user->identity->username;
-            $welcome .= ', 欢迎回来.';
-            ?>
-            <h3>在线办公平台</h3>
-            <div class="m-info">
-                会员ID: <?php echo Yii::$app->user->id?>
-                分红余额:
-                绩效工资余额:
+            <div>
+                <?php
+                $h=date('G');
+                $welcome = ($h<11) ? '早上好' : (($h<13) ? '中午好' : (($h<17) ? '下午好' : '晚上好'));
+                $welcome .= ', ' . Yii::$app->user->identity->username;
+                $welcome .= ', 欢迎回来.';
+                ?>
+                <h3>在线办公平台</h3>
+                <div class="m-info">
+                    会员ID: <?php echo Yii::$app->user->id?>
+                    分红余额:
+                    绩效工资余额:
+                </div>
             </div>
+            <div class="top qk-links">
+            <?php
+            NavBar::begin();
+            echo Nav::widget([
+                'options' => ['class' => 'navbar-nav navbar-left'],
+                'items' => [
+                    ['label' => '首页', 'url' => ['/news/index']],
+                    ['label' => '系统公告', 'url' => ['/news/index']],
+                    ['label' => '注册会员', 'url' => ['/user/create']],
+                    ['label' => '奖金明细', 'url' => ['/revenue/index']],
+                    ['label' => '奖金统计', 'url' => ['/revenue/total']],
+                    ['label' => '申请提现', 'url' => ['/revenue/withdraw']],
+                    ['label' => '添加留言', 'url' => ['/message/create']],
+                    Yii::$app->user->isGuest ?
+                        ['label' => '安全退出', 'url' => ['/site/login']] :
+                        [
+                            'label' => '安全退出 (' . Yii::$app->user->identity->username . ')',
+                            'url' => ['/site/logout'],
+                            'linkOptions' => ['data-method' => 'post']
+                        ],
+                ],
+            ]);
+            NavBar::end();
+            ?>
+        </div>
         </div>
     </div>
     <div class="menubar">
@@ -93,31 +120,6 @@ AppAsset::register($this);
     </div>
 
     <div class="container">
-        <div class="top nav">
-            <?php
-            NavBar::begin();
-            echo Nav::widget([
-                'options' => ['class' => 'navbar-nav navbar-left'],
-                'items' => [
-                    ['label' => '首页', 'url' => ['/news/index']],
-                    ['label' => '系统公告', 'url' => ['/news/index']],
-                    ['label' => '注册会员', 'url' => ['/user/create']],
-                    ['label' => '奖金明细', 'url' => ['/revenue/index']],
-                    ['label' => '奖金统计', 'url' => ['/revenue/total']],
-                    ['label' => '申请提现', 'url' => ['/revenue/withdraw']],
-                    ['label' => '添加留言', 'url' => ['/message/create']],
-                    Yii::$app->user->isGuest ?
-                        ['label' => '安全退出', 'url' => ['/site/login']] :
-                        [
-                            'label' => '安全退出 (' . Yii::$app->user->identity->username . ')',
-                            'url' => ['/site/logout'],
-                            'linkOptions' => ['data-method' => 'post']
-                        ],
-                ],
-            ]);
-            NavBar::end();
-            ?>
-        </div>
         <!-- Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) -->
