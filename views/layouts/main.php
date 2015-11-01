@@ -41,7 +41,7 @@ AppAsset::register($this);
             </div>
         </div>
     </div>
-    <div class="left sidebar">
+    <div class="menubar">
         <div class="container">
         <?php
             echo SideNav::widget([

@@ -178,8 +178,7 @@ body.login{background: #2E363F}
 /* nav  */
 .sidebar .panel{border:none 0}
 .nav > li{float:left;}
-.nav,
-nav.navbar-default{background:#2E363F;}
+.menubar{background:#2E363F;}
 .navbar-default .navbar-nav > li > a{color:#999}
 .navbar-default .navbar-nav > li > a:hover{color:#fff}
 
