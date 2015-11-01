@@ -53,7 +53,6 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'qq')->textInput(['maxlength' => true]) ?>
 
     <div class="form-group">
-        <?= $form->field($model, 'password_check')->textInput(['maxlength' => true]) ?>
 
         <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
