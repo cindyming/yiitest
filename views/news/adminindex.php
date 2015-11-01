@@ -14,7 +14,7 @@ $this->title = '信息管理';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $this->render('_adminmenu', []) ?>
+
 
     <h3>
        公告信息
