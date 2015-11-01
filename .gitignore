@@ -4,5 +4,6 @@ runtime/*
 !runtime/.gitignore
 protected/data/*.db
 themes/classic/views/
+config/*
 .idea/*
 /*.bak
