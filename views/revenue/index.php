@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'approved',
                 'value' => function($model) {
-                        return $model->getStatus()[$model->approved];
+                        return '已发放';
                     }
             ],
         ],
