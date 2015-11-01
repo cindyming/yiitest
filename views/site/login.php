@@ -21,11 +21,11 @@ $this->title = '玫瑰家园';
         ],
     ]); ?>
 
-    <?= $form->field($model, '用户名') ?>
+    <?= $form->field($model, 'username') ?>
 
-    <?= $form->field($model, '密码')->passwordInput() ?>
+    <?= $form->field($model, 'password')->passwordInput() ?>
 
-    <?= $form->field($model, '验证码')->widget(\yii\captcha\Captcha::classname(), [
+    <?= $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::classname(), [
         // configure additional widget properties here
     ]) ?>
 
