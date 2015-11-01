@@ -25,20 +25,21 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <div class="wrap member">
-    <div class="top">
-        <?php
-        $h=date('G');
-        $welcome = ($h<11) ? '早上好' : (($h<13) ? '中午好' : (($h<17) ? '下午好' : '晚上好'));
-        $welcome .= ', ' . Yii::$app->user->identity->username;
-        $welcome .= ', 欢迎回来.';
-        ?>
-        <h3>在线办公平台</h3>
-        <div>
-            会员ID: <?php echo Yii::$app->user->id?>
-            分红余额:
-            绩效工资余额:
+    <div class="top-header">
+        <div class="container">
+            <?php
+            $h=date('G');
+            $welcome = ($h<11) ? '早上好' : (($h<13) ? '中午好' : (($h<17) ? '下午好' : '晚上好'));
+            $welcome .= ', ' . Yii::$app->user->identity->username;
+            $welcome .= ', 欢迎回来.';
+            ?>
+            <h3>在线办公平台</h3>
+            <div>
+                会员ID: <?php echo Yii::$app->user->id?>
+                分红余额:
+                绩效工资余额:
+            </div>
         </div>
-
     </div>
     <div class="left sidebar">
     <?php
