@@ -148,7 +148,7 @@ class User extends ActiveRecord implements IdentityInterface
             'approved_at' => '审核日期',
             'created_at' => '注册时间',
             'password_old' => '原一级密码',
-            'password2_old' => '原一级密码'
+            'password2_old' => '原二级密码'
         ];
     }
 
