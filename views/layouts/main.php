@@ -27,21 +27,18 @@ AppAsset::register($this);
 <div class="wrap member">
     <div class="top-header">
         <div class="container">
-            <div>
                 <?php
                 $h=date('G');
                 $welcome = ($h<11) ? '早上好' : (($h<13) ? '中午好' : (($h<17) ? '下午好' : '晚上好'));
                 $welcome .= ', ' . Yii::$app->user->identity->username;
                 $welcome .= ', 欢迎回来.';
                 ?>
-                <h3>在线办公平台</h3>
-                <div class="m-info">
-                    会员ID: <?php echo Yii::$app->user->id?>
-                    分红余额:
-                    绩效工资余额:
-                </div>
+            <h2>在线办公平台</h2>
+            <div class="m-info">
+                会员ID: <?php echo Yii::$app->user->id?>
+                分红余额:
+                绩效工资余额:
             </div>
-            <div class="qk-links">
             <?php
             NavBar::begin();
             echo Nav::widget([
@@ -97,7 +94,6 @@ AppAsset::register($this);
             ]);
             NavBar::end();
             ?>
-            </div>
         </div>
     </div>
 

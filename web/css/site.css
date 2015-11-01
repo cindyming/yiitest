@@ -1,6 +1,7 @@
-zhtml,
+html,
 body {
     height: 100%;
+    font-family:Microsoft YaHei, Tahoma, Simsun, Verdama;
 }
 
 .wrap {
@@ -204,12 +205,12 @@ nav.navbar .container{padding:0}
 .dropdown-menu {border: none 0;box-shadow: none;}
 /* header */
 .top-header{background:#2E363F;color:#fff;padding:1% 0}
-.top-header h2{float:left;margin:0}
+.top-header h2{float:left;margin:0;font-size:28px;line-height:36px}
 .top-header h3{margin:0}
 .top-header .m-info{color:#999;margin:10px 0;text-align: right;}
 .qk-links{}
 .qk-links nav{float:right;background:transparent;border:none 0}
-h1{font-size:25px}
+h1{font-size:22px;margin:20px 0}
 
 .user-form > div{width:48%;margin-right:2%;display:inline-block;}
 .user-form > div:last-child{margin-right:0}
@@ -218,6 +219,6 @@ h1{font-size:25px}
 .filters .form-control{height:26px}
 
 .table-bordered > thead > tr > th{background:#efefef}
-
+.summary{text-align:right;margin: 0 0 5px}
 
 
