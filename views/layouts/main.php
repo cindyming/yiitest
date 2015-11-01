@@ -53,19 +53,19 @@ AppAsset::register($this);
                         ]
                     ],
                     [
-                        'label' => '财务管理', 'url' => ['/site/contact'],
+                        'label' => '财务管理', 'url' => ['/'],
                         'items' => [
                             ['label' => '奖金明细', 'url' => ['/revenue/index']],
-                            ['label' => '奖金统计', 'url' => ['/revenue/total']]
+                            ['label' => '奖金统计', 'url' => ['/']]
                         ]
                     ],
                     [
-                        'label' => '电子货币', 'url' => ['/site/contact'],
+                        'label' => '电子货币', 'url' => ['/'],
                         'items' => [
-                            ['label' => '入账明细', 'url' => ['/revenue/index']],
-                            ['label' => '出帐明细', 'url' => ['/revenue/total']],
-                            ['label' => '申请提现', 'url' => ['/revenue/index']],
-                            ['label' => '汇款提醒', 'url' => ['/revenue/index']],
+                            ['label' => '入账明细', 'url' => ['/']],
+                            ['label' => '出帐明细', 'url' => ['/']],
+                            ['label' => '申请提现', 'url' => ['/']],
+                            ['label' => '汇款提醒', 'url' => ['/']],
                         ]
                     ],
                     [
