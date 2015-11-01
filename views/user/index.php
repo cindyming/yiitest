@@ -32,10 +32,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         return $model->getStatus();
                     }
             ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{view}'
-            ],
         ],
     ]); ?>
 
