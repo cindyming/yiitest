@@ -358,22 +358,37 @@ class User extends ActiveRecord implements IdentityInterface
         return $merits[$this->level];
     }
 
+    public function diamondLevel()
+    {
+         $users = User::find()->where(['=', 'parent_id', $this->id])->orderBy(['achievements' => SORT_ASC])->limit(3)->all();
+        if (count($users) > 3 ) {
+            return $users[0]->achievements;
+        } else {
+            return 0;
+        }
+    }
+
     public function calculateLevel()
     {
         if ($this->achievements) {
             $level = 2;
             if (500000 > $this->achievements) {
-                $level = 2;
+                $level = ($this->investment < 200000) ? '1' : '2';
             } elseif ($this->achievements < 1500000) {
                 $level = 3;
-            } elseif ($this->achievements < 4000000) {
+            } elseif ($this->achievements < 12000000) {
                 $level = 4;
-            } elseif ($this->achievements < 10000000) {
-                $level = 5;
-            } elseif ($this->achievements < 20000000) {
-                $level = 6;
             } else {
-                $level = 7;
+                $minAchivements = $this->diamondLevel();
+                if ($minAchivements < 4000000) {
+                    $level = 4;
+                } elseif ( $minAchivements < 10000000) {
+                    $level = 5;
+                } elseif ($this->achievements < 20000000) {
+                    $level = 6;
+                } else {
+                    $level = 7;
+                }
             }
             return $level;
         } else {

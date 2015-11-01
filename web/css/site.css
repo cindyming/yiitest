@@ -1,6 +1,7 @@
-zhtml,
+html,
 body {
     height: 100%;
+    font-family:Microsoft YaHei, Tahoma, Simsun, Verdama;
 }
 
 .wrap {
@@ -218,6 +219,6 @@ h1{font-size:25px}
 .filters .form-control{height:26px}
 
 .table-bordered > thead > tr > th{background:#efefef}
-
+.summary{text-align:right;margin: 0 0 5px}
 
 
