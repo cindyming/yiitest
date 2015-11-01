@@ -34,7 +34,7 @@ AppAsset::register($this);
             $welcome .= ', 欢迎回来.';
             ?>
             <h3>在线办公平台</h3>
-            <div>
+            <div class="m-info">
                 会员ID: <?php echo Yii::$app->user->id?>
                 分红余额:
                 绩效工资余额:

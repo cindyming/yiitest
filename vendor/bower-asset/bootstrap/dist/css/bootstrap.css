@@ -2627,7 +2627,7 @@ input[type="search"] {
   }
 }
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom:5px;
 }
 .radio,
 .checkbox {
@@ -2878,7 +2878,7 @@ select[multiple].input-lg {
 .has-error.checkbox label,
 .has-error.radio-inline label,
 .has-error.checkbox-inline label {
-  color: #a94442;
+  color: #FF504D;
 }
 .has-error .form-control {
   border-color: #a94442;

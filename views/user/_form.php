@@ -18,6 +18,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'title')->dropDownList(['Mr' => '先生', 'Ms' => '女士']) ?>
+
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'password1')->passwordInput(['maxlength' => true]) ?>
@@ -27,8 +29,6 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'password3')->passwordInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'identity')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'title')->dropDownList(['Mr' => '先生', 'Ms' => '女士']) ?>
 
     <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
 
