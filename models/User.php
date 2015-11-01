@@ -362,9 +362,11 @@ class User extends ActiveRecord implements IdentityInterface
     {
         if ($this->achievements) {
             $level = 2;
-            if (500000 <= $this->achievements && $this->achievements < 150000) {
+            if (500000 > $this->achievements) {
+                $level = 2;
+            } elseif ($this->achievements < 1500000) {
                 $level = 3;
-            } elseif ($this->achievements< 4000000) {
+            } elseif ($this->achievements < 4000000) {
                 $level = 4;
             } elseif ($this->achievements < 10000000) {
                 $level = 5;
