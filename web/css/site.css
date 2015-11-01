@@ -191,7 +191,8 @@ body.login{background: #2E363F}
 .top-header{background:#2E363F;color:#fff;padding:1% 0}
 .top-header h3{margin:0}
 .top-header .m-info{color:#999;margin:10px 0 0}
-
+.qk-links{}
+.qk-links nav{float:right;background:transparent;border:none 0}
 h1{font-size:25px}
 
 .user-form > div{width:48%;margin-right:2%;display:inline-block;}

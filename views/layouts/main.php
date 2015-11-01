@@ -41,7 +41,7 @@ AppAsset::register($this);
                     绩效工资余额:
                 </div>
             </div>
-            <div class="top qk-links">
+            <div class="qk-links">
             <?php
             NavBar::begin();
             echo Nav::widget([
@@ -65,7 +65,7 @@ AppAsset::register($this);
             ]);
             NavBar::end();
             ?>
-        </div>
+            </div>
         </div>
     </div>
     <div class="menubar">
