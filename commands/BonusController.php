@@ -32,6 +32,7 @@ class BonusController extends Controller
             } else {
                 $data['bonus'] =  $user->investment * 0.03;
             }
+            $data['note'] = '分红结算: ' .  date('Y-m-d', time());
             $bonus = new Revenue();
             $bonus->load($data, '');
             $bonus->save();
