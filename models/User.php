@@ -360,7 +360,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function diamondLevel()
     {
-         $users = User::find()->where(['=', 'parent_id', $this->id])->orderBy(['achievements' => SORT_ASC])->limit(3)->all();
+         $users = User::find()->where(['=', 'referer', $this->id])->orderBy(['achievements' => SORT_ASC])->limit(3)->all();
         if (count($users) > 3 ) {
             return $users[0]->achievements;
         } else {
