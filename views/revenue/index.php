@@ -14,9 +14,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+       // 'filterModel' => $searchModel,
         'layout' => '{items} {summary} {pager}',
-        'pjax' => true,
+        //'pjax' => true,
         'columns' => [
             [
                 'class' => 'yii\grid\SerialColumn',
@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'user_id',
-                'filter' => true,
+                'filter' => false,
             ],
             'bonus',
             'merit',

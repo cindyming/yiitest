@@ -6,9 +6,12 @@ use app\models\RevenueSearch;
 use Yii;
 use app\models\Revenue;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
+use app\models\User;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\components\AccessRule;
 
 /**
  * RevenueController implements the CRUD actions for Revenue model.
@@ -18,6 +21,24 @@ class RevenueController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'ruleConfig' => [
+                    'class' => AccessRule::className(),
+                ],
+                    'rules' => [
+                        [
+                            'allow' => true,
+                            'actions' => ['adminindex', 'admintotal'],
+                            'roles' => [User::ROLE_ADMIN]
+                        ],
+                        [
+                            'allow' => true,
+                            'actions' => ['index', 'total'],
+                            'roles' => [User::ROLE_USER],
+                        ],
+                    ],
+                ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -99,7 +120,7 @@ class RevenueController extends Controller
 
         $data = Yii::$app->request->queryParams;
 
-        $data['Revenue']['user_id'] = Yii::$app->user->identity->id;
+        $data['RevenueSearch']['user_id'] = Yii::$app->user->identity->id;
 
         $dataProvider = $searchModel->search($data);
 
@@ -113,68 +134,6 @@ class RevenueController extends Controller
             'searchModel' => $searchModel,
         ]);
 
-    }
-
-    /**
-     * Displays a single Revenue model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
-     * Creates a new Revenue model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return mixed
-     */
-    public function actionCreate()
-    {
-        $model = new Revenue();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Updates an existing Revenue model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionUpdate($id)
-    {
-        $model = $this->findModel($id);
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Deletes an existing Revenue model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
-
-        return $this->redirect(['index']);
     }
 
     /**

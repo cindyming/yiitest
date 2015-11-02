@@ -19,7 +19,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'layout' => '{items} {summary} {pager}',
         'pjax' => true,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
             [
                 'class' => 'yii\grid\SerialColumn',
                 'header' => '序号'

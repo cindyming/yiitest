@@ -10,6 +10,8 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\User;
+use app\components\AccessRule;
 
 /**
  * NewsController implements the CRUD actions for News model.
@@ -22,10 +24,19 @@ class NewsController extends Controller
             'access' => [
                 'class' => AccessControl::className(),
                 'except' => ['login', 'logout'],
+                'ruleConfig' => [
+                    'class' => AccessRule::className(),
+                ],
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'actions' => ['adminindex', 'admincreate', 'admindelete', 'adminupdate',  'adminview'],
+                        'roles' => [User::ROLE_ADMIN]
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view'],
+                        'roles' => [User::ROLE_USER],
                     ],
                 ],
             ],
