@@ -1,33 +1,37 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Revenues';
+$this->title = '奖金结算明细';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="revenue-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Revenue', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'layout' => '{items} {summary} {pager}',
+        'pjax' => true,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            'id',
-            'user_id',
+            [
+                'class' => 'yii\grid\SerialColumn',
+                'header' => '序号'
+            ],
+            [
+                'attribute' => 'user_id',
+                'filter' => true,
+            ],
             'bonus',
             'merit',
             [
                 'class' => 'yii\grid\Column',
-                'label' => '总额',
+                'header' => '总额',
                 'content' => function($model) {
                         return $model->bonus + $model->merit;
                     }
@@ -40,7 +44,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'note',
             'created_at',
-            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 

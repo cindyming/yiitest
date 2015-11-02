@@ -10,6 +10,20 @@ use yii\behaviors\TimestampBehavior;
 
 class Revenue extends ActiveRecord
 {
+    public $bonus_total;
+    public $merit_total;
+
+    public $dynTableName = '{{%revenue}}';
+
+    /**
+     * @inheritdoc
+     */
+    public static function tableName()
+    {
+        $mod = new Revenue();
+        return $mod->dynTableName;
+    }
+
 
     public function behaviors()
     {
@@ -43,6 +57,8 @@ class Revenue extends ActiveRecord
             'bonus' => '分红',
             'merit' => '绩效',
             'approved' => '状态',
+            'bonus_total' => '分红',
+            'merit_total' => '绩效',
             'note' => '备注',
             'created_at' => '结算时间',
             'updated_at' => '发放时间',

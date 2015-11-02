@@ -9,6 +9,8 @@ use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\User;
+use app\components\AccessRule;
 
 /**
  * MessageController implements the CRUD actions for Message model.
@@ -21,10 +23,19 @@ class MessageController extends Controller
             'access' => [
                 'class' => AccessControl::className(),
                 'except' => ['login', 'logout'],
+                'ruleConfig' => [
+                    'class' => AccessRule::className(),
+                ],
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'actions' => ['adminindex', 'admindelete', 'adminreply', 'adminview'],
+                        'roles' => [User::ROLE_ADMIN]
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'index', 'view'],
+                        'roles' => [User::ROLE_USER],
                     ],
                 ],
             ],

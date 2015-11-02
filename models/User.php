@@ -11,6 +11,9 @@ use yii\behaviors\AttributeBehavior;
 
 class User extends ActiveRecord implements IdentityInterface
 {
+    const ROLE_USER = 3;
+    const ROLE_ADMIN = 1;
+
     public $password1;
     public $password3;
     public $password_old;

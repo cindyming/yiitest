@@ -1,12 +1,12 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Messages';
+$this->title = '留言管理';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="message-index">

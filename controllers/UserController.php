@@ -10,6 +10,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\UserSearch;
+use app\components\AccessRule;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -21,11 +22,20 @@ class UserController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'except' => ['login', 'logout'],
+                'except' => ['login', 'logout', 'autologin'],
+                'ruleConfig' => [
+                    'class' => AccessRule::className(),
+                ],
                 'rules' => [
                     [
                         'allow' => true,
-                        'roles' => ['@'],
+                        'actions' => ['adminindex', 'admincreate', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview'],
+                        'roles' => [User::ROLE_ADMIN]
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'changepassword', 'create', 'delete'],
+                        'roles' => [User::ROLE_USER],
                     ],
                 ],
             ],

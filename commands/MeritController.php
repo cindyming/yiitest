@@ -23,6 +23,11 @@ class MeritController extends Controller
 
         foreach ($users->models as $user) {
             $this->calculateMerit($user, $user->investment, $user->investment, '新增新会员:' . $user->id);
+
+            /** to do
+             * 1. list all the parent user for this user
+             * 2. calculate the merit and achivements
+             * */
         }
     }
 
