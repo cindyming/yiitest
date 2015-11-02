@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -14,12 +14,18 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'layout' => '{items} {summary} {pager}',
+        'pjax' => true,
         'columns' => [
             [
-                'attribute' => 'id',
-                'label' => '序号'
+                'class' => 'yii\grid\SerialColumn',
+                'header' => '序号'
             ],
-            'user_id',
+            [
+                'attribute' => 'user_id',
+                'filter' => true,
+            ],
             'bonus',
             'merit',
             [

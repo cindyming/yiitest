@@ -6,7 +6,7 @@ use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '奖金结算明细';
+$this->title = '奖金统计';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="revenue-index">
@@ -15,36 +15,26 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'layout' => '{items} {summary} {pager}',
         'pjax' => true,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
             [
                 'class' => 'yii\grid\SerialColumn',
                 'header' => '序号'
             ],
             [
                 'attribute' => 'user_id',
-                'filter' => true,
+                'filter' => false,
             ],
-            'bonus',
-            'merit',
+            'bonus_total',
+            'merit_total',
             [
                 'class' => 'yii\grid\Column',
-                'header' => '总额',
+                'header' => '实发总额',
                 'content' => function($model) {
-                        return $model->bonus + $model->merit;
+                        return $model->bonus_total + $model->merit_total;
                     }
             ],
-            [
-                'attribute' => 'approved',
-                'value' => function($model) {
-                        return $model->getStatus()[$model->approved];
-                    }
-            ],
-            'note',
-            'created_at',
         ],
     ]); ?>
 

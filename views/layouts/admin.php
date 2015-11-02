@@ -50,19 +50,19 @@ AppAsset::register($this);
                     [
                         'label' => '财务管理', 'url' => ['/invest/adminabout'],
                         'items' => [
-                            ['label' => '奖金结算', 'url' => yii\helpers\Url::to('/')],
-                            ['label' => '奖金统计', 'url' => yii\helpers\Url::to('/')],
-                            ['label' => '拨比统计', 'url' => yii\helpers\Url::to('/')],
+                            ['label' => '奖金结算', 'url' => yii\helpers\Url::to('/revenue/adminindex')],
+                            ['label' => '奖金统计', 'url' => yii\helpers\Url::to('/revenue/admintotal')],
+                            ['label' => '拨比统计', 'url' => yii\helpers\Url::to('/blank')],
                         ]
                     ],
                     [
-                        'label' => '电子货币', 'url' => ['/'],
+                        'label' => '电子货币', 'url' => ['/blank'],
                         'items' => [
-                            ['label' => '添加货币', 'url' => yii\helpers\Url::to('/')],
-                            ['label' => '账户管理', 'url' => yii\helpers\Url::to('/')],
-                            ['label' => '出帐明细', 'url' => yii\helpers\Url::to('/')],
-                            ['label' => '入账明细', 'url' => yii\helpers\Url::to('/')],
-                            ['label' => '体现管理', 'url' => yii\helpers\Url::to('/')],
+                            ['label' => '添加货币', 'url' => yii\helpers\Url::to('/blank')],
+                            ['label' => '账户管理', 'url' => yii\helpers\Url::to('/blank')],
+                            ['label' => '出帐明细', 'url' => yii\helpers\Url::to('/blank')],
+                            ['label' => '入账明细', 'url' => yii\helpers\Url::to('/blank')],
+                            ['label' => '体现管理', 'url' => yii\helpers\Url::to('/blank')],
                         ]
                     ],
                     [
@@ -74,13 +74,13 @@ AppAsset::register($this);
                         ]
                     ],
                     [
-                        'label' => '系统管理', 'url' => ['/'],
+                        'label' => '系统管理', 'url' => ['/blank'],
                         'items' => [
-                            ['label' => '数据管理', 'url' => yii\helpers\Url::to('/')],
-                            ['label' => '密码修改', 'url' => yii\helpers\Url::to('/')],
-                            ['label' => '系统参数', 'url' => yii\helpers\Url::to('/')],
-                            ['label' => '制度参数', 'url' => yii\helpers\Url::to('/')],
-                            ['label' => '系统日志', 'url' => yii\helpers\Url::to('/')],
+                            ['label' => '数据管理', 'url' => yii\helpers\Url::to('/blank')],
+                            ['label' => '密码修改', 'url' => yii\helpers\Url::to('/blank')],
+                            ['label' => '系统参数', 'url' => yii\helpers\Url::to('/blank')],
+                            ['label' => '制度参数', 'url' => yii\helpers\Url::to('/blank')],
+                            ['label' => '系统日志', 'url' => yii\helpers\Url::to('/blank')],
                         ]
                     ],
                     ['label' => '备份数据库', 'url' => ['/system/backup']],

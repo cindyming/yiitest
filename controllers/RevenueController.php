@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\RevenueSearch;
 use Yii;
 use app\models\Revenue;
 use yii\data\ActiveDataProvider;
@@ -32,18 +33,61 @@ class RevenueController extends Controller
      */
     public function actionAdminindex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Revenue::find(),
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-        ]);
+        $searchModel = new RevenueSearch();
+
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $dataProvider->pagination = [
+            'pageSize' => 20,
+        ];
+
 
         return $this->render('adminindex', [
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
     }
 
+    /**
+     * Lists all Revenue models.
+     * @return mixed
+     */
+    public function actionAdmintotal()
+    {
+
+        $searchModel = new RevenueSearch();
+
+        $dataProvider = $searchModel->searchTotal(Yii::$app->request->queryParams);
+
+        $dataProvider->pagination = [
+            'pageSize' => 20,
+        ];
+
+
+        return $this->render('admintotal', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
+    }
+
+    /**
+     * Lists all Revenue models.
+     * @return mixed
+     */
+    public function actionTotal()
+    {
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => Revenue::find()
+                        ->select(['id', 'sum(bonus) as bonus_total', 'sum(merit) as merit_total', 'user_id'])
+                        ->where(['=', 'user_id', Yii::$app->user->identity->id]),
+        ]);
+
+
+        return $this->render('total', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
 
     /**
      * Lists all Revenue models.
@@ -51,16 +95,24 @@ class RevenueController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Revenue::find()->where(['=', 'user_id', Yii::$app->user->identity->id]),
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-        ]);
+        $searchModel = new RevenueSearch();
+
+        $data = Yii::$app->request->queryParams;
+
+        $data['Revenue']['user_id'] = Yii::$app->user->identity->id;
+
+        $dataProvider = $searchModel->search($data);
+
+        $dataProvider->pagination = [
+            'pageSize' => 10,
+        ];
+
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
+
     }
 
     /**
