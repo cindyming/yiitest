@@ -15,19 +15,91 @@ class MeritController extends Controller
     {
         $query = User::find()->where(['=','role_id', 3]);
         $query->andWhere(['=','merited', 0]);
-        $query->orderBy([ 'id' => SORT_DESC, ]);
+        $query->orderBy([ 'id' => SORT_ASC, ]);
 
         $users = new ActiveDataProvider([
             'query' => $query
         ]);
 
         foreach ($users->models as $user) {
-            $this->calculateMerit($user, $user->investment, $user->investment, '新增新会员:' . $user->id);
+            $parents = array();
+                // $this->calculateMerit($user, $user->investment, $user->investment, '新增新会员:' . $user->id);
 
-            /** to do
-             * 1. list all the parent user for this user
-             * 2. calculate the merit and achivements
-             * */
+                /** to do
+                 * 1. list all the parent user for this user
+                 * 2. calculate the merit and achivements
+                 * */
+            $this->listParentsAddMerit($user, $parents, $user->investment);
+            if (count($parents)) {
+                $note = '新增新会员:' . $user->id;
+                $newInvertment = $user->investment;
+                $connection=Yii::$app->db;
+                try {
+                    $transaction = $connection->beginTransaction();
+                    $lastMeritRate = 0;
+                    foreach ($parents as $level => $pars) {
+                        if (count($pars) && ($level > 2)) {
+                            $firstParent = array_shift($pars);
+                            $meritRate = $firstParent->getMeritRate();
+
+                            $data = array(
+                                'user_id' => $firstParent->id,
+                                'note' => $note,
+                                'merit' => $newInvertment * ($meritRate - $lastMeritRate)
+                            );
+
+                            $merit = new Revenue();
+                            $merit->load($data, '');
+                            $merit->save();
+                            $firstParent->save();
+
+                            $total = count($pars);
+                            foreach ($pars as $per) {
+                                $data = array(
+                                    'user_id' => $per->id,
+                                    'note' => $note
+                                );
+                                $data['merit'] = $newInvertment * 0.05 / $total;
+                                $merit = new Revenue();
+                                $merit->load($data, '');
+                                $merit->save();
+                                $per->save();
+                            }
+
+                            $lastMeritRate = $meritRate;
+                        } else {
+                            if (count($per)){
+                                foreach ($pars as $per) {
+                                    $per->save();
+                                }
+                            }
+                        }
+                    }
+                    $transaction->commit();
+                } catch (Exception $e) {
+                    $transaction->rollback();//回滚函数
+                }
+            }
+        }
+    }
+    public function listParentsAddMerit($user, &$parents, $merit)
+    {
+        $parent = $user->getParennt()->one();
+        if ($parent->role_id != 1) {
+            if ($parent->merited == 1) {
+                $nextMerit = $merit;
+            } else {
+                $nextMerit = $merit + $user->achievements;
+            }
+            $parent->achievements += $merit;
+            $parent->level = $parent->calculateLevel();
+            $parent->merited = 1;
+            if (isset($parents[$parent->level])) {
+                $parents[$parent->level] = array($parent);
+            } else {
+                $parents[$parent->level][] = $parent;
+            }
+            $this->listParentsAddMerit($parent, $parents, $nextMerit);
         }
     }
 
