@@ -10,6 +10,6 @@ File=backup-$Now.sql.gz
 
 mysqldump -uroot  -palks@111 mgjiayuan --add-drop-table | gzip > $File
 
-mysql -uroot -palks@111 afs -e "insert into backup (filename) values ('$File');"
+mysql -uroot -palks@111 mgjiayuan -e "insert into backup (filename) values ('$File');"
 
 echo “Your Database Backup Successfully Completed”
