@@ -30,7 +30,7 @@ $isAdmin = Yii::$app->user->identity->isAdmin();
     <div class="top-header">
         <div class="container">
             <?php if ($isAdmin): ?>
-                 <?= $this->render('adminheader') ?>
+                <?= $this->render('adminheader') ?>
             <?php else: ?>
                 <?= $this->render('memberheader') ?>
             <?php endif ?>
@@ -45,13 +45,6 @@ $isAdmin = Yii::$app->user->identity->isAdmin();
     </div>
 </div>
 
-<!-- <footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
-    </div>
-</footer> -->
 
 <?php $this->endBody() ?>
 </body>
