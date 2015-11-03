@@ -33,6 +33,15 @@ class LoginForm extends Model
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'username'   => '会员编号',
+            'password' => '密码',
+            'captcha' => '验证码'
+        ];
+    }
+
     /**
      * Validates the password.
      * This method serves as the inline validation for password.
