@@ -29,7 +29,7 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'admincreate', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview'],
+                        'actions' => ['adminindex', 'admincreate', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -175,7 +175,7 @@ class UserController extends Controller
         $model = new User();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['adminindexunapprove', 'id' => $model->id]);
         } else {
             return $this->render('admincreate', [
                 'model' => $model,

@@ -370,9 +370,6 @@ class Controller extends Component implements ViewContextInterface
     {
         ;
         $content = $this->getView()->render($view, $params, $this);
-        if (Yii::$app->user->getId() && Yii::$app->user->getIdentity()->isAdmin() && (strpos($this->action->id,'admin') !== false)) {
-            $this->layout = 'admin';
-        }
         return $this->renderContent($content);
     }
 
