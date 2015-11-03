@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use dosamigos\ckeditor\CKEditor;  // http://www.yiiframework.com/extension/yii2-ckeditor-widget/
+use kartik\datecontrol\DateControl;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\News */
@@ -17,13 +18,13 @@ use dosamigos\ckeditor\CKEditor;  // http://www.yiiframework.com/extension/yii2-
 
     <?= $form->field($model, 'be_top')->dropDownList(['0' => '正常', '1' => '置顶']) ?>
 
-    <?= $form->field($model, 'public_at')->widget(\kartik\datetime\DateTimePicker::classname(), [
-        'language' => '',
-        'convertFormat' => true,
-        'pluginOptions' => [
-            'autoclose'=>true,
-            'timePicker'=> false,
-            'format' => 'dd-M-yyyy',
+    <?= $form->field($model, 'public_at')->widget(DateControl::classname(), [
+        'type'=>DateControl::FORMAT_DATE,
+        'ajaxConversion'=>false,
+        'options' => [
+            'pluginOptions' => [
+                'autoclose' => true
+            ]
         ]
     ]) ?>
 
