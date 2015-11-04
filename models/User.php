@@ -42,7 +42,20 @@ class User extends ActiveRecord implements IdentityInterface
                     ActiveRecord::EVENT_BEFORE_INSERT => 'referer',
                 ],
                 'value' => function ($event) {
-                        return Yii::$app->user->id;
+                        if (!$this->referer) {
+                            return Yii::$app->user->id;
+                        }
+                    },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'level',
+                ],
+                'value' => function ($event) {
+
+                         return $this->calculateLevel();
+
                     },
             ],
             [

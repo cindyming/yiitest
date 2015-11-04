@@ -27,12 +27,19 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\SerialColumn',
                 'header' => '序号'
+            ],            [
+                'attribute' => 'level',
+                'label'=>'业务等级',
+                'value' => function($model) {
+                        return $model->level ? $model->getLevelOptions()[$model->level] : '';
+                    }
             ],
             [
                 'attribute' => 'id',
                 'filter' => true,
                 'label'=>'会员编号',
             ],
+
             'username',
             'investment',
             'referer',

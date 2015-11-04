@@ -13,8 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -32,6 +30,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'id',
                 'filter' => true,
                 'label'=>'会员编号',
+            ],
+            [
+                'attribute' => 'level',
+                'label'=>'业务等级',
+                'value' => function($model) {
+                        return $model->level ? $model->getLevelOptions()[$model->level] : '';
+                    }
             ],
             'username',
             'identity',

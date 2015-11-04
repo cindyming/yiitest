@@ -33,6 +33,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => true,
                 'label'=>'会员编号',
             ],
+            [
+                'attribute' => 'level',
+                'label'=>'业务等级',
+                'value' => function($model) {
+                        return $model->level ? $model->getLevelOptions()[$model->level] : '';
+                    }
+            ],
             'username',
             'investment',
             'referer',
