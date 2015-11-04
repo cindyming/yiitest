@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use dosamigos\ckeditor\CKEditor;  // http://www.yiiframework.com/extension/yii2-ckeditor-widget/
+use kartik\datecontrol\Module;
 use kartik\datecontrol\DateControl;
 
 /* @var $this yii\web\View */
