@@ -24,7 +24,7 @@ echo Nav::widget([
                 ['label' => '审核会员', 'url' => yii\helpers\Url::to('/user/adminindexunapprove')],
                 ['label' => '正式会员', 'url' => yii\helpers\Url::to('/user/adminindexapprove')],
                 ['label' => '全部会员', 'url' => yii\helpers\Url::to('/user/adminindex')],
-                ['label' => '推荐图', 'url' => yii\helpers\Url::to('/user/digram')],
+                ['label' => '推荐图', 'url' => yii\helpers\Url::to('/user/admintree')],
             ],
         ],
         [
@@ -63,7 +63,6 @@ echo Nav::widget([
                 ['label' => '系统日志', 'url' => yii\helpers\Url::to('/blank')],
             ]
         ],
-        ['label' => '备份数据库', 'url' => ['/blank']],
         Yii::$app->user->isGuest ?
             ['label' => 'Login', 'url' => ['/site/login']] :
             [

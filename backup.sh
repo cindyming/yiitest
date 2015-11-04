@@ -4,9 +4,9 @@ cd /home/backup
 
 echo "You are In Backup Directory"
 
-Now=$(date +"%d-%m-%Y--%H:%M:%S")
+Now=$(date +"%d_%m_%Y_%H_%M_%S")
 
-File=backup-$Now.sql.gz
+File=backup_$Now.sql.gz
 
 mysqldump -uroot  -palks@111 mgjiayuan --add-drop-table | gzip > $File
 

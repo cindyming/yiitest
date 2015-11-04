@@ -1,0 +1,18 @@
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.0.9/themes/default/style.min.css" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.0.9/jstree.min.js"></script>
+
+<div id="container"></div>
+<script>
+    $(function() {
+        $('#container').jstree({
+            'core' : {
+                'data' : {
+                    "url" : "/user/admintreelazy",
+                    "dataType" : "json" // needed only if you do not supply JSON headers
+                }
+            }
+        });
+    });
+</script>

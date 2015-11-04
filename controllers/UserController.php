@@ -29,7 +29,7 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'admincreate', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
+                        'actions' => ['adminindex', 'admincreate', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -181,6 +181,61 @@ class UserController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+
+    public function actionAdmintreelazy()
+    {
+        $users = User::find()->where(['!=', 'id', 10000001])->orderBy(['id' => SORT_DESC])->all();
+
+        $result = array();
+
+        foreach ($users as $use) {
+            $result[] = array(
+                "id" => $use->id,
+                "parent" => $use->referer,
+                "text" => $use->id . "(" . $use->investment . ")"
+            );
+//            if (!isset($result[$use->id])) {
+//                $result[$use->id]['id'] = $use->id;
+//                $result[$use->id]['text'] = $use->id . "(" . $use->investment . ")";
+//            }
+//
+//            if (!isset($result[$use->referer])) {
+//                $result[$use->referer] = array('children'=> array());
+//            }
+//            $result[$use->referer]['children'][] = $result[$use->id];
+//            unset($result[$use->id]);
+
+        }
+        echo json_encode($result);
+    }
+
+    public function actionAdmintree()
+    {
+        $users = User::find()->where(['!=', 'id', 10000001])->orderBy(['id' => SORT_ASC])->all();
+
+        $result = array();
+
+        foreach ($users as $use) {
+            $result[] = array(
+                "id" => $use->id,
+                "parent" => ($use->referer == 10000001) ? '#' : $use->referer,
+                "text" => $use->id . "(" . $use->investment . ")"
+            );
+//            if (!isset($result[$use->id])) {
+//                $result[$use->id]['id'] = $use->id;
+//                $result[$use->id]['text'] = $use->id . "(" . $use->investment . ")";
+//            }
+//
+//            if (!isset($result[$use->referer])) {
+//                $result[$use->referer] = array('children'=> array());
+//            }
+//            $result[$use->referer]['children'][] = $result[$use->id];
+//            unset($result[$use->id]);
+
+        }
+        $data = ($result);
+        return $this->render('admintree',array( 'data' => $data));
     }
 
     /**

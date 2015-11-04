@@ -331,6 +331,12 @@ class User extends ActiveRecord implements IdentityInterface
         return $this->hasOne(User::className(), ['id' => 'referer'])->from(User::tableName().' us');// from设置别名，尽量避免手写表名称，会要求手动添加表前缀
     }
 
+    public function getChild()
+    {
+        return $this->hasOne(User::className(), ['referer' => 'id'])->from(User::tableName().' us');// from设置别名，尽量避免手写表名称，会要求手动添加表前缀
+    }
+
+
     public function getBankNames()
     {
         return  array('ICBC' => '工商银行', 'ABC' => '农业银行');
