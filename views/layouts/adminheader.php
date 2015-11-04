@@ -24,25 +24,24 @@ echo Nav::widget([
                 ['label' => '审核会员', 'url' => yii\helpers\Url::to('/user/adminindexunapprove')],
                 ['label' => '正式会员', 'url' => yii\helpers\Url::to('/user/adminindexapprove')],
                 ['label' => '全部会员', 'url' => yii\helpers\Url::to('/user/adminindex')],
+                ['label' => '报单员申请', 'url' => yii\helpers\Url::to('/user/adminapplyindex')],
                 ['label' => '推荐图', 'url' => yii\helpers\Url::to('/user/admintree')],
             ],
         ],
         [
             'label' => '财务管理', 'url' => ['/invest/adminabout'],
             'items' => [
-                ['label' => '奖金结算', 'url' => yii\helpers\Url::to('/revenue/adminindex')],
+                ['label' => '奖金明细', 'url' => yii\helpers\Url::to('/revenue/adminindex')],
                 ['label' => '奖金统计', 'url' => yii\helpers\Url::to('/revenue/admintotal')],
-                ['label' => '拨比统计', 'url' => yii\helpers\Url::to('/blank')],
+                ['label' => '拨比统计', 'url' => yii\helpers\Url::to('/revenue/adminglobal')],
+                ['label' => '出帐明细', 'url' => yii\helpers\Url::to('/blank')],
+                ['label' => '入账明细', 'url' => yii\helpers\Url::to('/blank')],
+                ['label' => '提现管理', 'url' => yii\helpers\Url::to('/cash/adminindex')],
             ]
         ],
         [
             'label' => '电子货币', 'url' => ['/blank'],
             'items' => [
-                ['label' => '添加货币', 'url' => yii\helpers\Url::to('/blank')],
-                ['label' => '账户管理', 'url' => yii\helpers\Url::to('/blank')],
-                ['label' => '出帐明细', 'url' => yii\helpers\Url::to('/blank')],
-                ['label' => '入账明细', 'url' => yii\helpers\Url::to('/blank')],
-                ['label' => '体现管理', 'url' => yii\helpers\Url::to('/blank')],
             ]
         ],
         [
@@ -56,7 +55,6 @@ echo Nav::widget([
         [
             'label' => '系统管理', 'url' => ['/blank'],
             'items' => [
-                ['label' => '数据管理', 'url' => yii\helpers\Url::to('/blank')],
                 ['label' => '密码修改', 'url' => yii\helpers\Url::to('/blank')],
                 ['label' => '系统参数', 'url' => yii\helpers\Url::to('/blank')],
                 ['label' => '制度参数', 'url' => yii\helpers\Url::to('/blank')],

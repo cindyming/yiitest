@@ -6,7 +6,6 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\helpers\Security;
 use yii\web\IdentityInterface;
-use app\models\Revenue;
 use yii\behaviors\AttributeBehavior;
 
 class User extends ActiveRecord implements IdentityInterface
@@ -129,7 +128,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['password1'], 'compare', 'compareAttribute' => 'password'],
             [['password3'], 'compare', 'compareAttribute' => 'password2'],
             [['approved_at'], 'string'],
-            [['role_id', 'merited', 'level'], 'number'],
+            [['role_id', 'merited', 'level', 'add_member'], 'number'],
             [['email'], 'email'],
             [['qq'], 'number']
         ];
@@ -153,6 +152,7 @@ class User extends ActiveRecord implements IdentityInterface
             'title' => '称谓',
             'referer' => '推荐人',
             'investment' => '投资额',
+            'add_member' => '开放报单员权限',
             'bank' => '银行名称',
             'level' => '会员等级',
             'cardname' => '开户名',

@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => true,
                 'label'=>'会员编号',
             ],
+            'username',
             [
                 'attribute' => 'level',
                 'label'=>'业务等级',
@@ -40,7 +41,13 @@ $this->params['breadcrumbs'][] = $this->title;
                         return $model->level ? $model->getLevelOptions()[$model->level] : '';
                     }
             ],
-            'username',
+            [
+                'attribute' => 'add_member',
+                'label'=>'报单员',
+                'value' => function($model) {
+                        return $model->add_member == 2 ? '是':'否';
+                    }
+            ],
             'investment',
             'referer',
             'phone',

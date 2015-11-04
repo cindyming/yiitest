@@ -29,7 +29,7 @@ class RevenueController extends Controller
                     'rules' => [
                         [
                             'allow' => true,
-                            'actions' => ['adminindex', 'admintotal'],
+                            'actions' => ['adminindex', 'admintotal', 'adminglobal', 'adminin'],
                             'roles' => [User::ROLE_ADMIN]
                         ],
                         [
@@ -64,6 +64,42 @@ class RevenueController extends Controller
 
 
         return $this->render('adminindex', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
+    }
+
+    public function actionAdminglobal()
+    {
+        $connection=Yii::$app->db;
+
+        $invertTotal = $connection->createCommand('SELECT sum(investment) as "total" FROM user WHERE role_id!=1')->queryColumn(['total']);
+        $invertTotal = $invertTotal[0];
+
+        $outTotal = $connection->createCommand('SELECT sum(bonus) as "bonus_total", sum(merit) as "merit_total" FROM revenue')->queryAll();
+;
+        $bonusTotal = $outTotal[0]['bonus_total'] ? $outTotal[0]['bonus_total'] : 0;
+        $meritTotal = $outTotal[0]['merit_total'] ? $outTotal[0]['merit_total'] : 0;
+
+        return $this->render('adminglobal', [
+            'inTotal' => $invertTotal,
+            'bonusTotal' => $bonusTotal,
+            'meritTotal' => $meritTotal
+        ]);
+    }
+
+    public function actionAdminin()
+    {
+        $searchModel = new RevenueSearch();
+
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $dataProvider->pagination = [
+            'pageSize' => 20,
+        ];
+
+
+        return $this->render('adminin', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
         ]);

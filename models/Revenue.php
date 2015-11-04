@@ -12,6 +12,7 @@ class Revenue extends ActiveRecord
 {
     public $bonus_total;
     public $merit_total;
+    public $type;
 
     public $dynTableName = '{{%revenue}}';
 

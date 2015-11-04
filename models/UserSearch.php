@@ -19,8 +19,8 @@ class UserSearch extends User
     public function rules()
     {
         return [
-            [['id', 'offical', 'locked', 'role_id', 'referer', 'investment'], 'integer'],
-            [['auth_key', 'access_token', 'username', 'password', 'password2', 'identity', 'phone', 'title', 'bank', 'cardname', 'cardnumber', 'bankaddress', 'email', 'qq', 'created_at', 'updated_at', 'approved_at'], 'safe'],
+            [['id', 'offical', 'locked', 'role_id', 'referer', 'investment', 'add_member'], 'integer'],
+            [['auth_key', 'access_token', 'username', 'password', 'password2', 'add_member', 'identity', 'phone', 'title', 'bank', 'cardname', 'cardnumber', 'bankaddress', 'email', 'qq', 'created_at', 'updated_at', 'approved_at'], 'safe'],
         ];
     }
 
@@ -67,6 +67,7 @@ class UserSearch extends User
             'referer' => $this->referer,
             'investment' => $this->investment,
             'approved_at' => $this->approved_at,
+            'add_member' => $this->add_member,
         ]);
 
         $query->andFilterWhere(['like', 'auth_key', $this->auth_key])

@@ -28,7 +28,9 @@ echo Nav::widget([
         [
             'label' => '业务中心', 'url' => ['/user/create'],
             'items' => [
-                ['label' => '会员注册', 'url' => ['/user/create']],
+                Yii::$app->user->identity->add_member == 2 ?
+                    ['label' => '会员注册', 'url' => ['/user/create']]:
+                  ['label' => '申请成为报单员', 'url' => ['/user/applyaddmember']],
                 ['label' => '我的推荐', 'url' => ['/user/index', 'referer' => Yii::$app->user->identity->id]]
             ]
         ],
@@ -36,16 +38,23 @@ echo Nav::widget([
             'label' => '财务管理', 'url' => ['/blank'],
             'items' => [
                 ['label' => '奖金明细', 'url' => ['/revenue/index']],
-                ['label' => '奖金统计', 'url' => ['/revenue/total']]
+                ['label' => '奖金统计', 'url' => ['/revenue/total']],
+                ['label' => '入账明细', 'url' => ['/blank']],
+                ['label' => '出帐明细', 'url' => ['/blank']],
+                [
+                    'label' => '提现管理', 'url' => ['/cash/index'],
+                    'items' => [
+                        ['label' => '提现管理', 'url' => ['/cash/index']],
+                        ['label' => '申请提现', 'url' => ['/cash/create']],
+                    ]
+                ],
+                ['label' => '汇款提醒', 'url' => ['/blank']],
             ]
         ],
         [
             'label' => '电子货币', 'url' => ['/blank'],
             'items' => [
-                ['label' => '入账明细', 'url' => ['/blank']],
-                ['label' => '出帐明细', 'url' => ['/blank']],
-                ['label' => '申请提现', 'url' => ['/blank']],
-                ['label' => '汇款提醒', 'url' => ['/blank']],
+
             ]
         ],
         [

@@ -29,12 +29,12 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'admincreate', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
+                        'actions' => ['adminindex', 'admincreate', 'adminapplyindex','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'changepassword', 'create', 'delete'],
+                        'actions' => ['index', 'changepassword', 'create', 'delete', 'view', 'applyaddmember'],
                         'roles' => [User::ROLE_USER],
                     ],
                 ],
@@ -47,6 +47,7 @@ class UserController extends Controller
             ],
         ];
     }
+
 
     /**
      * Lists all User models.
@@ -121,6 +122,44 @@ class UserController extends Controller
     }
 
     /**
+     * Lists all User models.
+     * @return mixed
+     */
+    public function actionAdminapplyindex()
+    {
+        $searchModel = new UserSearch();
+
+        $data = Yii::$app->request->queryParams;
+
+        $data['UserSearch']['add_member'] = 1;
+
+        $dataProvider = $searchModel->search($data);
+
+        $dataProvider->pagination = [
+            'pageSize' => 20,
+        ];
+
+
+        return $this->render('adminapplyindex', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
+    }
+
+
+    public function actionAdminapproveforaddmember($id)
+    {
+        $model = $this->findModel($id);
+        $model->add_member = 2;
+
+        if ( $model->save()) {
+            return $this->redirect(['adminindexapprove']);
+        } else {
+            return $this->redirect(['adminapplyindex']);
+        }
+    }
+
+    /**
      * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
@@ -183,32 +222,6 @@ class UserController extends Controller
         }
     }
 
-    public function actionAdmintreelazy()
-    {
-        $users = User::find()->where(['!=', 'id', 10000001])->orderBy(['id' => SORT_DESC])->all();
-
-        $result = array();
-
-        foreach ($users as $use) {
-            $result[] = array(
-                "id" => $use->id,
-                "parent" => $use->referer,
-                "text" => $use->id . "(" . $use->investment . ")"
-            );
-//            if (!isset($result[$use->id])) {
-//                $result[$use->id]['id'] = $use->id;
-//                $result[$use->id]['text'] = $use->id . "(" . $use->investment . ")";
-//            }
-//
-//            if (!isset($result[$use->referer])) {
-//                $result[$use->referer] = array('children'=> array());
-//            }
-//            $result[$use->referer]['children'][] = $result[$use->id];
-//            unset($result[$use->id]);
-
-        }
-        echo json_encode($result);
-    }
 
     public function actionAdmintree()
     {
@@ -222,17 +235,6 @@ class UserController extends Controller
                 "parent" => ($use->referer == 10000001) ? '#' : $use->referer,
                 "text" => $use->id . "(" . $use->investment . ")"
             );
-//            if (!isset($result[$use->id])) {
-//                $result[$use->id]['id'] = $use->id;
-//                $result[$use->id]['text'] = $use->id . "(" . $use->investment . ")";
-//            }
-//
-//            if (!isset($result[$use->referer])) {
-//                $result[$use->referer] = array('children'=> array());
-//            }
-//            $result[$use->referer]['children'][] = $result[$use->id];
-//            unset($result[$use->id]);
-
         }
         $data = ($result);
         return $this->render('admintree',array( 'data' => $data));
@@ -382,5 +384,28 @@ class UserController extends Controller
             ]);
         }
 
+    }
+
+    public function actionApplyaddmember()
+    {
+        $result = array(
+            'status' => 'fail',
+            'message' => ''
+        );
+        $user = $this->findModel(Yii::$app->user->identity->id);
+        if ($user->level > 4) {
+            $user->add_member = 1;
+            if ($user->save() ) {
+                $result['status']  = 'success';
+                $result['message'] = '您的申请已提交, 我们将尽快进行审核';
+            } else {
+                $result['message']  = '您的申请没有提交成功, 请稍后再试, 如还有问题请跟我们的管理员联系';
+            }
+        } else {
+            $result['message']  = '抱歉, 您的级别不够.';
+        }
+
+
+        return $this->render('applyaddmember', $result);
     }
 }
