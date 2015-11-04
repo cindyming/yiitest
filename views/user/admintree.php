@@ -1,4 +1,7 @@
-<?= \yiidreamteam\jstree\JsTree::widget([
+<?php
+use yiidreamteam\jstree\JsTree;
+?>
+<?= JsTree::widget([
     'containerOptions' => [
         'class' => 'data-tree',
     ],
