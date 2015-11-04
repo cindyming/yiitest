@@ -29,7 +29,7 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'admincreate', 'adminapplyindex','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
+                        'actions' => ['adminindex', 'admincreate', 'adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -172,7 +172,7 @@ class UserController extends Controller
 
         if ($model->load($data) && $model->save()) {
             return $this->redirect(['adminindexapprove']);
-        } else {var_dump($model->getErrors());die;
+        } else {
             return $this->redirect(['adminindexunapprove']);
         }
     }
@@ -407,5 +407,33 @@ class UserController extends Controller
 
 
         return $this->render('applyaddmember', $result);
+    }
+
+    public function actionAdminchange()
+    {
+        $model = $this->findModel(Yii::$app->user->id);
+        $result= array ('status' => false, 'message' => '密码修改成功');
+
+        $data = Yii::$app->request->post('User');
+        if (count($data)) {
+            if (isset($data['password'])) {
+                if ($model->validatePassword($data['password_old'])) {
+                    $model->setAttributes($data);
+                    if ($model->save()) {
+                        $result['status'] = true;
+                    } else {
+                        $result= array ('status' => false, 'message' => '密码修改失败');
+                    }
+                } else {
+                    $result['message'] = '原密码有误, 请输入正确的原密码';
+                }
+            }
+        } else {
+            $result['status'] = null;
+            unset($result['message']);
+        }
+        $result['model'] = $model;
+
+        return $this->render('adminchange', $result);
     }
 }

@@ -19,7 +19,7 @@ $this->title = '密码修改';
         <div id="changeFirstPassword" class="two-cols">
             <?php $form = ActiveForm::begin(); ?>
 
-            <?= $form->field($model, 'password_old')->passwordInput(['maxlength' => true, 'label' => '原一级密码']) ?>
+            <?= $form->field($model, 'password_old')->passwordInput(['maxlength' => true, 'label' => '原一级密码', 'value' => '']) ?>
 
             <?= $form->field($model, 'password')->passwordInput(['maxlength' => true, 'label' => '新一级密码']) ?>
 
@@ -35,7 +35,7 @@ $this->title = '密码修改';
         <div id="changeSecondPassword" class="two-cols">
             <?php $form = ActiveForm::begin(); ?>
 
-            <?= $form->field($model, 'password2_old')->passwordInput(['maxlength' => true, 'label' => '原二级密码']) ?>
+            <?= $form->field($model, 'password2_old')->passwordInput(['maxlength' => true, 'label' => '原二级密码', 'value' => '']) ?>
 
             <?= $form->field($model, 'password2')->passwordInput(['maxlength' => true, 'label' => '新二级密码']) ?>
 

@@ -34,8 +34,8 @@ echo Nav::widget([
                 ['label' => '奖金明细', 'url' => yii\helpers\Url::to('/revenue/adminindex')],
                 ['label' => '奖金统计', 'url' => yii\helpers\Url::to('/revenue/admintotal')],
                 ['label' => '拨比统计', 'url' => yii\helpers\Url::to('/revenue/adminglobal')],
-                ['label' => '出帐明细', 'url' => yii\helpers\Url::to('/blank')],
-                ['label' => '入账明细', 'url' => yii\helpers\Url::to('/blank')],
+                ['label' => '出帐明细', 'url' => yii\helpers\Url::to('/cash/adminout')],
+                ['label' => '入账明细', 'url' => yii\helpers\Url::to('/revenue/adminin')],
                 ['label' => '提现管理', 'url' => yii\helpers\Url::to('/cash/adminindex')],
             ]
         ],
@@ -55,7 +55,7 @@ echo Nav::widget([
         [
             'label' => '系统管理', 'url' => ['/blank'],
             'items' => [
-                ['label' => '密码修改', 'url' => yii\helpers\Url::to('/blank')],
+                ['label' => '密码修改', 'url' => yii\helpers\Url::to('/user/adminchange')],
                 ['label' => '系统参数', 'url' => yii\helpers\Url::to('/blank')],
                 ['label' => '制度参数', 'url' => yii\helpers\Url::to('/blank')],
                 ['label' => '系统日志', 'url' => yii\helpers\Url::to('/blank')],

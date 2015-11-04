@@ -19,6 +19,7 @@ class User extends ActiveRecord implements IdentityInterface
     public $password_check;
     public $password2_old;
     public $captcha;
+    public $old_username;
 
     public $dynTableName = '{{%user}}';
 
@@ -145,6 +146,7 @@ class User extends ActiveRecord implements IdentityInterface
             'password' => '一级密码',
             'password1' => '一级密码确认',
             'password_check' => '您的二级密码',
+            'old_username' => '原登录名',
             'password2' => '二级密码',
             'password3' => '二级密码确认',
             'identity' => '证件号码',

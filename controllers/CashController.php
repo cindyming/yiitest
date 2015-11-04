@@ -29,7 +29,7 @@ class CashController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'adminreject', 'adminapprove', 'adminupdate',  'adminview'],
+                        'actions' => ['adminindex', 'adminreject', 'adminapprove', 'adminupdate',  'adminview', 'adminout'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -58,6 +58,19 @@ class CashController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('adminindex', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionAdminout()
+    {
+        $searchModel = new CashSearch();
+        $data = Yii::$app->request->queryParams;
+        $data['CashSearch']['status'] = 2;
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('adminout', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
