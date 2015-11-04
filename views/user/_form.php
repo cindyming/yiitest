@@ -28,6 +28,10 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'password3')->passwordInput(['maxlength' => true]) ?>
 
+    <?php if(Yii::$app->user->identity->isAdmin()): ?>
+        <?= $form->field($model, 'level')->dropDownList(Yii::$app->user->identity->getLevelOptions()) ?>
+    <?php endif ?>
+
     <?= $form->field($model, 'identity')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>

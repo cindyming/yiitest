@@ -154,6 +154,7 @@ class User extends ActiveRecord implements IdentityInterface
             'referer' => '推荐人',
             'investment' => '投资额',
             'bank' => '银行名称',
+            'level' => '会员等级',
             'cardname' => '开户名',
             'cardnumber' => '银行账号',
             'bankaddress' => '开户地址',

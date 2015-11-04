@@ -8,7 +8,7 @@ use kartik\daterange\DateRangePicker;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '信息管理';
+$this->title = '公告管理';
 ?>
 <div class="news-index">
 

@@ -6,7 +6,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\News */
 
-$this->title = 'Create News';
+$this->title = '添加公告';
 
 ?>
 <div class="news-create">
