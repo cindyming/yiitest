@@ -44,6 +44,8 @@ class User extends ActiveRecord implements IdentityInterface
                 'value' => function ($event) {
                         if (!$this->referer) {
                             return Yii::$app->user->id;
+                        } else {
+                            return $this->referer;
                         }
                     },
             ],
