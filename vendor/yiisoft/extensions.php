@@ -93,6 +93,15 @@ return array (
       '@yii/codeception' => $vendorDir . '/yiisoft/yii2-codeception',
     ),
   ),
+  'kartik-v/yii2-widget-datepicker' =>
+    array (
+        'name' => 'kartik-v/yii2-widget-datepicker',
+        'version' => '9999999-dev',
+        'alias' =>
+            array (
+                '@kartik/date' => $vendorDir . '/kartik-v/yii2-widget-datepicker',
+            ),
+    ),
   'kartik-v/yii2-datecontrol' => 
   array (
     'name' => 'kartik-v/yii2-datecontrol',
@@ -138,15 +147,7 @@ return array (
       '@kartik/tree' => $vendorDir . '/kartik-v/yii2-tree-manager',
     ),
   ),
-  'kartik-v/yii2-widget-datepicker' => 
-  array (
-    'name' => 'kartik-v/yii2-widget-datepicker',
-    'version' => '9999999-dev',
-    'alias' => 
-    array (
-      '@kartik/date' => $vendorDir . '/kartik-v/yii2-widget-datepicker',
-    ),
-  ),
+
   'yiisoft/yii2-debug' => 
   array (
     'name' => 'yiisoft/yii2-debug',
