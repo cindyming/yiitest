@@ -68,7 +68,7 @@ class MeritController extends Controller
 
                             $lastMeritRate = $meritRate;
                         } else {
-                            if (count($per)){
+                            if (count($pars)){
                                 foreach ($pars as $per) {
                                     $per->save();
                                 }
