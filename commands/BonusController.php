@@ -12,9 +12,9 @@ class BonusController extends Controller
 {
     private $_diff = 200000;
 
-    public function actionIndex($message = 'hello world')
+    public function actionIndex()
     {
-        $query = User::find()->where(['=','role_id', 3]);
+        $query = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0]);
 
         $users = new ActiveDataProvider([
             'query' => $query,

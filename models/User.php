@@ -373,7 +373,7 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
-    public function getMeritRate()
+    public function getMeritRate($level = false)
     {
         $merits = array(
             3 => 0.05,
@@ -382,7 +382,7 @@ class User extends ActiveRecord implements IdentityInterface
             6 => 0.23,
             7 => 0.31,
         );
-        return $merits[$this->level];
+        return $merits[$level ? $level : $this->level];
     }
 
     public function diamondLevel()

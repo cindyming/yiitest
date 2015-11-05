@@ -41,7 +41,7 @@ class MeritController extends Controller
                         if (count($pars) && ($level > 2)) {
                             $firstParent = $pars[0];
                             unset($pars[0]);
-                            $meritRate = $firstParent->getMeritRate();
+                            $meritRate = $firstParent->getMeritRate($level);
 
                             $data = array(
                                 'user_id' => $firstParent->id,

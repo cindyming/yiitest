@@ -8,7 +8,7 @@ use yii\bootstrap\NavBar;
 
 ?>
 
-<h2>ADMIN</h2>
+<h2>管理员界面</h2>
 <div class="m-info">
     <?php echo  '欢迎 (' . Yii::$app->user->identity->username . ')' ?>
 </div>
