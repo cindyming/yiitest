@@ -23,7 +23,7 @@ $isAdmin = Yii::$app->user->identity->isAdmin();
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="u_member">
+<body class="<?php echo $isAdmin ? 'u_admin' : 'u_member'; ?>">
 <?php $this->beginBody() ?>
 
 <div class="wrap <?php if (!$isAdmin): ?> member <?php endif ?>">

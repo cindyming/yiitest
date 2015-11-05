@@ -363,6 +363,8 @@ class UserController extends Controller
                     if ($model->save()) {
                         $success = true;
                     }
+                } else {
+                    $model->addError('password_old', '原一级密码不正确');
                 }
             } else if (isset($data['password2'])){
                 if ($model->validatePassword2($data['password2_old'])) {
@@ -370,6 +372,8 @@ class UserController extends Controller
                     if ($model->save()) {
                         $success = true;
                     }
+                } else {
+                    $model->addError('password_old', '原二级密码不正确');
                 }
             }
         }
