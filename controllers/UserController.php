@@ -232,7 +232,7 @@ class UserController extends Controller
         foreach ($users as $use) {
             $result[] = array(
                 "id" => $use->id,
-                "parent" => ($use->referer == 10000001) ? '#' : $use->referer,
+                "parent" => (($use->referer == 10000001) || ($use->referer == 0)) ? '#' : $use->referer,
                 "text" => $use->id . "(" . $use->investment . ")"
             );
         }
