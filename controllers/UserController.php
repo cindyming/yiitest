@@ -29,12 +29,12 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'admincreate', 'delete', 'adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
+                        'actions' => ['adminindex', 'admincreate', 'delete', 'success','adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'changepassword', 'create', 'view', 'applyaddmember'],
+                        'actions' => ['index', 'changepassword', 'create', 'success', 'view', 'applyaddmember'],
                         'roles' => [User::ROLE_USER],
                     ],
                 ],
@@ -214,7 +214,7 @@ class UserController extends Controller
         $model = new User();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['adminindexunapprove', 'id' => $model->id]);
+            return $this->redirect(['success', 'id' => $model->id]);
         } else {
             return $this->render('admincreate', [
                 'model' => $model,
@@ -251,7 +251,7 @@ class UserController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['adminindex', 'id' => $model->id]);
+            return $this->redirect(['adminindexapprove', 'id' => $model->id]);
         } else {
             return $this->render('adminupdate', [
                 'model' => $model,
@@ -299,7 +299,7 @@ class UserController extends Controller
         $model = new User();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['success', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -435,5 +435,10 @@ class UserController extends Controller
         $result['model'] = $model;
 
         return $this->render('adminchange', $result);
+    }
+
+    public function actionSuccess()
+    {
+        return $this->render('success');
     }
 }

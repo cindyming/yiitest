@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-
+    <div style="color:#ff0000;margin:10px 0px">会员审核后5分钟内系统计算发放绩效，请届时刷新页面</div>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -76,7 +76,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             $options = [
                                 'title' => Yii::t('yii', '审核'),
                                 'aria-label' => Yii::t('yii', '审核'),
-                                'data-pjax' => '0',
                                 'data-confirm' => Yii::t('yii', '你确定要审核会员[' . $model->id . ']吗?'),
                                 'data-method' => 'post',
                             ];
