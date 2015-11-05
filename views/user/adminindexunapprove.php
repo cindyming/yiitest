@@ -49,6 +49,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '删除',
                 'template' => '{delete}',
+                'buttons' => [
+                    'delete' => function ($url, $model, $key) {
+                            $options = [
+                                'title' => Yii::t('yii', '删除'),
+                                'aria-label' => Yii::t('yii', '删除'),
+                                'data-confirm' => Yii::t('yii', '你确定要删除会员[' . $model->id . ']吗?'),
+                                'data-method' => 'post',
+                            ];
+                            return Html::a('删除', $url, $options);
+                        },
+                ],
+                'urlCreator' => function ($action, $model, $key, $index) {
+                        if ($action === 'delete') {
+                            $url ='/user/delete?id='.$model->id;
+                            return $url;
+                        }
+                    }
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
