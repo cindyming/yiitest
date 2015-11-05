@@ -86,7 +86,7 @@ class MeritController extends Controller
     public function listParentsAddMerit($user, &$parents, $merit)
     {
         $parent = $user->getParennt()->one();
-        if ($parent->role_id != 1) {
+        if ($parent && $parent->role_id != 1) {
             if ($parent->merited == 1) {
                 $nextMerit = $merit;
             } else {
