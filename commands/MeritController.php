@@ -39,7 +39,8 @@ class MeritController extends Controller
                     $lastMeritRate = 0;
                     foreach ($parents as $level => $pars) {
                         if (count($pars) && ($level > 2)) {
-                            $firstParent = array_shift($pars);
+                            $firstParent = $pars[0];
+                            unset($pars[0]);
                             $meritRate = $firstParent->getMeritRate();
 
                             $data = array(
@@ -88,20 +89,13 @@ class MeritController extends Controller
     {
         $parent = $user->getParennt()->one();
         if ($parent && $parent->role_id != 1) {
-            if ($parent->merited == 1) {
-                $nextMerit = $merit;
-            } else {
-                $nextMerit = $merit + $user->achievements;
-            }
             $parent->achievements += $merit;
             $parent->level = $parent->calculateLevel();
-            $parent->merited = 1;
-            if (isset($parents[$parent->level])) {
-                $parents[$parent->level] = array($parent);
-            } else {
-                $parents[$parent->level][] = $parent;
+            if (!isset($parents[$parent->level])) {
+                $parents[$parent->level] = array();
             }
-            $this->listParentsAddMerit($parent, $parents, $nextMerit);
+            $parents[$parent->level][] = $parent;
+            $this->listParentsAddMerit($parent, $parents, $merit);
         }
     }
 
