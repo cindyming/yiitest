@@ -89,12 +89,12 @@ class MeritController extends Controller
     {
         $parent = $user->getParennt()->one();
         if ($parent && $parent->role_id != 1) {
-            $parent->achievements += $merit;
-            $parent->level = $parent->calculateLevel();
             if (!isset($parents[$parent->level])) {
                 $parents[$parent->level] = array();
             }
             $parents[$parent->level][] = $parent;
+            $parent->achievements += $merit;
+            $parent->level = $parent->calculateLevel();
             $this->listParentsAddMerit($parent, $parents, $merit);
         }
     }
