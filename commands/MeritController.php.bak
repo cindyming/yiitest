@@ -75,7 +75,6 @@ class MeritController extends Controller
                             }
                         }
                     }
-					$user->merited = 1;
                     $transaction->commit();
                 } catch (Exception $e) {
                     $transaction->rollback();//回滚函数
