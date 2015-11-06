@@ -171,12 +171,13 @@ body.login{background: #2E363F url(bg.jpg) no-repeat center center}
 .loginbox h1{color:#777;font-size:28px;margin-bottom:5%;text-align:center;}
 .loginbox .col-lg-1{width:24%}
 .loginbox .col-lg-3{width:76%;display:inline-block;padding-left:0}
-.loginbox .col-lg-8{padding-left:24%;width:100%}
+.loginbox .col-lg-8{padding-left:24%;width:100%;font-size:12px}
+.loginbox .col-lg-11{padding:0 15px;margin:0;width:100%}
 .loginbox .form-horizontal .control-label{color:#777;}
 .loginbox .form-group{margin-bottom:6px}
 #loginform-captcha{width:135px }
-#loginform-captcha-image{float:right;}
-.loginbox button{width:100%;}
+#loginform-captcha-image{float:right;height:34px;width:auto}
+.loginbox button{width:100%;height:40px;}
 
 /* nav  */
 nav.navbar{margin:20px 0 0;background:transparent;border:none 0;}
