@@ -241,7 +241,7 @@ class UserController extends Controller
             $result[] = array(
                 "id" => $use->id,
                 "parent" => (($use->referer == 10000001) || ($use->referer == 0)) ? '#' : $use->referer,
-                "text" => $use->id . "(" . $use->investment . ")"
+                "text" => $use->id . "(" . $use->achievements . ")"
             );
         }
         $data = ($result);
