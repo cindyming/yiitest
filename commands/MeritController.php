@@ -21,7 +21,7 @@ class MeritController extends Controller
             'query' => $query
         ]);
 
-        $diamondMembers = User::find()->where(['=','role_id', 3])->andWhere('=', 'level',8);
+        $diamondMembers = User::find()->where(['=','role_id', 3])->andWhere('=', 'level',8)->all();
 
         foreach ($users->models as $user) {
             $parents = array();
