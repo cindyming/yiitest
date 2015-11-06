@@ -94,7 +94,7 @@ class MeritController extends Controller
                         }
                     }
 
-                    if (count($diamondMembers)) {
+                    if (false && count($diamondMembers)) {
                         foreach ($diamondMembers as $per) {
                             $merit_amount = round($newInvertment * 0.02, 2);
                             $data = array(
