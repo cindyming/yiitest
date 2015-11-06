@@ -167,7 +167,7 @@ a.desc:after {
 /* login  */
 label{font-weight:normal;}
 body.login{background: #2E363F url(bg.jpg) no-repeat center center}
-.loginbox{margin:0 auto;width: 400px;padding:5px 20px 20px;background:#fff}
+.loginbox{margin:0 auto;width: 400px;padding:5px 20px 20px;background:#fff;margin:5% auto 0}
 .loginbox h1{color:#777;font-size:28px;margin-bottom:5%;text-align:center;}
 .loginbox .col-lg-1{width:24%}
 .loginbox .col-lg-3{width:76%;display:inline-block;padding-left:0}
