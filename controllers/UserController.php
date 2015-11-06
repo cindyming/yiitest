@@ -407,7 +407,7 @@ class UserController extends Controller
                 $result['message']  = '您的申请没有提交成功, 请稍后再试, 如还有问题请跟我们的管理员联系';
             }
         } else {
-            $result['message']  = '抱歉, 您的级别不够.';
+            $result['message']  = '诶哟, 您的级别还不能申请报单员哦, 继续努力吧！';
         }
 
 

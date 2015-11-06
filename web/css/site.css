@@ -165,19 +165,22 @@ a.desc:after {
 }
 
 /* login  */
-body.login{background: #2E363F}
-.loginbox{margin:0 auto;width: 400px;}
-.loginbox h1{color:#fff;font-size:28px;margin-bottom:5%;text-align:center;}
-.loginbox .col-lg-1{width:30%}
-.loginbox .col-lg-3{width:68%;display:inline-block;}
-.loginbox .col-lg-8{padding-left:34%;width:100%}
-.loginbox .form-horizontal .control-label{color:#fff;}
+label{font-weight:normal;}
+body.login{background: #2E363F url(bg.jpg) no-repeat center center}
+.loginbox{margin:0 auto;width: 400px;padding:5px 20px 20px;background:#fff;margin:5% auto 0}
+.loginbox h1{color:#777;font-size:19px;text-align: center;margin: 0 -20px 8%;border-bottom: 1px solid #ccc;padding: 2% 0 3%;background-color: #efefef;}
+.loginbox .col-lg-1{width:24%}
+.loginbox .col-lg-3{width:73%;display:inline-block;padding-left:0}
+.loginbox .col-lg-8{padding-left:24%;width:100%;font-size:12px}
+.loginbox .col-lg-11{padding:0 15px;margin:0;width:100%}
+.loginbox .form-horizontal .control-label{color:#777;}
+.loginbox .form-group{margin-bottom:6px}
 #loginform-captcha{width:135px }
-#loginform-captcha-image{float:right;}
-.loginbox button{width:100%;}
+#loginform-captcha-image{float:right;height:34px;width:auto}
+.loginbox button{width:100%;height:40px;}
 
 /* nav  */
-nav.navbar{margin:20px 0 0;background:transparent;border:none 0;}
+nav.navbar{margin:35px 0 0;background:transparent;border:none 0;}
 nav.navbar .container{padding:0}
 .sidebar .panel{border:none 0}
 .nav > li{float:left;  margin-top: 2px;}
@@ -187,7 +190,7 @@ nav.navbar .container{padding:0}
 .menubar .kv-sidenav li a:hover{background:#27a9e3;color:#fff}
 .menubar .kv-sidenav a .indicator{color:#939da8}
 .menubar .kv-sidenav a:hover .indicator{color:#fff}
-.navbar-default .navbar-nav > li > a{color:#999;padding: 10px 15px;}
+.navbar-default .navbar-nav > li > a{color:#E2E2E2;padding: 10px 15px;}
 .navbar-default .navbar-nav > li > a:hover{color:#fff}
 .navbar-collapse {padding-right: 0;padding-left: 0;}
 .navbar-default .navbar-nav > .open > a,
@@ -206,10 +209,12 @@ nav.navbar .container{padding:0}
 .dropdown-menu > li > a{padding:8px 20px}
 .dropdown-menu > .active > a{background:transparent;color:#333}
 /* header */
-.top-header{background:#2E363F;color:#fff;padding:1% 0}
+.top-header{background:#2E363F;color:#fff;padding:1% 0 0}
 .top-header h2{float:left;margin:0;font-size:28px;line-height:36px}
 .top-header h3{margin:0}
-.top-header .m-info{color:#999;margin:10px 0;text-align: right;}
+.top-header .m-info{color:#E2E2E2;margin:10px 0;text-align: right;font-size:12px;}
+.top-header .m-info li{display:inline-block;line-height:13px;border-right:1px solid #ccc;padding:0 9px;*display:inline;}
+.top-header .m-info li:last-child{border-right:none 0;padding-right:0}
 .qk-links{}
 .qk-links nav{float:right;background:transparent;border:none 0}
 h1{font-size:22px;margin:20px 0}
