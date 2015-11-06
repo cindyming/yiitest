@@ -39,9 +39,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'investment')->textInput(['maxlength' => true]) ?>
 
-    <?php if (!$model->isNewRecord): ?>
-    <?= $form->field($model, 'locked')->dropDownList([0 => '未锁定', 1 => '锁定']) ?>
-    <?= $form->field($model, 'referer', [ 'template' => "{label}： <label>如会员没有推荐人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true,'readonly' => true])->label() ?>
+    <?php if(!$model->isNewRecord): ?>
+         <?= $form->field($model, 'locked')->dropDownList([0 => '未锁定', 1 => '锁定']) ?>
+         <?= $form->field($model, 'referer', [ 'template' => "{label}： <label>如会员没有推荐人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true,'readonly' => true, 'value' => ($this->referer === 0) ? '#' : $this->referer])->label() ?>
+    <?php else: ?>
+
+        <?= $form->field($model, 'referer', [ 'template' => "{label}： <label>如会员没有推荐人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true])->label() ?>
+
     <?php endif ?>
     <?= $form->field($model, 'bank')->dropDownList(['ICBC' => '工商银行', 'ABC' => '农业银行']) ?>
 
