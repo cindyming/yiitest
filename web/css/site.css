@@ -170,7 +170,7 @@ body.login{background: #2E363F url(bg.jpg) no-repeat center center}
 .loginbox{margin:0 auto;width: 400px;padding:5px 20px 20px;background:#fff;margin:5% auto 0}
 .loginbox h1{color:#777;font-size:28px;margin-bottom:5%;text-align:center;}
 .loginbox .col-lg-1{width:24%}
-.loginbox .col-lg-3{width:76%;display:inline-block;padding-left:0}
+.loginbox .col-lg-3{width:73%;display:inline-block;padding-left:0}
 .loginbox .col-lg-8{padding-left:24%;width:100%;font-size:12px}
 .loginbox .col-lg-11{padding:0 15px;margin:0;width:100%}
 .loginbox .form-horizontal .control-label{color:#777;}
@@ -209,7 +209,7 @@ nav.navbar .container{padding:0}
 .dropdown-menu > li > a{padding:8px 20px}
 .dropdown-menu > .active > a{background:transparent;color:#333}
 /* header */
-.top-header{background:#2E363F;color:#fff;padding:1% 0}
+.top-header{background:#2E363F;color:#fff;padding:1% 0 0}
 .top-header h2{float:left;margin:0;font-size:28px;line-height:36px}
 .top-header h3{margin:0}
 .top-header .m-info{color:#E2E2E2;margin:10px 0;text-align: right;font-size:12px;}
