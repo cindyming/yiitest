@@ -15,9 +15,23 @@ $welcome .= ', 欢迎回来.';
 ?>
     <h2>在线办公平台</h2>
     <div class="m-info">
-        会员ID: <?php echo Yii::$app->user->id?>
-        分红余额:
-        绩效工资余额:
+        <ul>
+            <li>
+                会员ID: <?php echo Yii::$app->user->id?>
+            </li>
+            <li>
+                等级: <?php echo Yii::$app->user->identity->getLevelOptions()[Yii::$app->user->identity->level]; ?>
+            </li>
+            <li>
+                网络昵称: <?php echo Yii::$app->user->identity->username?>
+            </li>
+            <li>
+                分红余额: <?php echo Yii::$app->user->identity->bonus_remain?>
+            </li>
+            <li>
+                绩效工资余额: <?php echo Yii::$app->user->identity->merit_total?>
+            </li>
+        </ul>
     </div>
 <?php
 NavBar::begin();

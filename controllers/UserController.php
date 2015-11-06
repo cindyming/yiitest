@@ -185,8 +185,9 @@ class UserController extends Controller
      */
     public function actionAutologin($id)
     {
-        $model = $this->findModel($id);
+        Yii::$app->user->logout();
 
+        $model = $this->findModel($id);
         Yii::$app->user->login($model, 3600*24*30);
 
         return $this->redirect(['news/index']);

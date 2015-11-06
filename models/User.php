@@ -131,7 +131,8 @@ class User extends ActiveRecord implements IdentityInterface
             [['password1'], 'compare', 'compareAttribute' => 'password'],
             [['password3'], 'compare', 'compareAttribute' => 'password2'],
             [['approved_at'], 'string'],
-            [['role_id', 'merited', 'level', 'add_member'], 'number'],
+            [['role_id', 'merited', 'level', 'add_member', 'stop_bonus', 'level'], 'number'],
+            [['bonus_total', 'merit_total'], 'double'],
             [['email'], 'email'],
             [['qq'], 'number']
         ];
@@ -388,7 +389,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function diamondLevel()
     {
          $users = User::find()->where(['=', 'referer', $this->id])->orderBy(['achievements' => SORT_ASC])->limit(3)->all();
-        if (count($users) > 3 ) {
+        if (count($users) == 3 ) {
             return $users[0]->achievements;
         } else {
             return 0;

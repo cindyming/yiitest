@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'cardname') ?>
         <?= $form->field($model, 'bankaddress') ?>
         <?= $form->field($model, 'amount') ?>
-        <?= $form->field($model, 'password2') ?>
+        <?= $form->field($model, 'password2')->passwordInput() ?>
         <div class="form-group">
             <?= Html::submitButton('确认[分红]提现', ['class' => 'btn btn-primary', 'onClick' => "$('#cash-type').val(1)"]) ?>
             <?= Html::submitButton('确认[绩效]提现', ['class' => 'btn btn-primary', 'onClick' => "$('#cash-type').val(2)"]) ?>

@@ -112,20 +112,48 @@ class CashController extends Controller
     {
         $model = new Cash();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        $data = Yii::$app->request->post();
+        if ($model->load(Yii::$app->request->post()) && isset($data['Cash']) && isset($data['Cash']['password2'])) {
+            if (Yii::$app->user->identity->validatePassword2($data['Cash']['password2'])) {
+                if ($model->save()) {
+                    return $this->redirect(['index']);
+                } else {
+                    return $this->render('create', [
+                        'model' => $model,
+                    ]);
+                }
+            } else {
+                $model->addError('password2', '二级密码不正确, 请输入正确的二级密码');
+            }
         }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     public function actionAdminapprove($id)
     {
         $model = $this->findModel($id);
-        $model->status = 2;
-        $model->save();
+
+        $connection=Yii::$app->db;
+        try {
+            $transaction = $connection->beginTransaction();
+
+            $model->status = 2;
+            $model->save();
+            $user = User::findById($model->user_id);
+            if ($model->type == 1) {
+                $user->bonus_remain = $user->bonus_remain - $model->amount;
+            } else {
+                $user->merit_remain = $user->merit_remain - $model->amount;
+            }
+            $user->save();
+            $transaction->commit();
+        } catch (Exception $e) {
+            $transaction->rollback();//回滚函数
+        }
+
 
         return $this->redirect(['adminindex', 'id' => $model->id]);
 

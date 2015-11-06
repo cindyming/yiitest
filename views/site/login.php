@@ -15,6 +15,7 @@ $this->title = '玫瑰家园';
     <?php $form = ActiveForm::begin([
         'id' => 'loginform',
         'options' => ['class' => 'form-horizontal'],
+        'enableClientValidation' => true,
         'fieldConfig' => [
             'template' => "{label}\n<div class=\"col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
             'labelOptions' => ['class' => 'col-lg-1 control-label'],
@@ -25,8 +26,9 @@ $this->title = '玫瑰家园';
 
     <?= $form->field($model, 'password')->passwordInput() ?>
 
-    <?= $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::classname(), [
-        // configure additional widget properties here
+    <?= $form->field($model, 'captcha')->widget(\yii\captcha\Captcha::classname(),
+        ['captchaAction'=>'site/captcha',
+            'imageOptions'=>['alt'=>'点击换图','title'=>'点击换图', 'style'=>'cursor:pointer']
     ]) ?>
 
     <div class="form-group">

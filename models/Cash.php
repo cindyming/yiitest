@@ -89,6 +89,6 @@ class Cash extends ActiveRecord
 
     public function getStatus($filter =false)
     {
-        return  $filter ? array(''=> '不限', 1 => '未处理', 2 => '已发放', 3 => '拒绝') : array(1 => '未处理', 2 => '发放', 3 => '拒绝');
+        return  $filter ? array(''=> '不限', 1 => '未处理', 2 => '已发放', 3 => '拒绝') : array(1 => '未处理', 2 => '已发放', 3 => '拒绝');
     }
 }

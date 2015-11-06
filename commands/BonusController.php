@@ -29,10 +29,17 @@ class BonusController extends Controller
             } else {
                 $data['bonus'] =  $user->investment * 0.03;
             }
+            $data['total'] = $user->bonus_remain + $data['bonus'];
             $data['note'] = '分红结算: ' .  date('Y-m-d', time());
+            $user->bonus_total = $data['total'];
+            $user->bonus_remain = $user->bonus_remain + $data['bonus'];
             $bonus = new Revenue();
             $bonus->load($data, '');
             $bonus->save();
+            if ($data['total'] > ($user->investment * 2 )) {
+                $user->stop_bonus = 1;
+            }
+            $user->save();
         }
     }
 }

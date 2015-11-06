@@ -23,13 +23,15 @@ class MeritController extends Controller
 
         foreach ($users->models as $user) {
             $parents = array();
+            $noMeritParents = array();
                 // $this->calculateMerit($user, $user->investment, $user->investment, '新增新会员:' . $user->id);
 
                 /** to do
                  * 1. list all the parent user for this user
                  * 2. calculate the merit and achivements
                  * */
-            $this->listParentsAddMerit($user, $parents, $user->investment);
+            $this->listParentsAddMerit($user, $parents, $noMeritParents, $user->investment);
+
             if (count($parents)) {
                 $note = '新增新会员:' . $user->id;
                 $newInvertment = $user->investment;
@@ -42,12 +44,16 @@ class MeritController extends Controller
                             $firstParent = $pars[0];
                             unset($pars[0]);
                             $meritRate = $firstParent->getMeritRate($level);
+                            $merit_amount = $newInvertment * ($meritRate - $lastMeritRate);
 
                             $data = array(
                                 'user_id' => $firstParent->id,
                                 'note' => $note,
-                                'merit' => $newInvertment * ($meritRate - $lastMeritRate)
+                                'merit' => $merit_amount,
+                                'total' => $merit_amount +  $firstParent->merit_remain
                             );
+                            $firstParent->merit_total +=$merit_amount;
+                            $firstParent->merit_remain +=$merit_amount;
 
                             $merit = new Revenue();
                             $merit->load($data, '');
@@ -56,14 +62,18 @@ class MeritController extends Controller
 
                             $total = count($pars);
                             foreach ($pars as $per) {
+                                $merit_amount = round($newInvertment * 0.05 / $total, 2);
                                 $data = array(
                                     'user_id' => $per->id,
-                                    'note' => $note
+                                    'note' => $note,
+                                    'merit' => $merit_amount,
+                                    'total' => $merit_amount +  $per->merit_remain
                                 );
-                                $data['merit'] = $newInvertment * 0.05 / $total;
                                 $merit = new Revenue();
                                 $merit->load($data, '');
                                 $merit->save();
+                                $per->merit_total +=$merit_amount;
+                                $per->merit_remain +=$merit_amount;
                                 $per->save();
                             }
 
@@ -76,6 +86,11 @@ class MeritController extends Controller
                             }
                         }
                     }
+                    if (count($noMeritParents)) {
+                        foreach ($noMeritParents as $per) {
+                            $per->save();
+                        }
+                    }
                     $user->merited = 1;
                     $user->save();
                     $transaction->commit();
@@ -85,17 +100,26 @@ class MeritController extends Controller
             }
         }
     }
-    public function listParentsAddMerit($user, &$parents, $merit)
+
+
+    public function listParentsAddMerit($user, &$parents, &$noMeritParents, $merit, $lastLevel = 0)
     {
         $parent = $user->getParennt()->one();
         if ($parent && $parent->role_id != 1) {
-            if (!isset($parents[$parent->level])) {
-                $parents[$parent->level] = array();
+
+            if ($parent->level < $lastLevel) {
+                $noMeritParents[] = $parent;
+            } else {
+                if (!isset($parents[$parent->level])) {
+                    $parents[$parent->level] = array();
+                }
+                $parents[$parent->level][] = $parent;
+                $lastLevel = $parent->level;
             }
-            $parents[$parent->level][] = $parent;
+
             $parent->achievements += $merit;
             $parent->level = $parent->calculateLevel();
-            $this->listParentsAddMerit($parent, $parents, $merit);
+            $this->listParentsAddMerit($parent, $parents, $noMeritParents, $merit, $lastLevel);
         }
     }
 
