@@ -35,6 +35,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         return $model->bonus + $model->merit;
                     }
             ],
+            [
+                'attribute' => 'total',
+                'label' => '入账后余额',
+            ],
             'created_at',
             [
                 'attribute' => 'approved',

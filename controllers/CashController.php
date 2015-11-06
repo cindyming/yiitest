@@ -83,7 +83,15 @@ class CashController extends Controller
     public function actionIndex()
     {
         $searchModel = new CashSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        $data = Yii::$app->request->queryParams;
+
+        $data['CashSearch']['user_id'] = Yii::$app->user->identity->id;
+
+        $dataProvider = $searchModel->search($data);
+        $dataProvider->pagination = [
+            'pageSize' => 10
+        ];
 
         return $this->render('index', [
             'searchModel' => $searchModel,
