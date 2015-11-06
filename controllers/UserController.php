@@ -171,6 +171,23 @@ class UserController extends Controller
         $data = array('User' => array('approved_at' => date('Y-m-d h:i:s', time()), 'role_id'=> 3));
 
         if ($model->load($data) && $model->save()) {
+            $addedBy = User::findOne($model->added_by);
+            if ($addedBy && $addedBy->getId()) {
+                $meritAmount = round($model->investment * 0.01, 2);
+                $data = array(
+                    'user_id' => $addedBy->id,
+                    'note' => '会员：' .$model->id . '的保单奖励',
+                    'merit' => $meritAmount,
+                    'total' => $meritAmount +  $addedBy->merit_remain
+                );
+                $merit = new Revenue();
+                $merit->load($data, '');
+                $merit->save();
+                $addedBy->merit_remain += $meritAmount;
+                $addedBy->merit_total += $meritAmount;
+                $addedBy->save();
+            }
+
             return $this->redirect(['adminindexapprove']);
         } else {
             return $this->redirect(['adminindexunapprove']);
@@ -216,8 +233,11 @@ class UserController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $user =  User::findOne($model->referer);
+            if ($model->investment < 50000){
+                $model->addError('investment', '投资额不可以少于5W,请重新输入');
+            }
             if ($model->referer === '#' || ($user && $user->getId())) {
-                if ($model->save()) {
+                if (($model->investment >= 50000) && $model->save()) {
                     return $this->redirect(['success', 'id' => $model->id]);
                 }
             } else {

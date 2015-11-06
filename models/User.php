@@ -61,6 +61,15 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'added_by',
+                ],
+                'value' => function ($event) {
+                        return Yii::$app->user->identity->id;
+                    },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'auth_key',
                 ],
                 'value' => function ($event) {
@@ -124,12 +133,12 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password', 'password','title', 'password2', 'identity', 'phone',  'investment', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'required'],
+            [['username', 'password', 'password','title', 'password2', 'added_by', 'identity', 'phone',  'investment', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'required'],
             [['username', 'password'], 'string', 'max' => 100],
             [['password1'], 'compare', 'compareAttribute' => 'password'],
             [['password3'], 'compare', 'compareAttribute' => 'password2'],
             [['approved_at'], 'string'],
-            [['referer'], 'trim'],
+            [['referer', 'added_by'], 'trim'],
             [['role_id', 'merited', 'level', 'add_member', 'stop_bonus', 'level'], 'number'],
             [['bonus_total', 'merit_total'], 'double'],
             [['email'], 'email'],
@@ -395,6 +404,12 @@ class User extends ActiveRecord implements IdentityInterface
         }
     }
 
+    public function isDiamondLevel()
+    {
+        $users = User::find()->where(['=', 'referer', $this->id])->andWhere(['=', 'level', 7])->orderBy(['achievements' => SORT_ASC])->limit(3)->all();
+        return (count($users) == 3) ? true : false;
+    }
+
     public function calculateLevel()
     {
         $achievements = $this->achievements ? $this->achievements : $this->investment;
@@ -412,6 +427,8 @@ class User extends ActiveRecord implements IdentityInterface
                 $level = 5;
             } elseif ($this->achievements < 20000000) {
                 $level = 6;
+            } else if ($this->isDiamondLevel()){
+                $level = 8;
             } else {
                 $level = 7;
             }
