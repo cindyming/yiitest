@@ -133,7 +133,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password', 'password','title', 'password2', 'added_by', 'identity', 'phone',  'investment', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'required'],
+            [['username', 'password', 'password','title', 'password2',  'identity', 'phone',  'investment', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'required'],
             [['username', 'password'], 'string', 'max' => 100],
             [['password1'], 'compare', 'compareAttribute' => 'password'],
             [['password3'], 'compare', 'compareAttribute' => 'password2'],
