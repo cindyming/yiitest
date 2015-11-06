@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Html;
 
-$this->title = '申请报单员' . ($status == 'success' ? '成功' : '失败');
+$this->title = '申请报单员' . ($status == 'success' ? '成功' : '诶哟');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
