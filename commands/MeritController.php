@@ -21,6 +21,8 @@ class MeritController extends Controller
             'query' => $query
         ]);
 
+        $diamondMembers = User::find()->where(['=','role_id', 3])->andWhere('=', 'level',8);
+
         foreach ($users->models as $user) {
             $parents = array();
             $noMeritParents = array();
@@ -91,6 +93,24 @@ class MeritController extends Controller
                             $per->save();
                         }
                     }
+
+                    if (count($diamondMembers)) {
+                        foreach ($diamondMembers as $per) {
+                            $merit_amount = round($newInvertment * 0.02, 2);
+                            $data = array(
+                                'user_id' => $per->id,
+                                'note' => $note,
+                                'merit' => $merit_amount,
+                                'total' => $merit_amount +  $per->merit_remain
+                            );
+                            $merit = new Revenue();
+                            $merit->load($data, '');
+                            $merit->save();
+                            $per->merit_total +=$merit_amount;
+                            $per->merit_remain +=$merit_amount;
+                            $per->save();
+                        }
+                    }
                     $user->merited = 1;
                     $user->achievements += $user->investment;
                     $user->level = $user->calculateLevel();
@@ -116,7 +136,7 @@ class MeritController extends Controller
 
             if ($parent->level < $lastLevel) {
                 $noMeritParents[] = $parent;
-            } else {
+            } else if ($parent->level < 8) {
                 if (!isset($parents[$parent->level])) {
                     $parents[$parent->level] = array();
                 }

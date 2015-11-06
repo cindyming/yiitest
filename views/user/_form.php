@@ -41,7 +41,7 @@ use yii\widgets\ActiveForm;
 
     <?php if(!$model->isNewRecord): ?>
          <?= $form->field($model, 'locked')->dropDownList([0 => '未锁定', 1 => '锁定']) ?>
-         <?= $form->field($model, 'referer', [ 'template' => "{label}： <label>如会员没有推荐人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true,'readonly' => true, 'value' => ($this->referer === 0) ? '#' : $this->referer])->label() ?>
+         <?= $form->field($model, 'referer', [ 'template' => "{label}： <label>如会员没有推荐人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true,'readonly' => true, 'value' => ($model->referer == 0) ? '#' : $model->referer])->label() ?>
     <?php else: ?>
 
         <?= $form->field($model, 'referer', [ 'template' => "{label}： <label>如会员没有推荐人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true])->label() ?>
