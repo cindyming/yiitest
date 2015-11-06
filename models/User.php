@@ -43,7 +43,7 @@ class User extends ActiveRecord implements IdentityInterface
                 ],
                 'value' => function ($event) {
                         if (!$this->referer) {
-                            return Yii::$app->user->id;
+                            return Yii::$app->user->identity->id;
                         } else {
                             return $this->referer;
                         }
@@ -126,11 +126,12 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password', 'password','title', 'password2', 'identity', 'phone', 'referer', 'investment', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'required'],
-            [['username', 'password'], 'string', 'max' => 100],
+            [['username', 'password', 'password','title', 'password2', 'identity', 'phone',  'investment', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'required'],
+            [['username', 'password', 'referer'], 'string', 'max' => 100],
             [['password1'], 'compare', 'compareAttribute' => 'password'],
             [['password3'], 'compare', 'compareAttribute' => 'password2'],
             [['approved_at'], 'string'],
+            [['referer'], 'trim'],
             [['role_id', 'merited', 'level', 'add_member', 'stop_bonus', 'level'], 'number'],
             [['bonus_total', 'merit_total'], 'double'],
             [['email'], 'email'],

@@ -41,10 +41,8 @@ use yii\widgets\ActiveForm;
 
     <?php if (!$model->isNewRecord): ?>
     <?= $form->field($model, 'locked')->dropDownList([0 => '未锁定', 1 => '锁定']) ?>
+    <?= $form->field($model, 'referer', [ 'template' => "{label}： <label>如会员没有推荐人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true,'readonly' => true])->label() ?>
     <?php endif ?>
-
-    <?= $form->field($model, 'referer')->textInput(['maxlength' => true]) ?>
-
     <?= $form->field($model, 'bank')->dropDownList(['ICBC' => '工商银行', 'ABC' => '农业银行']) ?>
 
     <?= $form->field($model, 'cardname')->textInput(['maxlength' => true]) ?>
@@ -59,7 +57,7 @@ use yii\widgets\ActiveForm;
 
     <div class="form-group">
 
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton($model->isNewRecord ? '创建' : '保存', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

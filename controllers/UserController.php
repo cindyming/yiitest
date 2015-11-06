@@ -214,13 +214,20 @@ class UserController extends Controller
     {
         $model = new User();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['success', 'id' => $model->id]);
-        } else {
-            return $this->render('admincreate', [
-                'model' => $model,
-            ]);
+        if ($model->load(Yii::$app->request->post())) {
+            $user =  User::findOne($model->referer);
+            if ($model->referer === '#' || ($user && $user->getId())) {
+                if ($model->save()) {
+                    return $this->redirect(['success', 'id' => $model->id]);
+                }
+            } else {
+                $model->addError('referer', '推荐人的会员ID不正确, 请确认之后重新输入');
+            }
         }
+        return $this->render('admincreate', [
+            'model' => $model,
+        ]);
+
     }
 
 
@@ -251,13 +258,19 @@ class UserController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['adminindexapprove', 'id' => $model->id]);
-        } else {
-            return $this->render('adminupdate', [
-                'model' => $model,
-            ]);
+        if ($model->load(Yii::$app->request->post())) {
+            $user =  User::findOne($model->referer);
+            if ($model->referer === '#' || ($user && $user->getId())) {
+                if ($model->save()) {
+                    return $this->redirect(['adminindexapprove', 'id' => $model->id]);
+                }
+            } else {
+                $model->addError('referer', '推荐人的会员ID不正确, 请确认之后重新输入');
+            }
         }
+        return $this->render('adminupdate', [
+            'model' => $model,
+        ]);
     }
 
     /**

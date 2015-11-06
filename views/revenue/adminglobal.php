@@ -14,13 +14,13 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <div>
-        总投资金额 : <?= $inTotal ?>
+        总投资金额 : <?= round($inTotal, 2) ?>
     </div>
     <div>
-        总分红金额 : <?= $bonusTotal ?>
+        总分红金额 : <?= round($bonusTotal, 2) ?>
     </div>
     <div>
-        总绩效金额 : <?= $meritTotal ?>
+        总绩效金额 : <?= round($meritTotal, 2) ?>
     </div>
 
 </div>

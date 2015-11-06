@@ -41,8 +41,6 @@ echo Nav::widget([
         ],
         [
             'label' => '电子货币', 'url' => ['/blank'],
-            'items' => [
-            ]
         ],
         [
             'label' => '信息管理', 'url' => ['/news/adminindex'],
@@ -56,11 +54,11 @@ echo Nav::widget([
             'label' => '系统管理', 'url' => ['/blank'],
             'items' => [
                 ['label' => '密码修改', 'url' => yii\helpers\Url::to('/user/adminchange')],
-                ['label' => '系统参数', 'url' => yii\helpers\Url::to('/blank')],
-                ['label' => '制度参数', 'url' => yii\helpers\Url::to('/blank')],
+                ['label' => '系统设置', 'url' => yii\helpers\Url::to('/blank')],
                 ['label' => '系统日志', 'url' => yii\helpers\Url::to('/blank')],
             ]
         ],
+
         Yii::$app->user->isGuest ?
             ['label' => 'Login', 'url' => ['/site/login']] :
             [
