@@ -98,6 +98,11 @@ class MeritController extends Controller
                 } catch (Exception $e) {
                     $transaction->rollback();//回滚函数
                 }
+            } else {
+                $user->merited = 1;
+                $user->achievements += $user->investment;
+                $user->level = $user->calculateLevel();
+                $user->save();
             }
         }
     }
