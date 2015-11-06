@@ -55,9 +55,7 @@ class User extends ActiveRecord implements IdentityInterface
                     ActiveRecord::EVENT_BEFORE_INSERT => 'level',
                 ],
                 'value' => function ($event) {
-
                          return $this->calculateLevel();
-
                     },
             ],
             [
