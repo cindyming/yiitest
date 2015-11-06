@@ -93,6 +93,7 @@ class MeritController extends Controller
                     }
                     $user->merited = 1;
                     $user->achievements += $user->investment;
+                    $user->level = $user->calculateLevel();
                     $user->save();
                     $transaction->commit();
                 } catch (Exception $e) {
