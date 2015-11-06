@@ -233,7 +233,7 @@ class UserController extends Controller
 
     public function actionAdmintree()
     {
-        $users = User::find()->where(['!=', 'id', 10000001])->orderBy(['id' => SORT_ASC])->all();
+        $users = User::find()->where(['=', 'role_id', 3])->orderBy(['id' => SORT_ASC])->all();
 
         $result = array();
 
