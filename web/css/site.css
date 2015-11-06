@@ -165,7 +165,7 @@ a.desc:after {
 }
 
 /* login  */
-body.login{background: #2E363F}
+body.login{background: #2E363F url(bg.jpg) no-repeat center center}
 .loginbox{margin:0 auto;width: 400px;}
 .loginbox h1{color:#fff;font-size:28px;margin-bottom:5%;text-align:center;}
 .loginbox .col-lg-1{width:30%}
