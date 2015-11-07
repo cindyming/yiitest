@@ -13,6 +13,9 @@ class MeritController extends Controller
 {
     public function actionIndex()
     {
+
+        $diamondMembers = User::find()->where(['=','role_id', 3])->andWhere(['=', 'level',8])->all();
+
         $query = User::find()->where(['=','role_id', 3]);
         $query->andWhere(['=','merited', 0]);
         $query->orderBy([ 'id' => SORT_ASC, ]);
@@ -20,9 +23,6 @@ class MeritController extends Controller
         $users = new ActiveDataProvider([
             'query' => $query
         ]);
-
-      //  $diamondMembers = User::find()->where(['=','role_id', 3])->andWhere('=', 'level',8)->all();
-
         foreach ($users->models as $user) {
             $parents = array();
             $noMeritParents = array();
@@ -94,7 +94,7 @@ class MeritController extends Controller
                         }
                     }
 
-                    if (false && count($diamondMembers)) {
+                    if (count($diamondMembers)) {
                         foreach ($diamondMembers as $per) {
                             $merit_amount = round($newInvertment * 0.02, 2);
                             $data = array(
@@ -118,6 +118,7 @@ class MeritController extends Controller
                     $transaction->commit();
                 } catch (Exception $e) {
                     $transaction->rollback();//回滚函数
+                    var_dump($e->getMessage());
                 }
             } else {
                 $user->merited = 1;

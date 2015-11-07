@@ -81,7 +81,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             'title' => Yii::t('yii', '登录会员平台'),
                             'aria-label' => Yii::t('yii', '登录会员平台'),
                             'data-pjax' => '0',
-                            'target' => '_blank'
                         ];
                         return Html::a('登录会员平台', $url, $options);
                     },

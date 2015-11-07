@@ -379,6 +379,7 @@ class User extends ActiveRecord implements IdentityInterface
             5 => '一级总监',
             6 => '二级总监',
             7 => '三级总监',
+            8 => '钻石级总监',
         ];
     }
 
@@ -396,7 +397,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function diamondLevel()
     {
-         $users = User::find()->where(['=', 'referer', $this->id])->orderBy(['achievements' => SORT_ASC])->limit(3)->all();
+         $users = User::find()->where(['=', 'referer', $this->id])->andWhere(['=', 'role_id', 3])->orderBy(['achievements' => SORT_ASC])->limit(3)->all();
+
         if (count($users) == 3 ) {
             return $users[0]->achievements;
         } else {
@@ -415,9 +417,9 @@ class User extends ActiveRecord implements IdentityInterface
         $achievements = $this->achievements ? $this->achievements : $this->investment;
         if (500000 > $achievements) {
             $level = ($achievements < 200000) ? '1' : '2';
-        } elseif ($this->achievements < 1500000) {
+        } elseif ( $achievements< 1500000) {
             $level = 3;
-        } elseif ($this->achievements < 12000000) {
+        } elseif ( $achievements < 12000000) {
             $level = 4;
         } else {
             $minAchivements = $this->diamondLevel();
