@@ -79,7 +79,7 @@ class Cash extends ActiveRecord
 
     public function getBankNames($options= false)
     {
-        return  $options ? array('' => '不限', 'ICBC' => '工商银行', 'ABC' => '农业银行') ? array('ICBC' => '工商银行', 'ABC' => '农业银行');
+        return  $options ? array('' => '不限', 'ICBC' => '工商银行', 'ABC' => '农业银行') : array('ICBC' => '工商银行', 'ABC' => '农业银行');
     }
 
     public function getTypes($filter = false)
