@@ -63,6 +63,25 @@ class InvestmentController extends Controller
         ]);
     }
 
+    public function actionIndex()
+    {
+        $searchModel = new InvestmentSearch();
+        $data = Yii::$app->request->queryParams;
+
+        $data['InvestmentSearch']['user_id'] = Yii::$app->user->identity->id;
+
+        $dataProvider = $searchModel->search($data);
+        $dataProvider->pagination = [
+            'pageSize' => 10
+        ];
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
     /**
      * Displays a single Investment model.
      * @param integer $id

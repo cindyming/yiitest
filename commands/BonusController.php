@@ -36,7 +36,7 @@ class BonusController extends Controller
             $bonus = new Revenue();
             $bonus->load($data, '');
             $bonus->save();
-            if ($data['total'] > ($user->investment * 2 )) {
+            if (($data['total'] + $user->merit_total) > ($user->investment * 2 )) {
                 $user->stop_bonus = 1;
             }
             $user->save();
