@@ -25,6 +25,7 @@ class News extends ActiveRecord
     {
         return [
             [['title', 'be_top', 'content'], 'required'],
+            [['public_at'], 'trim']
         ];
     }
 

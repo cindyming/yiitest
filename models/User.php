@@ -79,6 +79,15 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'investment',
+                ],
+                'value' => function ($event) {
+                        return $this->investment * 10000;
+                    },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'access_token',
                 ],
                 'value' => function ($event) {
@@ -138,7 +147,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['password1'], 'compare', 'compareAttribute' => 'password'],
             [['password3'], 'compare', 'compareAttribute' => 'password2'],
             [['approved_at'], 'string'],
-            [['referer', 'added_by'], 'trim'],
+            [['referer', 'added_by', 'achievements'], 'trim'],
             [['role_id', 'merited', 'level', 'add_member', 'stop_bonus', 'level'], 'number'],
             [['bonus_total', 'merit_total'], 'double'],
             [['email'], 'email'],
@@ -372,25 +381,31 @@ class User extends ActiveRecord implements IdentityInterface
     public function getLevelOptions()
     {
         return [
-            1 => '普通会员',
-            2 => 'VIP会员',
+            1 => '实习生',
+            2 => '业务员',
             3 => '主任',
             4 => '经理',
             5 => '一级总监',
             6 => '二级总监',
             7 => '三级总监',
-            8 => '钻石级总监',
+            8 => '区域总监',
+            9 => '全国总监',
+            10 => '钻石级总监',
         ];
     }
 
     public function getMeritRate($level = false)
     {
         $merits = array(
-            3 => 0.05,
-            4 => 0.1,
+            1 => 0.03,
+            2 => 0.06,
+            3 => 0.09,
+            4 => 0.12,
             5 => 0.16,
-            6 => 0.23,
-            7 => 0.31,
+            6 => 0.19,
+            7 => 0.22,
+            8 => 0.25,
+            9 => 0.28
         );
         return $merits[$level ? $level : $this->level];
     }
@@ -414,7 +429,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function calculateLevel()
     {
-        $achievements = $this->achievements ? $this->achievements : $this->investment;
+        $achievements = $this->achievements ? $this->achievements : $this->investment;var_dump($achievements);
         if (500000 > $achievements) {
             $level = ($achievements < 200000) ? '1' : '2';
         } elseif ( $achievements< 1500000) {
@@ -422,14 +437,14 @@ class User extends ActiveRecord implements IdentityInterface
         } elseif ( $achievements < 12000000) {
             $level = 4;
         } else {
-            $minAchivements = $this->diamondLevel();
+            $minAchivements = $this->diamondLevel();var_dump('user:' . $this->id . ':minAchive:' .$minAchivements );
             if ($minAchivements < 4000000) {
                 $level = 4;
             } elseif ( $minAchivements < 10000000) {
                 $level = 5;
             } elseif ($this->achievements < 20000000) {
                 $level = 6;
-            } else if ($this->isDiamondLevel()){
+            } elseif ($this->isDiamondLevel()) {
                 $level = 8;
             } else {
                 $level = 7;

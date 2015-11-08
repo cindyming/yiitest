@@ -19,9 +19,11 @@ $this->title = '留言内容';
             'content:ntext',
             [
                 'attribute' => 'replied_content',
-                'value' => function($model) {
+                'content' => function($model) {
                         if ($model->replied_content) {
                             return $model->replied_content;
+                        } else {
+                            return '';
                         }
                     }
             ]

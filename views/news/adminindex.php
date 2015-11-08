@@ -14,18 +14,11 @@ $this->title = '公告管理';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-
-
-    <h3>
-       公告信息
-    </h3>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'striped'=> true,
         'hover'=> true,
-        //'summary' => '',
         'layout' => '{items} {summary} {pager}',
         'pjax' => true,
         'columns' => [
@@ -72,9 +65,6 @@ $this->title = '公告管理';
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '删除',
                 'template' => '{delete}',
-                'buttons' => [
-
-                ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                         if ($action === 'delete') {
                             $url ='/news/admindelete?id='.$model->id;

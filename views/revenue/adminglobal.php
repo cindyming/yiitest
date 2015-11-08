@@ -22,5 +22,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <div>
         总绩效金额 : <?= round($meritTotal, 2) ?>
     </div>
+    <div>
+        总剩余金额 : <?= round($inTotal, 2) - round($bonusTotal, 2) -  round($meritTotal, 2) ?>
+    </div>
 
 </div>

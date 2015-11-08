@@ -21,6 +21,7 @@ echo Nav::widget([
             'label' => '会员管理', 'url' => ['/user/adminindex'],
             'items' => [
                 ['label' => '注册会员', 'url' => yii\helpers\Url::to('/user/admincreate')],
+                ['label' => '追加投资', 'url' => yii\helpers\Url::to('/investment/adminindex')],
                 ['label' => '审核会员', 'url' => yii\helpers\Url::to('/user/adminindexunapprove')],
                 ['label' => '正式会员', 'url' => yii\helpers\Url::to('/user/adminindexapprove')],
                 ['label' => '全部会员', 'url' => yii\helpers\Url::to('/user/adminindex')],

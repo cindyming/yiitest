@@ -39,6 +39,24 @@ class Investment extends ActiveRecord
                     },
             ],
             [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'amount',
+                ],
+                'value' => function ($event) {
+                        return $this->amount * 10000;
+                    },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'added_by',
+                ],
+                'value' => function ($event) {
+                        return Yii::$app->user->identity->id;
+                    },
+            ],
+            [
                 'class' => TimestampBehavior::className(),
                 'updatedAtAttribute' => 'updated_at',
                 'value' => new Expression('NOW()'),
@@ -52,7 +70,7 @@ class Investment extends ActiveRecord
     {
         return [
             [['user_id', 'amount'], 'required'],
-            [['merited', 'note'], 'trim'],
+            [['merited', 'note', 'added_by'], 'trim'],
         ];
     }
 
@@ -63,23 +81,12 @@ class Investment extends ActiveRecord
     {
         return [
             'id' => '序号',
-            'user_id' => '编号',
-            'bonus' => '分红',
-            'merit' => '绩效',
-            'approved' => '状态',
-            'bonus_total' => '分红',
-            'merit_total' => '绩效',
+            'user_id' => '会员编号',
+            'amount' => '追加投资额',
             'note' => '备注',
-            'created_at' => '结算时间',
-            'updated_at' => '发放时间',
+            'created_at' => '追加时间',
+            'updated_at' => '更新时间',
         ];
     }
 
-    public function getStatus()
-    {
-        return [
-            0 => '未发放',
-            1 => '已发放',
-        ];
-    }
 }

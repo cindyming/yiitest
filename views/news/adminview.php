@@ -12,11 +12,9 @@ $this->title = '公告管理';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-
-
     <p>
-        <?= Html::a('Update', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Delete', ['delete', 'id' => $model->id], [
+        <?= Html::a('修改', ['adminupdate', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('删除', ['admindelete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',
@@ -29,11 +27,12 @@ $this->title = '公告管理';
         'model' => $model,
         'attributes' => [
             'id',
-            'be_top',
+            [
+                'attribute' => 'be_top',
+                'value' => $model->getBetopOptions()[$model->be_top]
+            ],
             'title',
             'content:ntext',
-            'created_at',
-            'updated_at',
             'public_at',
         ],
     ]) ?>

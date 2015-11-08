@@ -25,9 +25,9 @@ class BonusController extends Controller
                 'user_id' => $user->id,
             );
             if ($user->investment >= $this->_diff) {
-                $data['bonus'] =  $user->investment * 0.02;
-            } else {
                 $data['bonus'] =  $user->investment * 0.03;
+            } else {
+                $data['bonus'] =  $user->investment * 0.02;
             }
             $data['total'] = $user->bonus_remain + $data['bonus'];
             $data['note'] = '分红结算: ' .  date('Y-m-d', time());

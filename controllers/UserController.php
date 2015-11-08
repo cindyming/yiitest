@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use Yii;
 use app\models\User;
+use app\models\Revenue;
 use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -172,11 +173,11 @@ class UserController extends Controller
 
         if ($model->load($data) && $model->save()) {
             $addedBy = User::findOne($model->added_by);
-            if ($addedBy && $addedBy->getId()) {
+            if ($addedBy && $addedBy->getId() && ($addedBy->role_id == 3)) {
                 $meritAmount = round($model->investment * 0.01, 2);
                 $data = array(
                     'user_id' => $addedBy->id,
-                    'note' => '会员：' .$model->id . '的保单奖励',
+                    'note' => '会员：' .$model->id . '的报单奖励',
                     'merit' => $meritAmount,
                     'total' => $meritAmount +  $addedBy->merit_remain
                 );
@@ -232,12 +233,15 @@ class UserController extends Controller
         $model = new User();
 
         if ($model->load(Yii::$app->request->post())) {
+            if ($model->isNewRecord) {
+                $model->achievements = $model->investment;
+            }
             $user =  User::findOne($model->referer);
-            if ($model->investment < 50000){
+            if ($model->investment < 5){
                 $model->addError('investment', '投资额不可以少于5W,请重新输入');
             }
             if ($model->referer === '#' || ($user && $user->getId())) {
-                if (($model->investment >= 50000) && $model->save()) {
+                if (($model->investment >= 5) && $model->save()) {
                     return $this->redirect(['success', 'id' => $model->id]);
                 }
             } else {
@@ -333,12 +337,15 @@ class UserController extends Controller
         $model = new User();
 
         if ($model->load(Yii::$app->request->post())) {
+            if ($model->isNewRecord) {
+                $model->achievements = $model->investment;
+            }
             $user =  User::findOne($model->referer);
-            if ($model->investment < 50000){
+            if ($model->investment < 5){
                 $model->addError('investment', '投资额不可以少于5W,请重新输入');
             }
             if ($model->referer === '#' || ($user && $user->getId())) {
-                if (($model->investment >= 50000) && $model->save()) {
+                if (($model->investment >= 5) && $model->save()) {
                     return $this->redirect(['success', 'id' => $model->id]);
                 }
             } else {
