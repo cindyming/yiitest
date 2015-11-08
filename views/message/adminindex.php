@@ -36,7 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'updated_at',
                 'value' => function($model) {
-                        return ($model->updated_at == '0000-00-00 00:00:00') ? '' :  $model->updated_at;
+                        return ($model->replied_content == '') ? '' :  $model->updated_at;
                     }
             ],
             [

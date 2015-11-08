@@ -48,7 +48,7 @@ echo Nav::widget([
             'items' => [
                 ['label' => '公告管理', 'url' => yii\helpers\Url::to('/news/adminindex')],
                 ['label' => '添加公告', 'url' => yii\helpers\Url::to('/news/admincreate')],
-                ['label' => '信息管理', 'url' => yii\helpers\Url::to('/message/adminindex')],
+                ['label' => '留言管理', 'url' => yii\helpers\Url::to('/message/adminindex')],
             ]
         ],
         [
