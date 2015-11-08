@@ -234,7 +234,7 @@ class UserController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model->isNewRecord) {
-                $model->achievements = $model->investment;
+                $model->achievements = $model->investment * 10000;
             }
             $user =  User::findOne($model->referer);
             if ($model->investment < 5){
@@ -338,7 +338,7 @@ class UserController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             if ($model->isNewRecord) {
-                $model->achievements = $model->investment;
+                $model->achievements = $model->investment * 10000;
             }
             $user =  User::findOne($model->referer);
             if ($model->investment < 5){
