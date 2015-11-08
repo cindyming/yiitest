@@ -73,7 +73,7 @@ class RevenueController extends Controller
     {
         $connection=Yii::$app->db;
 
-        $invertTotal = $connection->createCommand('SELECT sum(investment) as "total" FROM user WHERE role_id!=1')->queryColumn(['total']);
+        $invertTotal = $connection->createCommand('SELECT sum(investment) as "total" FROM user WHERE role_id=3')->queryColumn(['total']);
         $invertTotal = $invertTotal[0];
 
         $outTotal = $connection->createCommand('SELECT sum(bonus) as "bonus_total", sum(merit) as "merit_total" FROM revenue')->queryAll();
