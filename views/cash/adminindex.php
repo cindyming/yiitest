@@ -54,7 +54,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'amount',
                 'label'=>'实发金额',
                 'value' => function($model) {
-                        return ($model->type == 1) ? $model->amount : ($model->amount * 0.9);
+                        return ($model->type == 1) ? $model->amount : ($model->amount * 0.95);
                     }
             ],
             'created_at',
