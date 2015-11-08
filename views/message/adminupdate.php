@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Message */
 
-$this->title = 'Update Message: ' . ' ' . $model->title;
+$this->title = '回复信息 : ' . ' ' . $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Messages', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Update';
@@ -14,7 +14,13 @@ $this->params['breadcrumbs'][] = 'Update';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-
+    <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+            'title',
+            'content:ntext',
+        ],
+    ]) ?>
 
     <?= $this->render('_form', [
         'model' => $model,
