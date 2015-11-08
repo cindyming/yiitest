@@ -64,7 +64,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterType'=>GridView::FILTER_SELECT2,
                 'filter' => $searchModel->getStatus(true),
                 'content' => function($model) {
-                        return (isset($model->getStatus()[$model->status])) ? $model->getStatus()[$model->status] :( Html::a('发放', '/cash/adminapprove?id='.$model->id, ['data-confirm'=>"你确定要发放[" . $model->user_id. "]"  . $model->amount . "的提现申请"]) . '   ' . Html::a('拒绝', '/cash/adminreject?id='.$model->id, ['data-confirm'=>"你确定要拒绝[" . $model->user_id. "]"  . $model->amount . "的提现申请"]) );
+                        return (in_array($model->status, array(2, 3)) ? $model->getStatus()[$model->status] :( Html::a('发放', '/cash/adminapprove?id='.$model->id, ['data-confirm'=>"你确定要发放[" . $model->user_id. "]"  . $model->amount . "的提现申请"]) . '   ' . Html::a('拒绝', '/cash/adminreject?id='.$model->id, ['data-confirm'=>"你确定要拒绝[" . $model->user_id. "]"  . $model->amount . "的提现申请"]) );
                     }
             ],
         ],
