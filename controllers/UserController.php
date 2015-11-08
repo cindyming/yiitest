@@ -460,7 +460,6 @@ class UserController extends Controller
             $result['message']  = '诶哟, 您的级别还不能申请报单员哦, 继续努力吧！';
         }
 
-
         return $this->render('applyaddmember', $result);
     }
 
