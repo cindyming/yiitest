@@ -54,7 +54,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             $options = [
                                 'title' => Yii::t('yii', '批准'),
                                 'aria-label' => Yii::t('yii', '批准'),
-                                'data-pjax' => '0',
                                 'data-confirm' => Yii::t('yii', '你确定要批准会员[' . $model->id . ']成为报单员吗?'),
                                 'data-method' => 'post',
                             ];
