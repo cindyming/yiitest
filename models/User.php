@@ -350,7 +350,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function getStatus()
     {
-        return ($this->approved_at) ? '正式' : '非正式';
+        return ($this->role_id == 3) ? '正式' : ( ($this->role_id == 4) ? '拒绝' : '待审核');
     }
 
     public function getLockedOptions()

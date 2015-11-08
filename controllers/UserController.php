@@ -30,7 +30,7 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'admincreate', 'delete', 'success','adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
+                        'actions' => ['adminindex', 'admincreate', 'delete', 'adminreject','success','adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -193,6 +193,18 @@ class UserController extends Controller
         } else {
             return $this->redirect(['adminindexunapprove']);
         }
+    }
+
+    public function actionAdminreject($id)
+    {
+        $model = $this->findModel($id);
+        $data = array('User' => array('role_id'=> 4));
+
+        if ($model->load($data) && $model->save()) {
+
+        }
+
+        return $this->redirect(['adminindexunapprove']);
     }
 
     /**

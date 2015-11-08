@@ -47,22 +47,22 @@ $this->params['breadcrumbs'][] = $this->title;
             'created_at',
             [
                 'class' => 'yii\grid\ActionColumn',
-                'header' => '删除',
+                'header' => '拒绝',
                 'template' => '{delete}',
                 'buttons' => [
                     'delete' => function ($url, $model, $key) {
                             $options = [
-                                'title' => Yii::t('yii', '删除'),
-                                'aria-label' => Yii::t('yii', '删除'),
-                                'data-confirm' => Yii::t('yii', '你确定要删除会员[' . $model->id . ']吗?'),
+                                'title' => Yii::t('yii', '拒绝'),
+                                'aria-label' => Yii::t('yii', '拒绝'),
+                                'data-confirm' => Yii::t('yii', '你确定要拒绝会员[' . $model->id . ']吗?'),
                                 'data-method' => 'post',
                             ];
-                            return Html::a('删除', $url, $options);
+                            return Html::a('拒绝', $url, $options);
                         },
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                         if ($action === 'delete') {
-                            $url ='/user/delete?id='.$model->id;
+                            $url ='/user/adminreject?id='.$model->id;
                             return $url;
                         }
                     }
