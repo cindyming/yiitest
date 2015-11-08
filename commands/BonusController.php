@@ -24,6 +24,12 @@ class BonusController extends Controller
             $data = array(
                 'user_id' => $user->id,
             );
+
+            if (($user->bonus_total + $user->merit_total) > ($user->investment * 2 )) {
+                $user->stop_bonus = 1;
+                $user->save();
+                continue;
+            }
             if ($user->investment >= $this->_diff) {
                 $data['bonus'] =  $user->investment * 0.03;
             } else {
@@ -36,7 +42,7 @@ class BonusController extends Controller
             $bonus = new Revenue();
             $bonus->load($data, '');
             $bonus->save();
-            if (($data['total'] + $user->merit_total) > ($user->investment * 2 )) {
+            if (($user->bonus_total + $user->merit_total + $data['bonus']) > ($user->investment * 2 )) {
                 $user->stop_bonus = 1;
             }
             $user->save();
