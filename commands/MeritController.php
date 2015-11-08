@@ -43,6 +43,7 @@ class MeritController extends Controller
                 $addtionalInvest->merited = 1;
                 $addtionalInvest->save();
                 $newInvestment = $addtionalInvest->amount;
+                $user->investment += $newInvestment;
 
                 $this->addMeritForMember($user, $newInvestment);
 
