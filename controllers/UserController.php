@@ -178,7 +178,7 @@ class UserController extends Controller
                 $data = array(
                     'user_id' => $addedBy->id,
                     'note' => '会员：' .$model->id . '的报单奖励',
-                    'merit' => $meritAmount,
+                    'bonus' => $meritAmount,
                     'total' => $meritAmount +  $addedBy->merit_remain
                 );
                 $merit = new Revenue();
