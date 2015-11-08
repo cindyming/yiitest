@@ -184,8 +184,8 @@ class UserController extends Controller
                 $merit = new Revenue();
                 $merit->load($data, '');
                 $merit->save();
-                $addedBy->merit_remain += $meritAmount;
-                $addedBy->merit_total += $meritAmount;
+                $addedBy->bonus_remain += $meritAmount;
+                $addedBy->bonus_total += $meritAmount;
                 $addedBy->save();
             }
 

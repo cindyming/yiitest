@@ -19,8 +19,8 @@ $this->title = '新闻公告';
         'dataProvider' => $dataProvider,
         'columns' => [
             [
-                'attribute' => 'id',
-                'label' => '编号'
+                'class' => 'yii\grid\SerialColumn',
+                'header' => '编号'
             ],
             [
                 'attribute' => 'be_top',

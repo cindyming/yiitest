@@ -153,7 +153,7 @@ class NewsController extends Controller
       //  $searchModel = new Newssearch();
 
         $dataProvider = new ActiveDataProvider([
-            'query' => News::find()->orderBy(['be_top' => SORT_DESC]),
+            'query' => News::find()->orderBy(['be_top' => SORT_DESC, 'id' => SORT_DESC]),
             'pagination' => [
                 'pageSize' => 5,
             ],

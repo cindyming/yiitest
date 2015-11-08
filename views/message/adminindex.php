@@ -16,7 +16,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            'id',
+            [
+                'class' => 'yii\grid\SerialColumn',
+                'header' => '编号'
+            ],
             [
                 'attribute' => 'type',
                 'value' => function($model) {

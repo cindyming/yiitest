@@ -16,7 +16,6 @@ class Message extends ActiveRecord
         return [
             [
                 'class' => TimestampBehavior::className(),
-                'updatedAtAttribute' => 'updated_at',
                 'value' => new Expression('NOW()'),
             ],
             [
