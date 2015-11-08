@@ -39,6 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'total',
                 'label' => '入账后余额',
             ],
+            'note',
             'created_at',
             [
                 'attribute' => 'approved',
