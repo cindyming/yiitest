@@ -412,7 +412,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function diamondLevel()
     {
-         $users = User::find()->where(['=', 'referer', $this->id])->andWhere(['=', 'role_id', 3])->orderBy(['achievements' => SORT_ASC])->limit(3)->all();
+         $users = User::find()->where(['=', 'referer', $this->id])->andWhere(['=', 'role_id', 3])->andWhere(['=', 'merited', 1])->orderBy(['achievements' => SORT_ASC])->limit(3)->all();
 
         if (count($users) == 3 ) {
             return $users[0]->achievements;
@@ -423,7 +423,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function isDiamondLevel()
     {
-        $users = User::find()->where(['=', 'referer', $this->id])->andWhere(['=', 'level', 9])->orderBy(['achievements' => SORT_ASC])->limit(3)->all();
+        $users = User::find()->where(['=', 'referer', $this->id])->andWhere(['=', 'level', 9])->andWhere(['=', 'merited', 1])->orderBy(['achievements' => SORT_ASC])->limit(3)->all();
         return (count($users) == 3) ? true : false;
     }
 
