@@ -16,6 +16,7 @@ class MeritController extends Controller
     {
         $diamonds = User::find()->where(['=','role_id', 3])->andWhere(['=', 'level',10]);
         if (count($this->excludeDiamondMembers)) {
+            var_dump('exclude', implode(',', $this->excludeDiamondMembers));
             $diamonds->andWhere(['not in', 'id', $this->excludeDiamondMembers]);
         }
         return $diamonds->all();
