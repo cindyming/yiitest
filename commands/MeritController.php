@@ -15,10 +15,10 @@ class MeritController extends Controller
     public function loadDiamondMembers()
     {
         $diamonds = User::find()->where(['=','role_id', 3])->andWhere(['=', 'level',10]);
-        if (count($this->excludeDiamondMembers)) {
-            var_dump('exclude', implode(',', $this->excludeDiamondMembers));
-            $diamonds->andWhere(['not in', 'id', $this->excludeDiamondMembers]);
-        }
+//        if (count($this->excludeDiamondMembers)) {
+//            var_dump('exclude', implode(',', $this->excludeDiamondMembers));
+//            $diamonds->andWhere(['not in', 'id', $this->excludeDiamondMembers]);
+//        }
         return $diamonds->all();
     }
     public function actionIndex()
@@ -113,9 +113,10 @@ class MeritController extends Controller
     public function dealWithDiamondMembers($parents, $amount, $note)
     {
         if (count($parents)) {
+            $merit_amount = round($amount * 0.02/count($parents), 2);
             foreach ($parents as $per) {
                 var_dump ('diamonds member: ' . $per->id);
-                $merit_amount = round($amount * 0.02, 2);
+
                 $this->addMeritForMember($per, 0, $merit_amount, $note);
             }
         }
@@ -141,7 +142,7 @@ class MeritController extends Controller
                     foreach ($pars as $per) {
                         var_dump ('slibing parents: ' . $per->id);
                         $this->excludeDiamondMembers[] = $per->id;
-                        $this->addMeritForMember($per, $newInvestment, round($newInvestment * 0.02, 2), '钻石会员的绩效:' . $note);
+                        $this->addMeritForMember($per, $newInvestment);
                     }
                 } else {
                     $firstParent = array_shift($pars);
