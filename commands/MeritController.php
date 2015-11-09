@@ -156,9 +156,8 @@ class MeritController extends Controller
                         var_dump ('slibing parents: ' . $per->id);
                         $this->addMeritForMember($per, $newInvestment, round($newInvestment * 0.02 / $total, 2), '加权平均绩效:' . $note);
                     }
+                    $lastMeritRate = $meritRate;
                 }
-
-                $lastMeritRate = $meritRate;
             }
         }
     }
