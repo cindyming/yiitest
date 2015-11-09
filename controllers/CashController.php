@@ -122,8 +122,19 @@ class CashController extends Controller
 
         $data = Yii::$app->request->post();
         if ($model->load(Yii::$app->request->post()) && isset($data['Cash']) && isset($data['Cash']['password2'])) {
+            $validateAmount = true;
+            if ($model->type == 1) {
+                $compareAmount = Yii::$app->user->identity->bonus_remain;
+            } else {
+                $compareAmount = Yii::$app->user->identity->merit_remain;
+            }
+
+            if ($model->amount > $compareAmount) {
+                $validateAmount = false;
+                $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain . '.');
+            }
             if (Yii::$app->user->identity->validatePassword2($data['Cash']['password2'])) {
-                if ($model->save()) {
+                if ($validateAmount && $model->save()) {
                     return $this->redirect(['index']);
                 } else {
                     return $this->render('create', [

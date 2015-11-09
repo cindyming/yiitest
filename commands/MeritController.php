@@ -161,14 +161,16 @@ class MeritController extends Controller
 
         if($merit_amount) {
             $merit_amount = round($merit_amount, 2);
+            $merit_remain = round($merit_amount * 0.9);
             $data = array(
                 'user_id' => $user->id,
                 'note' => $note,
-                'merit' => $merit_amount,
+                'merit' => $merit_remain,
                 'total' => $merit_amount +  $user->merit_remain
-            );var_dump('total' . $user->merit_total);
-            $user->merit_total +=$merit_amount;
-            $user->merit_remain +=$merit_amount;
+            );
+            $user->mall_remain += ($merit_amount - $merit_remain);
+            $user->merit_total += $merit_amount;
+            $user->merit_remain += $merit_remain;
 
             $merit = new Revenue();
             $merit->load($data, '');

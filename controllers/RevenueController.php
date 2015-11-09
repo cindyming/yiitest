@@ -73,8 +73,9 @@ class RevenueController extends Controller
     {
         $connection=Yii::$app->db;
 
-        $invertTotal = $connection->createCommand('SELECT sum(investment) as "total" FROM user WHERE role_id=3')->queryColumn(['total']);
-        $invertTotal = $invertTotal[0];
+        $invertTotal = $connection->createCommand('SELECT sum(investment) as "total", sum(mall_remain) as "mall_total" FROM user WHERE role_id=3')->queryAll();
+        $inTotal = $invertTotal[0]['total'];
+        $mallTotal = $invertTotal[0]['mall_total'];
 
         $outTotal = $connection->createCommand('SELECT sum(bonus) as "bonus_total", sum(merit) as "merit_total" FROM revenue')->queryAll();
 ;
@@ -82,9 +83,10 @@ class RevenueController extends Controller
         $meritTotal = $outTotal[0]['merit_total'] ? $outTotal[0]['merit_total'] : 0;
 
         return $this->render('adminglobal', [
-            'inTotal' => $invertTotal,
+            'inTotal' => $inTotal,
             'bonusTotal' => $bonusTotal,
-            'meritTotal' => $meritTotal
+            'meritTotal' => $meritTotal,
+            'mallTotal' => $mallTotal
         ]);
     }
 

@@ -29,7 +29,10 @@ $welcome .= ', 欢迎回来.';
                 分红余额: <?php echo Yii::$app->user->identity->bonus_remain?>
             </li>
             <li>
-                绩效工资余额: <?php echo Yii::$app->user->identity->merit_total?>
+                可提现绩效工资余额: <?php echo Yii::$app->user->identity->merit_remain?>
+            </li>
+            <li>
+                商城币余额: <?php echo Yii::$app->user->identity->mall_remain?>
             </li>
         </ul>
     </div>
