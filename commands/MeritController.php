@@ -186,7 +186,7 @@ class MeritController extends Controller
         $parent = $user->getParennt()->one();
         if ($parent && $parent->role_id != 1) {
              $level = $parent->level;
-             if ($level < 8) {
+             if ($level < 10) {
                  if ($level < $lastLevel) {
                      $lowLevelParents[] = $parent;
                  } else {
@@ -197,7 +197,7 @@ class MeritController extends Controller
                     $lastLevel = $level;
                  }
              }
-            $this->listParentsAddMerit($parent, $parents, $lastLevel);
+            $this->listParentsAddMerit($parent, $parents,$lowLevelParents, $lastLevel);
         }
     }
 }
