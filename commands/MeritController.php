@@ -34,6 +34,7 @@ class MeritController extends Controller
 
         foreach ($additionalInvestList as $addtionalInvest)
         {
+            $diamondMembers = $this->loadDiamondMembers();
             $user = User::findOne($addtionalInvest->user_id);
 
             var_dump ('start calculate addintional investment for user: ' . $user->id);
@@ -58,7 +59,7 @@ class MeritController extends Controller
 
                 $this->dealWithLowLevelMembers($lowLevelParents, $newInvestment);
 
-                $diamondMembers = $this->loadDiamondMembers();
+
                 $note = '钻石总监绩效 - '. $note;
                 $this->dealWithDiamondMembers($diamondMembers, $newInvestment, $note);
 
@@ -76,6 +77,7 @@ class MeritController extends Controller
         $users = User::find()->where(['=','role_id', 3])->andWhere(['=','merited', 0])->orderBy([ 'id' => SORT_ASC, ])->all();
 
         foreach ($users as $user) {
+            $diamondMembers = $this->loadDiamondMembers();
             var_dump ('start calculate for user: ' . $user->id);
             $parents = array();
             $lowLevelParents = array();
@@ -96,7 +98,7 @@ class MeritController extends Controller
 
                 $this->dealWithLowLevelMembers($lowLevelParents, $amount);
 
-                $diamondMembers = $this->loadDiamondMembers();
+
                 $note = '钻石总监绩效 - 新会员 - ' . $user->id;
                 $this->dealWithDiamondMembers($diamondMembers, $amount, $note);
 
