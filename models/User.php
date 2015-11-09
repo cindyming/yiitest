@@ -444,11 +444,11 @@ class User extends ActiveRecord implements IdentityInterface
                 $level = 4;
             } elseif ($minAchivements < 6000000) {
                 $level = 5;
-            } elseif ( $minAchivements < 10000000) {
+            } elseif ($minAchivements < 10000000) {
                 $level = 6;
-            } elseif ($this->achievements < 15000000) {
+            } elseif ($minAchivements < 15000000) {
                 $level = 7;
-            } elseif ($this->achievements < 20000000) {
+            } elseif ($minAchivements < 20000000) {
                 $level = 8;
             } elseif ($this->isDiamondLevel()) {
                 $level = 10;
