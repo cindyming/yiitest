@@ -116,7 +116,7 @@ class MeritController extends Controller
             foreach ($parents as $per) {
                 var_dump ('diamonds member: ' . $per->id);
                 $merit_amount = round($amount * 0.02, 2);
-                $this->addMeritForMember($per, $amount, $merit_amount, $note);
+                $this->addMeritForMember($per, 0, $merit_amount, $note);
             }
         }
     }
