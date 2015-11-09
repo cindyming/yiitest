@@ -11,9 +11,10 @@ use app\models\Revenue;
 
 class MeritController extends Controller
 {
+    public $excludeDiamondMembers = array();
     public function loadDiamondMembers()
     {
-        return User::find()->where(['=','role_id', 3])->andWhere(['=', 'level',10])->all();
+        return User::find()->where(['=','role_id', 3])->andWhere(['=', 'level',10])->andWhere(['not in', 'id', $this->$excludeDiamondMembers])->all();
     }
     public function actionIndex()
     {
@@ -23,7 +24,7 @@ class MeritController extends Controller
 
     public function calculateAddtionalInvestment()
     {
-        $diamondMembers = $this->loadDiamondMembers();
+
         $additionalInvestList = Investment::find()->where(['=','merited', 0])->orderBy([ 'id' => SORT_ASC, ])->all();
 
         foreach ($additionalInvestList as $addtionalInvest)
@@ -52,6 +53,7 @@ class MeritController extends Controller
 
                 $this->dealWithLowLevelMembers($lowLevelParents, $newInvestment);
 
+                $diamondMembers = $this->loadDiamondMembers();
                 $note = '钻石总监绩效 - '. $note;
                 $this->dealWithDiamondMembers($diamondMembers, $newInvestment, $note);
 
@@ -66,7 +68,6 @@ class MeritController extends Controller
 
     public function calculateNewMember()
     {
-        $diamondMembers = $this->loadDiamondMembers();
         $users = User::find()->where(['=','role_id', 3])->andWhere(['=','merited', 0])->orderBy([ 'id' => SORT_ASC, ])->all();
 
         foreach ($users as $user) {
@@ -90,6 +91,7 @@ class MeritController extends Controller
 
                 $this->dealWithLowLevelMembers($lowLevelParents, $amount);
 
+                $diamondMembers = $this->loadDiamondMembers();
                 $note = '钻石总监绩效 - 新会员 - ' . $user->id;
                 $this->dealWithDiamondMembers($diamondMembers, $amount, $note);
 
@@ -130,17 +132,24 @@ class MeritController extends Controller
             $lastMeritRate = 0;
             foreach ($parents as $level => $pars) {
                 var_dump ('level: ' . $level);
+                if($level == 10) {
+                    foreach ($pars as $per) {
+                        var_dump ('slibing parents: ' . $per->id);
+                        $this->excludeDiamondMembers[] = $per->id;
+                        $this->addMeritForMember($per, $newInvestment, round($newInvestment * 0.02, 2), '钻石会员的绩效:' . $note);
+                    }
+                } else {
+                    $firstParent = array_shift($pars);
+                    $meritRate = $firstParent->getMeritRate($level);
+                    $merit_amount = $newInvestment * ($meritRate - $lastMeritRate);
+                    $this->addMeritForMember($firstParent, $newInvestment, $merit_amount, $note);
+                    var_dump ('first parent: ' . $firstParent->id . 'level:' .$firstParent->level);
 
-                $firstParent = array_shift($pars);
-                $meritRate = $firstParent->getMeritRate($level);
-                $merit_amount = $newInvestment * ($meritRate - $lastMeritRate);
-                $this->addMeritForMember($firstParent, $newInvestment, $merit_amount, $note);
-                var_dump ('first parent: ' . $firstParent->id . 'level:' .$firstParent->level);
-
-                $total = count($pars);
-                foreach ($pars as $per) {
-                    var_dump ('slibing parents: ' . $per->id);
-                    $this->addMeritForMember($per, $newInvestment, round($newInvestment * 0.02 / $total, 2), '加权平均绩效:' . $note);
+                    $total = count($pars);
+                    foreach ($pars as $per) {
+                        var_dump ('slibing parents: ' . $per->id);
+                        $this->addMeritForMember($per, $newInvestment, round($newInvestment * 0.02 / $total, 2), '加权平均绩效:' . $note);
+                    }
                 }
 
                 $lastMeritRate = $meritRate;
@@ -188,17 +197,17 @@ class MeritController extends Controller
         $parent = $user->getParennt()->one();
         if ($parent && $parent->role_id != 1) {
              $level = $parent->level;
-             if ($level < 10) {
-                 if ($level < $lastLevel) {
-                     $lowLevelParents[] = $parent;
-                 } else {
-                    if (!isset($parents[$level])) {
-                        $parents[$level] = array();
-                    }
-                    $parents[$level][] = $parent;
-                    $lastLevel = $level;
-                 }
+
+             if ($level < $lastLevel) {
+                 $lowLevelParents[] = $parent;
+             } else {
+                if (!isset($parents[$level])) {
+                    $parents[$level] = array();
+                }
+                $parents[$level][] = $parent;
+                $lastLevel = $level;
              }
+
             $this->listParentsAddMerit($parent, $parents,$lowLevelParents, $lastLevel);
         }
     }
