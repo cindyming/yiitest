@@ -179,7 +179,7 @@ class MeritController extends Controller
             $data = array(
                 'user_id' => $user->id,
                 'note' => $note,
-                'merit' => $merit_remain,
+                'merit' => $merit_amount,
                 'total' => $merit_amount +  $user->merit_remain
             );
             $user->mall_remain += ($merit_amount - $merit_remain);
