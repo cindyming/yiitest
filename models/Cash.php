@@ -3,8 +3,10 @@
 namespace app\models;
 
 use yii;
+use yii\db\Expression;
 use yii\db\ActiveRecord;
 use yii\behaviors\AttributeBehavior;
+use yii\behaviors\TimestampBehavior;
 
 class Cash extends ActiveRecord
 {
@@ -24,6 +26,10 @@ class Cash extends ActiveRecord
     public function behaviors()
     {
         return [
+            [
+                'class' => TimestampBehavior::className(),
+                'value' => new Expression('NOW()'),
+            ],
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [

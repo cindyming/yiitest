@@ -98,7 +98,6 @@ class MeritController extends Controller
 
                 $this->dealWithLowLevelMembers($lowLevelParents, $amount);
 
-
                 $note = '钻石总监绩效 - 新会员 - ' . $user->id;
                 $this->dealWithDiamondMembers($diamondMembers, $amount, $note);
 

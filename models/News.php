@@ -3,6 +3,8 @@
 namespace app\models;
 
 use yii\db\ActiveRecord;
+use yii\db\Expression;
+use yii\behaviors\TimestampBehavior;
 
 class News extends ActiveRecord
 {
@@ -16,6 +18,16 @@ class News extends ActiveRecord
     {
         $mod = new News();
         return $mod->dynTableName;
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'value' => new Expression('NOW()'),
+            ],
+        ];
     }
 
     /**

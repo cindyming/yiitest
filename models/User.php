@@ -4,9 +4,11 @@ namespace app\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+use yii\db\Expression;
 use yii\helpers\Security;
 use yii\web\IdentityInterface;
 use yii\behaviors\AttributeBehavior;
+use yii\behaviors\TimestampBehavior;
 
 class User extends ActiveRecord implements IdentityInterface
 {
@@ -36,6 +38,10 @@ class User extends ActiveRecord implements IdentityInterface
     public function behaviors()
     {
         return [
+            [
+                'class' => TimestampBehavior::className(),
+                'value' => new Expression('NOW()'),
+            ],
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
