@@ -543,8 +543,9 @@ class UserController extends Controller
         return $this->render('adminchange', $result);
     }
 
-    public function actionSuccess()
+    public function actionSuccess($id)
     {
-        return $this->render('success');
+        $user = $this->findModel($id);
+        return $this->render('success', ['model' => $user]);
     }
 }
