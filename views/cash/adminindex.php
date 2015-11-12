@@ -16,6 +16,22 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'export'=>[
+            'fontAwesome'=>true,
+            'showConfirmAlert'=>false,
+            'target'=>GridView::TARGET_BLANK
+        ],
+        'exportConfig' => [
+            GridView::EXCEL => ['label' => 'Save as excel']
+        ],
+        'toolbar'=>[
+            '{export}',
+            '{toggleData}'
+        ],
+        'panel'=>[
+            'type'=>GridView::TYPE_PRIMARY,
+        ],
+        'autoXlFormat' => true,
         'layout' => '{items} {summary} {pager}',
         'columns' => [
             [

@@ -41,7 +41,7 @@ class NewsSearch extends News
      */
     public function search($params)
     {
-        $query = News::find();
+        $query = News::find()->orderBy(['be_top' => SORT_DESC,'id' => SORT_DESC]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -66,7 +66,8 @@ class NewsSearch extends News
 
         $query->andFilterWhere(['like', 'be_top', $this->be_top])
             ->andFilterWhere(['like', 'title', $this->title])
-            ->andFilterWhere(['like', 'content', $this->content]);
+            ->andFilterWhere(['like', 'content', $this->content])
+            ->orderBy(['be_top' => SORT_DESC,'id' => SORT_DESC]);
 
         return $dataProvider;
     }

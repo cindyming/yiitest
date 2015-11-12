@@ -21,16 +21,24 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'id',
                 'label'=>'会员编号',
             ],
-            'username',
+            [
+                'attribute' => 'username',
+                'filter' => true,
+            ],
             'investment',
-            'phone',
+            [
+                'attribute' => 'phone',
+                'filter' => true,
+            ],
             'created_at:datetime',
             [
                 'attribute' => 'approved_at',
                 'label'     => '状态',
                 'value'  => function($model) {
                         return $model->getStatus();
-                    }
+                    },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=> [2 => '待审核', 3 => '正式', 4=> '拒绝'],
             ],
         ],
     ]); ?>

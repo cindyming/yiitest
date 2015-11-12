@@ -152,9 +152,10 @@ class User extends ActiveRecord implements IdentityInterface
             [['username', 'password'], 'string', 'max' => 100],
             [['password1'], 'compare', 'compareAttribute' => 'password'],
             [['password3'], 'compare', 'compareAttribute' => 'password2'],
+            [['password3', 'password', 'password1', 'password2'], 'string', 'min' => 6],
             [['approved_at'], 'string'],
             [['referer', 'added_by', 'achievements'], 'trim'],
-            [['role_id', 'merited', 'level', 'add_member', 'stop_bonus', 'level'], 'number'],
+            [['role_id', 'merited', 'level', 'add_member', 'stop_bonus'], 'number'],
             [['bonus_total', 'merit_total'], 'double'],
             [['email'], 'email'],
             [['qq'], 'number']
@@ -379,25 +380,41 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
 
-    public function getBankNames()
+    public function getBankNames($filter = false)
     {
-        return  array('ICBC' => '工商银行', 'ABC' => '农业银行');
+        return  $filter ? array('' => '不限', 'ICBC' => '工商银行', 'ABC' => '农业银行') : array('ICBC' => '工商银行', 'ABC' => '农业银行');
     }
 
-    public function getLevelOptions()
+    public function getLevelOptions($filter = false)
     {
-        return [
-            1 => '实习生',
-            2 => '业务员',
-            3 => '主任',
-            4 => '经理',
-            5 => '一级总监',
-            6 => '二级总监',
-            7 => '三级总监',
-            8 => '区域总监',
-            9 => '全国总监',
-            10 => '钻石级总监',
-        ];
+        if ($filter) {
+            return array(
+                '' => '不限',
+                1 => '实习生',
+                2 => '业务员',
+                3 => '主任',
+                4 => '经理',
+                5 => '一级总监',
+                6 => '二级总监',
+                7 => '三级总监',
+                8 => '区域总监',
+                9 => '全国总监',
+                10 => '钻石级总监',
+            );
+        } else {
+            return array(
+                1 => '实习生',
+                2 => '业务员',
+                3 => '主任',
+                4 => '经理',
+                5 => '一级总监',
+                6 => '二级总监',
+                7 => '三级总监',
+                8 => '区域总监',
+                9 => '全国总监',
+                10 => '钻石级总监',
+            );
+        }
     }
 
     public function getMeritRate($level = false)

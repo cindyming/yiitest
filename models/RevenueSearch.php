@@ -19,7 +19,7 @@ class RevenueSearch extends Revenue
     {
         return [
             [['id', 'user_id', 'approved', 'bonus', 'merit'], 'integer'],
-            [['note', 'created_at', 'updated_at'], 'safe'],
+            [['note', 'created_at', 'updated_at', 'type'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class RevenueSearch extends Revenue
      */
     public function search($params)
     {
-        $query = Revenue::find();
+        $query = Revenue::find()->orderBy(['id' => SORT_DESC]);
 
         // add conditions that should always apply here
 
@@ -67,8 +67,18 @@ class RevenueSearch extends Revenue
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
+        $column = '';
+        if ($this->type == 1) {
+            $column = 'bonus';
+        } elseif ($this->type == 2) {
+            $column = 'merit';
+        }
+        if ($column) {
+            $query->andFilterWhere(['>', $column, 0]);
+        }
 
-        $query->andFilterWhere(['like', 'note', $this->note]);
+        $query->andFilterWhere(['like', 'note', $this->note])
+              ->orderBy(['id' => SORT_DESC]);
 
         return $dataProvider;
     }

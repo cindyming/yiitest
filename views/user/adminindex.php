@@ -36,20 +36,34 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'业务等级',
                 'value' => function($model) {
                         return $model->level ? $model->getLevelOptions()[$model->level] : '';
-                    }
+                    },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>$searchModel->getLevelOptions(true),
             ],
-            'username',
-            'identity',
+            [
+                'attribute' => 'username',
+                'filter' => true,
+            ],
+            [
+                'attribute' => 'identity',
+                'filter' => true,
+            ],
             [
                 'attribute' => 'bank',
                 'value' => function($model) {
                         return $model->bank ? $model->getBankNames()[$model->bank] : '';
-                    }
+                    },
+                'filter' => true,
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>$searchModel->getBankNames(true),
             ],
             'cardname',
             'bankaddress',
             'cardnumber',
-            'phone',
+            [
+                'attribute' => 'phone',
+                'filter' => true,
+            ],
             [
                 'attribute' => 'approved_at',
                 'label' => '状态',

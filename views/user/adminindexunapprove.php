@@ -38,11 +38,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'业务等级',
                 'value' => function($model) {
                         return $model->level ? $model->getLevelOptions()[$model->level] : '';
-                    }
+                    },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=> $searchModel->getLevelOptions(true),
             ],
-            'username',
+            [
+                'attribute' => 'username',
+                'filter' => true,
+            ],
             'investment',
-            'referer',
+            [
+                'attribute' => 'referer',
+                'filter' => true,
+            ],
             'phone',
             'created_at',
             [

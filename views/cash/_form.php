@@ -11,11 +11,11 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'bank')->dropDownList($model->getBankNames()) ?>
+        <?= $form->field($model, 'bank')->dropDownList($model->getBankNames(), ['value' => Yii::$app->user->identity->bank]) ?>
         <?= $form->field($model, 'type')->label('')->hiddenInput() ?>
-        <?= $form->field($model, 'cardnumber') ?>
-        <?= $form->field($model, 'cardname') ?>
-        <?= $form->field($model, 'bankaddress') ?>
+        <?= $form->field($model, 'cardnumber')->textInput(['value' => Yii::$app->user->identity->cardnumber]); ?>
+        <?= $form->field($model, 'cardname')->textInput(['value' => Yii::$app->user->identity->cardname]); ?>
+        <?= $form->field($model, 'bankaddress')->textInput(['value' => Yii::$app->user->identity->bankaddress]); ?>
         <?= $form->field($model, 'amount') ?>
         <?= $form->field($model, 'password2')->passwordInput() ?>
         <div class="form-group">

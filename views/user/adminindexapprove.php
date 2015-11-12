@@ -33,25 +33,41 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => true,
                 'label'=>'会员编号',
             ],
-            'username',
+            [
+                'attribute' => 'username',
+                'filter' => true,
+            ],
             [
                 'attribute' => 'level',
                 'label'=>'业务等级',
                 'value' => function($model) {
                         return $model->level ? $model->getLevelOptions()[$model->level] : '';
-                    }
+                    },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=> $searchModel->getLevelOptions(true),
             ],
             [
                 'attribute' => 'add_member',
                 'label'=>'报单员',
                 'value' => function($model) {
                         return $model->add_member == 2 ? '是':'否';
-                    }
+                    },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=> [''=> '不限', 0=>'否', 2=> '是']
             ],
             'investment',
-            'referer',
-            'phone',
-            'identity',
+            [
+                'attribute' => 'referer',
+                'filter' => true,
+            ],
+            [
+                'attribute' => 'phone',
+                'filter' => true,
+            ],
+            [
+                'attribute' => 'identity',
+                'filter' => true,
+            ],
             'approved_at',
             [
                 'attribute' => 'locked',

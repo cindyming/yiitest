@@ -24,15 +24,15 @@ $this->title = '密码修改';
             <?php endif ?>
             <?php $form = ActiveForm::begin(); ?>
 
-            <?= $form->field($model, 'old_username')->textInput(['maxlength' => true, 'readonly' => true, 'value' => $model->username]) ?>
+            <?= $form->field($model, 'old_username')->textInput(['minlength' => 6, 'readonly' => true, 'value' => $model->username]) ?>
 
-            <?= $form->field($model, 'password_old')->passwordInput(['maxlength' => true, 'label' => '原一级密码'])->label('原密码') ?>
+            <?= $form->field($model, 'password_old')->passwordInput(['minlength' => 6, 'label' => '原一级密码'])->label('原密码') ?>
 
-            <?= $form->field($model, 'username')->textInput(['maxlength' => true, 'value' => $model->username])->label('新登录名') ?>
+            <?= $form->field($model, 'username')->textInput(['minlength' => 6, 'value' => $model->username])->label('新登录名') ?>
 
-            <?= $form->field($model, 'password')->passwordInput(['maxlength' => true, 'label' => '新一级密码', 'value' => ''])->label('新密码') ?>
+            <?= $form->field($model, 'password')->passwordInput(['minlength' => 6, 'label' => '新一级密码', 'value' => ''])->label('新密码') ?>
 
-            <?= $form->field($model, 'password1')->passwordInput(['maxlength' => true, 'label' => '确认新一级密码', 'value' => ''])->label('确认新密码')  ?>
+            <?= $form->field($model, 'password1')->passwordInput(['minlength' => 6, 'label' => '确认新一级密码', 'value' => ''])->label('确认新密码')  ?>
             <div class="form-group">
                 <?= Html::submitButton('确认修改', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
             </div>

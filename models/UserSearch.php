@@ -19,7 +19,7 @@ class UserSearch extends User
     public function rules()
     {
         return [
-            [['id', 'offical', 'locked', 'role_id', 'referer', 'investment', 'add_member'], 'integer'],
+            [['id', 'offical', 'locked', 'role_id', 'referer', 'investment', 'add_member', 'level'], 'integer'],
             [['auth_key', 'access_token', 'username', 'password', 'password2', 'add_member', 'identity', 'phone', 'title', 'bank', 'cardname', 'cardnumber', 'bankaddress', 'email', 'qq', 'created_at', 'updated_at', 'approved_at'], 'safe'],
         ];
     }
@@ -42,7 +42,7 @@ class UserSearch extends User
      */
     public function search($params)
     {
-        $query = User::find()->where(['!=','role_id',1]);
+        $query = User::find()->where(['!=','role_id',1])->orderBy(['id' => SORT_DESC]);
 
         // add conditions that should always apply here
 
@@ -65,6 +65,7 @@ class UserSearch extends User
             'locked' => $this->locked,
             'role_id' => $this->role_id,
             'referer' => $this->referer,
+            'level' => $this->level,
             'investment' => $this->investment,
             'approved_at' => $this->approved_at,
             'add_member' => $this->add_member,
@@ -83,7 +84,8 @@ class UserSearch extends User
             ->andFilterWhere(['like', 'cardnumber', $this->cardnumber])
             ->andFilterWhere(['like', 'bankaddress', $this->bankaddress])
             ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'qq', $this->qq]);
+            ->andFilterWhere(['like', 'qq', $this->qq])
+            ->orderBy(['id' => SORT_DESC]);
 
         return $dataProvider;
     }

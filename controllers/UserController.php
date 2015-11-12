@@ -35,7 +35,7 @@ class UserController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'changepassword', 'create', 'success', 'view', 'applyaddmember'],
+                        'actions' => ['index', 'changepassword', 'create', 'success', 'view', 'applyaddmember', 'tree'],
                         'roles' => [User::ROLE_USER],
                     ],
                 ],
@@ -178,14 +178,14 @@ class UserController extends Controller
                 $data = array(
                     'user_id' => $addedBy->id,
                     'note' => '会员：' .$model->id . '的报单奖励',
-                    'bonus' => $meritAmount,
-                    'total' => $meritAmount +  $addedBy->bonus_remain
+                    'baodan' => $meritAmount,
+                    'total' => $meritAmount +  $addedBy->baodan_remain
                 );
                 $merit = new Revenue();
                 $merit->load($data, '');
                 $merit->save();
-                $addedBy->bonus_remain += $meritAmount;
-                $addedBy->bonus_total += $meritAmount;
+                $addedBy->baodan_remain += $meritAmount;
+                $addedBy->baodan_total += $meritAmount;
                 $addedBy->save();
             }
 
@@ -245,19 +245,27 @@ class UserController extends Controller
         $model = new User();
 
         if ($model->load(Yii::$app->request->post())) {
+            $validate = true;
             if ($model->isNewRecord) {
                 $model->achievements = $model->investment * 10000;
             }
-            $user =  User::findOne($model->referer);
+
             if ($model->investment < 5){
+                $validate = false;
                 $model->addError('investment', '投资额不可以少于5W,请重新输入');
             }
-            if ($model->referer === '#' || ($user && $user->getId())) {
-                if (($model->investment >= 5) && $model->save()) {
-                    return $this->redirect(['success', 'id' => $model->id]);
-                }
-            } else {
+            $userNameUser = User::findByUsername($model->username);
+            if ($userNameUser && $userNameUser->id) {
+                $validate = false;
+                $model->addError('username', '此网络昵称已经被注册, 请重新输入');
+            }
+            $user =  User::findOne($model->referer);
+            if ($model->referer !== '#' && !$user) {
+                $validate = false;
                 $model->addError('referer', '推荐人的会员ID不正确, 请确认之后重新输入');
+            }
+            if ($validate && $model->save()) {
+                return $this->redirect(['success', 'id' => $model->id]);
             }
         }
         return $this->render('admincreate', [
@@ -265,7 +273,31 @@ class UserController extends Controller
         ]);
 
     }
+    public function actionTree()
+    {
+        $users = User::find()->where(['=', 'role_id', 3])->andWhere(['>=', 'id', Yii::$app->user->identity->id])->orderBy(['id' => SORT_ASC])->all();
 
+        $result = array();
+        $ids = array();
+        foreach($users as $use) {
+            if ($use->id == Yii::$app->user->identity->id) {
+                $ids[] = $use->id;
+                $result[] = array(
+                    "id" => $use->id,
+                    "parent" => '#',
+                    "text" => $use->id . "(昵称: " . $use->username  . ", 投资额 : " . ($use->investment / 10000) . "万, 总业绩 : "  . ($use->achievements/10000) . "万)"
+                );
+            } elseif ($use->referer && in_array($use->referer, $ids)) {
+                $ids[] = $use->id;
+                $result[] = array(
+                    "id" => $use->id,
+                    "parent" => $use->referer,
+                    "text" => $use->id . "(昵称: " . $use->username  . ", 投资额 : " . ($use->investment / 10000) . "万, 总业绩 : "  . ($use->achievements/10000) . "万)"
+                );
+            }
+        }
+        return $this->render('admintree',array( 'data' => $result));
+    }
 
     public function actionAdmintree()
     {
@@ -277,7 +309,7 @@ class UserController extends Controller
             $result[] = array(
                 "id" => $use->id,
                 "parent" => (($use->referer == '#') || ($use->referer == 0)) ? '#' : $use->referer,
-                "text" => $use->id . "(昵称: " . $use->username  . ", 投资额 : " . $use->investment . ", 总业绩 : "  . $use->achievements . ")"
+                "text" => $use->id . "(昵称: " . $use->username  . ", 投资额 : " . ($use->investment / 10000) . "万, 总业绩 : "  . ($use->achievements/10000) . "万)"
             );
         }
         $data = ($result);
@@ -349,19 +381,27 @@ class UserController extends Controller
         $model = new User();
 
         if ($model->load(Yii::$app->request->post())) {
+            $validate = true;
             if ($model->isNewRecord) {
                 $model->achievements = $model->investment * 10000;
             }
-            $user =  User::findOne($model->referer);
+
             if ($model->investment < 5){
+                $validate = false;
                 $model->addError('investment', '投资额不可以少于5W,请重新输入');
             }
-            if ($model->referer === '#' || ($user && $user->getId())) {
-                if (($model->investment >= 5) && $model->save()) {
-                    return $this->redirect(['success', 'id' => $model->id]);
-                }
-            } else {
+            $userNameUser = User::findByUsername($model->username);
+            if ($userNameUser && $userNameUser->id) {
+                $validate = false;
+                $model->addError('username', '此网络昵称已经被注册, 请重新输入');
+            }
+            $user =  User::findOne($model->referer);
+            if ($model->referer !== '#' && !$user) {
+                $validate = false;
                 $model->addError('referer', '推荐人的会员ID不正确, 请确认之后重新输入');
+            }
+            if ($validate && $model->save()) {
+                return $this->redirect(['success', 'id' => $model->id]);
             }
         }
         return $this->render('create', [

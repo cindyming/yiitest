@@ -33,7 +33,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => '账户类型',
                 'content' => function($model) {
                     return $model->bonus ? '分红' : '绩效';
-                }
+                },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=> ['' => '不限',  1=> '分红', 2 => '绩效'],
             ],
             [
                 'class' => 'yii\grid\Column',

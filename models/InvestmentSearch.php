@@ -42,7 +42,7 @@ class InvestmentSearch extends Investment
      */
     public function search($params)
     {
-        $query = Investment::find();
+        $query = Investment::find()->orderBy(['id' => SORT_DESC]);
 
         // add conditions that should always apply here
 
@@ -68,7 +68,8 @@ class InvestmentSearch extends Investment
             'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', 'note', $this->note]);
+        $query->andFilterWhere(['like', 'note', $this->note])
+              ->orderBy(['id' => SORT_DESC]);
 
         return $dataProvider;
     }

@@ -41,7 +41,7 @@ class CashSearch extends Cash
      */
     public function search($params)
     {
-        $query = Cash::find();
+        $query = Cash::find()->orderBy(['id' => SORT_DESC]);
 
         // add conditions that should always apply here
 

@@ -26,6 +26,9 @@ $welcome .= ', 欢迎回来.';
                 网络昵称: <?php echo Yii::$app->user->identity->username?>
             </li>
             <li>
+                总业绩: <?php echo Yii::$app->user->identity->achievements?>
+            </li>
+            <li>
                 分红余额: <?php echo Yii::$app->user->identity->bonus_remain?>
             </li>
             <li>
@@ -48,7 +51,8 @@ echo Nav::widget([
                 Yii::$app->user->identity->add_member == 2 ?
                     ['label' => '会员注册', 'url' => ['/user/create']]:
                   ['label' => '申请成为报单员', 'url' => ['/user/applyaddmember']],
-                ['label' => '我的推荐', 'url' => ['/user/index', 'referer' => Yii::$app->user->identity->id]]
+                ['label' => '我的推荐', 'url' => ['/user/index', 'referer' => Yii::$app->user->identity->id]],
+                ['label' => '推荐图', 'url' => ['/user/tree']],
             ]
         ],
         [
