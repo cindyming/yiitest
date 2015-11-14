@@ -32,10 +32,13 @@ $welcome .= ', 欢迎回来.';
                 分红余额: <?php echo Yii::$app->user->identity->bonus_remain?>
             </li>
             <li>
+                报单费余额: <?php echo round(Yii::$app->user->identity->baodan_remain, 2)?>
+            </li>
+            <li>
                 可提现绩效工资余额: <?php echo Yii::$app->user->identity->merit_remain?>
             </li>
             <li>
-                商城币余额: <?php echo Yii::$app->user->identity->mall_remain?>
+                商城币余额: <?php echo round(Yii::$app->user->identity->mall_remain, 2)?>
             </li>
         </ul>
     </div>
@@ -52,7 +55,7 @@ echo Nav::widget([
                     ['label' => '会员注册', 'url' => ['/user/create']]:
                   ['label' => '申请成为报单员', 'url' => ['/user/applyaddmember']],
                 ['label' => '我的推荐', 'url' => ['/user/index', 'referer' => Yii::$app->user->identity->id]],
-                ['label' => '推荐图', 'url' => ['/user/tree']],
+                \app\models\System::loadConfig('open_member_tree') ? ['label' => '推荐图', 'url' => ['/user/tree']] : '',
             ]
         ],
         [

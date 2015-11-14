@@ -55,7 +55,7 @@ echo Nav::widget([
             'label' => '系统管理', 'url' => ['/blank'],
             'items' => [
                 ['label' => '密码修改', 'url' => yii\helpers\Url::to('/user/adminchange')],
-                ['label' => '系统设置', 'url' => yii\helpers\Url::to('/blank')],
+                ['label' => '系统设置', 'url' => yii\helpers\Url::to('/system/index')],
                 ['label' => '系统日志', 'url' => yii\helpers\Url::to('/blank')],
             ]
         ],

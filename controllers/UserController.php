@@ -245,25 +245,7 @@ class UserController extends Controller
         $model = new User();
 
         if ($model->load(Yii::$app->request->post())) {
-            $validate = true;
-            if ($model->isNewRecord) {
-                $model->achievements = $model->investment * 10000;
-            }
-
-            if ($model->investment < 5){
-                $validate = false;
-                $model->addError('investment', '投资额不可以少于5W,请重新输入');
-            }
-            $userNameUser = User::findByUsername($model->username);
-            if ($userNameUser && $userNameUser->id) {
-                $validate = false;
-                $model->addError('username', '此网络昵称已经被注册, 请重新输入');
-            }
-            $user =  User::findOne($model->referer);
-            if ($model->referer !== '#' && !$user) {
-                $validate = false;
-                $model->addError('referer', '推荐人的会员ID不正确, 请确认之后重新输入');
-            }
+            $validate = $this->validateUserData($model);
             if ($validate && $model->save()) {
                 return $this->redirect(['success', 'id' => $model->id]);
             }
@@ -305,12 +287,22 @@ class UserController extends Controller
 
         $result = array();
 
+        $ids = array();
+
         foreach ($users as $use) {
-            $result[] = array(
-                "id" => $use->id,
-                "parent" => (($use->referer == '#') || ($use->referer == 0)) ? '#' : $use->referer,
-                "text" => $use->id . "(昵称: " . $use->username  . ", 投资额 : " . ($use->investment / 10000) . "万, 总业绩 : "  . ($use->achievements/10000) . "万)"
-            );
+            $referer = (($use->referer == '#') || ($use->referer == 0)) ? '#' : $use->referer;
+
+            if (($referer == '#')  || in_array($referer, $ids)) {
+                $result[] = array(
+                    "id" => $use->id,
+                    "parent" => (($use->referer == '#') || ($use->referer == 0)) ? '#' : $use->referer,
+                    "text" => $use->id . "(昵称: " . $use->username  . ", 投资额 : " . ($use->investment / 10000) . "万, 总业绩 : "  . ($use->achievements/10000) . "万)"
+                );
+                $ids[] = $use->id;
+            } else {
+
+            }
+
         }
         $data = ($result);
         return $this->render('admintree',array( 'data' => $data));
@@ -370,6 +362,37 @@ class UserController extends Controller
         }
     }
 
+    protected function validateUserData(&$model){
+        $validate = true;
+        if ($model->isNewRecord) {
+            $model->achievements = $model->investment * 10000;
+        }
+
+        if ($model->investment < 5){
+            $validate = false;
+            $model->addError('investment', '投资额不可以少于5W, 请重新输入');
+        }
+
+        $userNameUser = User::findByUsername($model->username);
+        if ($userNameUser && $userNameUser->id) {
+            $validate = false;
+            $model->addError('username', '此网络昵称已经被注册, 请重新输入');
+        }
+
+        $user =  User::findOne($model->referer);
+        if ($model->referer !== '#' && !$user) {
+            $validate = false;
+            $model->addError('referer', '接点人的会员ID不正确, 请确认之后重新输入');
+        }
+
+        $user =  User::findOne($model->suggest_by);
+        if (!$user || !$user->getId()) {
+            $validate = false;
+            $model->addError('suggest_by', '推荐人的会员ID不正确, 请确认之后重新输入');
+        }
+        return $validate;
+    }
+
 
     /**
      * Creates a new User model.
@@ -381,25 +404,7 @@ class UserController extends Controller
         $model = new User();
 
         if ($model->load(Yii::$app->request->post())) {
-            $validate = true;
-            if ($model->isNewRecord) {
-                $model->achievements = $model->investment * 10000;
-            }
-
-            if ($model->investment < 5){
-                $validate = false;
-                $model->addError('investment', '投资额不可以少于5W,请重新输入');
-            }
-            $userNameUser = User::findByUsername($model->username);
-            if ($userNameUser && $userNameUser->id) {
-                $validate = false;
-                $model->addError('username', '此网络昵称已经被注册, 请重新输入');
-            }
-            $user =  User::findOne($model->referer);
-            if ($model->referer !== '#' && !$user) {
-                $validate = false;
-                $model->addError('referer', '推荐人的会员ID不正确, 请确认之后重新输入');
-            }
+            $validate = $this->validateUserData($model);
             if ($validate && $model->save()) {
                 return $this->redirect(['success', 'id' => $model->id]);
             }

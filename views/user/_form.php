@@ -45,12 +45,14 @@ use yii\widgets\ActiveForm;
     <?php if(!$model->isNewRecord): ?>
          <?= $form->field($model, 'investment', [ 'template' => "{label}\n <div style='color:#ff0000'>" . $model->investment . "</div>\n{hint}\n{error}"])->textInput(['maxlength' => true, 'readonly' => true]) ?>
          <?= $form->field($model, 'locked')->dropDownList([0 => '未锁定', 1 => '锁定']) ?>
-         <?= $form->field($model, 'referer', [ 'template' => "{label}： <label>如会员没有推荐人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true,'readonly' => true, 'value' => ($model->referer == 0) ? '#' : $model->referer])->label() ?>
+         <?= $form->field($model, 'referer', [ 'template' => "{label}： <label>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true,'readonly' => true, 'value' => ($model->referer == 0) ? '#' : $model->referer])->label() ?>
     <?php else: ?>
         <?= $form->field($model, 'investment',[ 'template' => "{label}\n{input}0000   <label style='color:#ff0000'>此处输入单位为万,例如你输入1就代表1W</label>\n{hint}\n{error}"])->textInput(['maxlength' => true]) ?>
-        <?= $form->field($model, 'referer', [ 'template' => "{label}： <label>如会员没有推荐人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true])->label() ?>
-
+        <?= $form->field($model, 'referer', [ 'template' => "{label}： <label>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true])->label() ?>
     <?php endif ?>
+
+    <?= $form->field($model, 'suggest_by')->textInput(['maxlength' => true])->hint('推荐人ID')->label() ?>
+
     <?= $form->field($model, 'bank')->dropDownList(['ICBC' => '工商银行', 'ABC' => '农业银行']) ?>
 
     <?= $form->field($model, 'cardname')->textInput(['maxlength' => true]) ?>

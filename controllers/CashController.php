@@ -125,13 +125,15 @@ class CashController extends Controller
             $validateAmount = true;
             if ($model->type == 1) {
                 $compareAmount = Yii::$app->user->identity->bonus_remain;
-            } else {
+            } elseif($model->type == 2) {
                 $compareAmount = Yii::$app->user->identity->merit_remain;
+            } elseif($model->type == 3) {
+                $compareAmount = Yii::$app->user->identity->baodan_remain;
             }
 
             if ($model->amount > $compareAmount) {
                 $validateAmount = false;
-                $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain . '.');
+                $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 报单费余额: ' . Yii::$app->user->identity->baodan_remain  . '.');
             }
             if (Yii::$app->user->identity->validatePassword2($data['Cash']['password2'])) {
                 if ($validateAmount && $model->save()) {
@@ -164,8 +166,10 @@ class CashController extends Controller
             $user = User::findById($model->user_id);
             if ($model->type == 1) {
                 $user->bonus_remain = $user->bonus_remain - $model->amount;
-            } else {
+            } elseif($model->type == 2) {
                 $user->merit_remain = $user->merit_remain - $model->amount;
+            } elseif($model->type == 3) {
+                $user->baodan_remain = $user->baodan_remain - $model->amount;
             }
             $user->save();
             $transaction->commit();

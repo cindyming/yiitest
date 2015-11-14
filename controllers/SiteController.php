@@ -59,8 +59,10 @@ class SiteController extends Controller
     public function userRedirect()
     {
         if (Yii::$app->user->getIdentity()->isAdmin()) {
-            $this->redirect(array('/user/adminindex'));
+            Yii::$app->systemlog->add('管理员', '登录');
+            $this->redirect(array('/news/adminindex'));
         } else {
+            Yii::$app->systemlog->add('会员: ' . Yii::$app->user->identity->id, '登录');
             $this->redirect(array('/news/index'));
         }
     }
