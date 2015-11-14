@@ -273,12 +273,22 @@ class UserController extends Controller
 
         $result = array();
 
+        $ids = array();
+
         foreach ($users as $use) {
-            $result[] = array(
-                "id" => $use->id,
-                "parent" => (($use->referer == '#') || ($use->referer == 0)) ? '#' : $use->referer,
-                "text" => $use->id . "(昵称: " . $use->username  . ", 投资额 : " . $use->investment . ", 总业绩 : "  . $use->achievements . ")"
-            );
+            $referer = (($use->referer == '#') || ($use->referer == 0)) ? '#' : $use->referer;
+
+            if (($referer == '#')  || in_array($referer, $ids)) {
+                $result[] = array(
+                    "id" => $use->id,
+                    "parent" => (($use->referer == '#') || ($use->referer == 0)) ? '#' : $use->referer,
+                    "text" => $use->id . "(昵称: " . $use->username  . ", 投资额 : " . ($use->investment / 10000) . "万, 总业绩 : "  . ($use->achievements/10000) . "万)"
+                );
+                $ids[] = $use->id;
+            } else {
+
+            }
+
         }
         $data = ($result);
         return $this->render('admintree',array( 'data' => $data));
