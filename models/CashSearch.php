@@ -19,7 +19,7 @@ class CashSearch extends Cash
     {
         return [
             [['id', 'user_id', 'type', 'status', 'amount'], 'integer'],
-            [['bank', 'cardname', 'cardnumber', 'bankaddress', 'created_at', 'update_at'], 'safe'],
+            [['bank', 'cardname', 'cardnumber', 'bankaddress', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -65,7 +65,7 @@ class CashSearch extends Cash
             'status' => $this->status,
             'amount' => $this->amount,
             'created_at' => $this->created_at,
-            'update_at' => $this->update_at,
+            'updated_at' => $this->updated_at,
         ]);
 
         $query->andFilterWhere(['like', 'bank', $this->bank])

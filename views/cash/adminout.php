@@ -38,9 +38,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'账户类型',
                 'filter'=> true,
                 'filterType'=>GridView::FILTER_SELECT2,
-                'filter' => ['' => '不限', '1' => '分红', 2 => '绩效工资'],
+                'filter' =>$searchModel->getTypes(true),
                 'value' => function($model) {
-                        return $model->type == 1 ? '分红' : '绩效工资';
+                        return $model->getType();
                     }
             ],
             [
@@ -51,7 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'amount',
                 'label'=>'手续费',
                 'value' => function($model) {
-                        return $model->type == 1 ? 0 : $model->amount * 0.1;
+                        return $model->type == 2 ? $model->amount * 0.1 : 0 ;
                     }
             ],
             'created_at',

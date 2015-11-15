@@ -87,7 +87,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                 'data-confirm' => Yii::t('yii', '你确定要审核会员[' . $model->id . ']吗?'),
                                 'data-method' => 'post',
                             ];
-                            return Html::a('审核', $url, $options);
+                            $parent = $model->getParennt()->one();
+                            return ($parent->role_id == 3) ? Html::a('审核', $url, $options) : '接点人' . (($parent->role_id == 2) ? '未被审核' : '已拒绝');
                         },
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {

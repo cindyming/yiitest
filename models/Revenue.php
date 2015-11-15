@@ -12,6 +12,7 @@ class Revenue extends ActiveRecord
 {
     public $bonus_total;
     public $merit_total;
+    public $baodan_total;
     public $type;
 
     public $dynTableName = '{{%revenue}}';
@@ -43,7 +44,7 @@ class Revenue extends ActiveRecord
     {
         return [
             [['user_id'], 'required'],
-            [['bonus', 'merit', 'note', 'total'], 'trim'],
+            [['bonus', 'merit', 'note', 'total', 'baodan'], 'trim'],
         ];
     }
 
@@ -57,9 +58,11 @@ class Revenue extends ActiveRecord
             'user_id' => '编号',
             'bonus' => '分红',
             'merit' => '绩效',
+            'baodan' => '报单费',
             'approved' => '状态',
             'bonus_total' => '分红',
             'merit_total' => '绩效',
+            'baodan_total' => '报单费',
             'note' => '备注',
             'created_at' => '结算时间',
             'updated_at' => '发放时间',

@@ -90,11 +90,19 @@ class Cash extends ActiveRecord
 
     public function getTypes($filter = false)
     {
-        return  $filter ? array(''=> '不限', 1 => '分红提现', 2 => '绩效提现') : array(1 => '分红提现', 2 => '绩效提现');
+        return  $filter ? array(''=> '不限', 1 => '分红提现', 2 => '绩效提现', 3 => '报单费') : array(1 => '分红提现', 2 => '绩效提现', 3 => '报单费');
     }
 
     public function getStatus($filter =false)
     {
         return  $filter ? array(''=> '不限', 1 => '未处理', 2 => '已发放', 3 => '拒绝') : array(1 => '未处理', 2 => '已发放', 3 => '拒绝');
     }
+
+    public function getType()
+    {
+        $types = $this->getTypes();
+        return isset($types[$this->type]) ? $types[$this->type] : '';
+    }
+
+
 }
