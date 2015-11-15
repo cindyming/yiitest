@@ -29,6 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'bonus',
             'merit',
+            'baodan',
             [
                 'attribute' => 'total',
                 'label' => '入账后余额',

@@ -18,8 +18,8 @@ class RevenueSearch extends Revenue
     public function rules()
     {
         return [
-            [['id', 'user_id', 'approved', 'bonus', 'merit'], 'integer'],
-            [['note', 'created_at', 'updated_at', 'type'], 'safe'],
+            [['id', 'user_id', 'approved', 'bonus', 'merit', 'baodan'], 'integer'],
+            [['note', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -67,18 +67,8 @@ class RevenueSearch extends Revenue
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
-        $column = '';
-        if ($this->type == 1) {
-            $column = 'bonus';
-        } elseif ($this->type == 2) {
-            $column = 'merit';
-        }
-        if ($column) {
-            $query->andFilterWhere(['>', $column, 0]);
-        }
 
-        $query->andFilterWhere(['like', 'note', $this->note])
-              ->orderBy(['id' => SORT_DESC]);
+        $query->andFilterWhere(['like', 'note', $this->note]);
 
         return $dataProvider;
     }
@@ -92,7 +82,7 @@ class RevenueSearch extends Revenue
      */
     public function searchTotal($params)
     {
-        $query = Revenue::find()->select(['COUNT(*) AS cnt', 'SUM(bonus) as bonus_total', 'SUM(merit) as merit_total', 'id', 'user_id']);
+        $query = Revenue::find()->select(['COUNT(*) AS cnt', 'SUM(bonus) as bonus_total', 'SUM(merit) as merit_total','sum(baodan) as baodan_total', 'id', 'user_id']);
 
         // add conditions that should always apply here
 
@@ -120,7 +110,7 @@ class RevenueSearch extends Revenue
         ]);
 
         $query->andFilterWhere(['like', 'note', $this->note]);
-        $query->groupBy(['user_id']);
+        $query->groupBy(['user_id'])->orderBy(['id' => SORT_DESC]);
 
         return $dataProvider;
     }

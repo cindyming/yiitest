@@ -62,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'type',
                 'label'=>'账户类型',
                 'value' => function($model) {
-                        return $model->type == 1 ? '分红' : '绩效工资';
+                        return $model->getType();
                     }
             ],
             'amount',
@@ -70,7 +70,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'amount',
                 'label'=>'实发金额',
                 'value' => function($model) {
-                        return ($model->type == 1) ? $model->amount : ($model->amount * 0.95);
+                        return ($model->type == 2) ? ($model->amount * 0.95) : $model->amount ;
                     }
             ],
             'created_at',
