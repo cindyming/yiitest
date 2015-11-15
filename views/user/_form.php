@@ -45,9 +45,9 @@ use yii\widgets\ActiveForm;
     <?php if(!$model->isNewRecord): ?>
          <?= $form->field($model, 'investment', [ 'template' => "{label}\n <div style='color:#ff0000'>" . $model->investment . "</div>\n{hint}\n{error}"])->textInput(['maxlength' => true, 'readonly' => true]) ?>
          <?= $form->field($model, 'locked')->dropDownList([0 => '未锁定', 1 => '锁定']) ?>
-         <?= $form->field($model, 'referer', [ 'template' => "{label}： <label>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true,'readonly' => true, 'value' => ($model->referer == 0) ? '#' : $model->referer])->label() ?>
+         <?= $form->field($model, 'referer', [ 'template' => "{label}： <label class='des'>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true,'readonly' => true, 'value' => ($model->referer == 0) ? '#' : $model->referer])->label() ?>
     <?php else: ?>
-        <?= $form->field($model, 'investment',[ 'template' => "{label}\n{input}0000   <label style='color:#ff0000'>此处输入单位为万,例如你输入1就代表1W</label>\n{hint}\n{error}"])->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'investment',[ 'template' => "{label}\n{input}<label class='des' style='color:#ff0000'>万,例如你输入1就代表1万</label>\n{hint}\n{error}"])->textInput(['maxlength' => true]) ?>
         <?= $form->field($model, 'referer', [ 'template' => "{label}： <label>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true])->label() ?>
     <?php endif ?>
 
@@ -65,7 +65,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'qq')->textInput(['maxlength' => true]) ?>
 
-    <div class="form-group">
+    <div class="form-group buttons">
 
         <?= Html::submitButton($model->isNewRecord ? '创建' : '保存', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
