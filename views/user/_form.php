@@ -51,7 +51,7 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'referer', [ 'template' => "{label}： <label>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true])->label() ?>
     <?php endif ?>
 
-    <?= $form->field($model, 'suggest_by')->textInput(['maxlength' => true])->hint('推荐人ID')->label() ?>
+    <?= $form->field($model, 'suggest_by',[ 'template' => "{label}： <label class='des'>推荐人ID</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'bank')->dropDownList(['ICBC' => '工商银行', 'ABC' => '农业银行']) ?>
 

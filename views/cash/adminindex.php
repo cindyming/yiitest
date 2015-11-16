@@ -22,7 +22,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'target'=>GridView::TARGET_BLANK
         ],
         'exportConfig' => [
-            GridView::EXCEL => ['label' => 'Save as excel']
+            GridView::EXCEL => ['label' => '保存为Excel文件']
         ],
         'toolbar'=>[
             '{export}',
