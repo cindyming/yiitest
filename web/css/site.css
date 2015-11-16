@@ -225,8 +225,13 @@ h1{font-size:22px;margin:20px 0}
 .user-form .two-cols .form-group{width:100%; vertical-align: top;}
 .filters .form-control{height:26px}
 .user-form .form-group.buttons{clear:both;}
-#user-investment{width:200px}
-
+#user-investment{width:200px;float:left;}
+label.des{font-size:12px;line-height:31px;margin-left:8px}
+.help-block{font-size:12px}
+div.required label:after {
+    content: " *";
+    color: red;
+}
 .table-bordered > thead > tr > th{background:#efefef}
 .summary{text-align:right;margin: 0 0 5px}
 
