@@ -226,8 +226,10 @@ h1{font-size:22px;margin:20px 0}
 .user-form .two-cols .form-group{width:100%; vertical-align: top;}
 .filters .form-control{height:26px}
 .user-form .form-group.buttons{clear:both;}
-label[for="user-investment"]{display:block;}
-#user-investment{width:200px;display:inline-block;}
+label[for="user-investment"],
+label[for="investment-amount"]{display:block;}
+#user-investment,
+#investment-amount{width:200px;display:inline-block;}
 label.des{font-size:12px;line-height:31px;margin-left:8px}
 .help-block{font-size:12px}
 div.required label:after {
@@ -239,3 +241,6 @@ div.required label:after {
 
 body.u_admin .top-header{background:url('bg.jpg') repeat scroll 20% 42% #2E363F}
 .sm-form{width:50%}
+
+.select2-container--krajee .select2-selection--single{height:26px;line-height:13px}
+.select2-container--krajee .select2-selection--single .select2-selection__arrow{height:25px}
