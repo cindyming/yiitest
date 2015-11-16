@@ -25,6 +25,7 @@ class Log  extends ActiveRecord
     {
         return [
             [['role', 'action', 'result'], 'required'],
+            [['note'], 'trim'],
         ];
     }
 
@@ -37,6 +38,7 @@ class Log  extends ActiveRecord
             'role'   => '角色',
             'action' => '动作',
             'result' => '结果',
+            'note' => '摘要',
             'created_at' => '时间',
         ];
     }
