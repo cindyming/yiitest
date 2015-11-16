@@ -169,14 +169,15 @@ label{font-weight:normal;}
 body.login{background: #2E363F url(bg.jpg) no-repeat center center;background-size:cover}
 .loginbox{margin:0 auto;width: 400px;padding:5px 20px 20px;background:#fff;margin:5% auto 0}
 .loginbox h1{color:#777;font-size:19px;text-align: center;margin: 0 -20px 8%;border-bottom: 1px solid #ccc;padding: 2% 0 3%;background-color: #efefef;}
-.loginbox .col-lg-1{width:24%}
+.loginbox .col-lg-1{width:26%}
 .loginbox .col-lg-3{width:73%;display:inline-block;padding-left:0}
-.loginbox .col-lg-8{padding-left:24%;width:100%;font-size:12px}
+.loginbox .col-lg-8{padding-left:26%;width:100%;font-size:12px}
 .loginbox .col-lg-11{padding:0 15px;margin:0;width:100%}
 .loginbox .form-horizontal .control-label{color:#777;}
 .loginbox .form-group{margin-bottom:6px}
 #loginform-captcha{width:135px }
-#loginform-captcha-image{float:right;height:34px;width:auto}
+.field-loginform-captcha{}
+#loginform-captcha-image{position:absolute;right:0}
 .loginbox button{width:100%;height:40px;}
 
 /* nav  */
@@ -225,7 +226,8 @@ h1{font-size:22px;margin:20px 0}
 .user-form .two-cols .form-group{width:100%; vertical-align: top;}
 .filters .form-control{height:26px}
 .user-form .form-group.buttons{clear:both;}
-#user-investment{width:200px;float:left;}
+label[for="user-investment"]{display:block;}
+#user-investment{width:200px;display:inline-block;}
 label.des{font-size:12px;line-height:31px;margin-left:8px}
 .help-block{font-size:12px}
 div.required label:after {
@@ -236,3 +238,4 @@ div.required label:after {
 .summary{text-align:right;margin: 0 0 5px}
 
 body.u_admin .top-header{background:url('bg.jpg') repeat scroll 20% 42% #2E363F}
+.sm-form{width:50%}
