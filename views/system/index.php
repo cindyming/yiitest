@@ -8,7 +8,7 @@ use yii\widgets\ActiveForm;
 ?>
 <div class="system-create">
 
-    <div class="system-form">
+    <div class="system-form sm-form">
 
         <?php $form = ActiveForm::begin(); ?>
 
