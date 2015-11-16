@@ -23,6 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'role',
             'action',
+            'result',
+            'note',
             'created_at'
         ],
     ]); ?>
