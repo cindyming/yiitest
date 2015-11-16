@@ -7,7 +7,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
-$this->title = '玫瑰家园';
+$this->title = '玫瑰家园 v2';
 ?>
 <div class="loginbox">
     <h1><?= Html::encode($this->title) ?></h1>
