@@ -29,7 +29,7 @@ class RevenueController extends Controller
                     'rules' => [
                         [
                             'allow' => true,
-                            'actions' => ['adminindex', 'admintotal', 'adminglobal', 'adminin'],
+                            'actions' => ['adminindex', 'admintotal', 'adminglobal', 'adminin', 'manualadd'],
                             'roles' => [User::ROLE_ADMIN]
                         ],
                         [
@@ -73,20 +73,24 @@ class RevenueController extends Controller
     {
         $connection=Yii::$app->db;
 
-        $invertTotal = $connection->createCommand('SELECT sum(investment) as "total", sum(merit_remain) as "merit_total", sum(mall_remain) as "mall_total" FROM user WHERE role_id=3')->queryAll();
+        $invertTotal = $connection->createCommand('SELECT sum(investment) as "total" FROM user WHERE role_id=3')->queryAll();
         $inTotal = $invertTotal[0]['total'];
-        $mallTotal = $invertTotal[0]['mall_total'];
-        $meritTotal = $invertTotal[0]['merit_total'] ? $invertTotal[0]['merit_total'] : 0;
 
-        $outTotal = $connection->createCommand('SELECT sum(bonus) as "bonus_total", sum(merit) as "merit_total" FROM revenue')->queryAll();
+
+        $outTotal = $connection->createCommand('SELECT sum(bonus) as "bonus_total", sum(merit) as "merit_total", sum(baodan) as "baodan_total" FROM revenue')->queryAll();
         $bonusTotal = $outTotal[0]['bonus_total'] ? $outTotal[0]['bonus_total'] : 0;
+        $meritTotal = $outTotal[0]['merit_total'] ? $outTotal[0]['merit_total'] : 0;
+        $mallTotal = $meritTotal * 0.1;
+        $meritTotal = $meritTotal * 0.9;
+        $baodanTotal = $outTotal[0]['baodan_total'] ? $outTotal[0]['baodan_total'] : 0;
 
 
         return $this->render('adminglobal', [
             'inTotal' => $inTotal,
             'bonusTotal' => $bonusTotal,
             'meritTotal' => $meritTotal,
-            'mallTotal' => $mallTotal
+            'mallTotal' => $mallTotal,
+            'baodanTotal' => $baodanTotal
         ]);
     }
 
@@ -122,7 +126,6 @@ class RevenueController extends Controller
             'pageSize' => 20,
         ];
 
-
         return $this->render('admintotal', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
@@ -138,7 +141,7 @@ class RevenueController extends Controller
 
         $dataProvider = new ActiveDataProvider([
             'query' => Revenue::find()
-                        ->select(['id', 'sum(bonus) as bonus_total', 'sum(merit) as merit_total', 'user_id'])
+                        ->select(['id', 'sum(bonus) as bonus_total', 'sum(merit) as merit_total', 'sum(baodan) as baodan_total', 'user_id'])
                         ->where(['=', 'user_id', Yii::$app->user->identity->id]),
         ]);
 
@@ -188,5 +191,49 @@ class RevenueController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionManualadd()
+    {
+        $model = new Revenue();
+
+        if ($model->load(Yii::$app->request->post())) {
+            $user = User::findOne($model->user_id);
+            if ($user && $user->id) {
+                $connection = Yii::$app->db;
+                try {
+                    $transaction = $connection->beginTransaction();
+                    if ($model->type == 1) {
+                        $user->bonus_remain = $user->bonus_remain + $model->amount;
+                        $user->bonus_total = $user->bonus_total + $model->amount;
+                        $model->bonus = $model->amount;
+                        $model->total = $user->bonus_remain;
+                    } elseif($model->type == 2) {
+                        $user->merit_remain = $user->merit_remain + $model->amount;
+                        $user->merit_total = $user->merit_total + $model->amount;
+                        $model->merit = $model->amount;
+                        $model->total = $user->merit_total;
+                    }
+                    $model->type = 2;
+                    $model->note = $model->note . '(管理员充值: ' . date('Y-m-d', time()) . ')';
+                    $model->save();
+                    $user->save();
+                    $transaction->commit();
+                    Yii::$app->systemlog->add('管理员', '添加货币 - 收入', '成功','会员: ' .$model->user_id . ' ; ' . $model->note );
+                    return $this->redirect(['adminin']);
+                } catch (Exception $e) {
+                    $transaction->rollback();//回滚函数
+                    Yii::$app->log($e->getMessage());
+                }
+
+            } else {
+                $model->addError('user_id', '会员编号不存在, 请确认后重新操作');
+            }
+            Yii::$app->systemlog->add('管理员', '添加货币 - 收入', '失败','会员: '  .$model->user_id  .serialize($model->getErrors()));
+        }
+
+        return $this->render('manualadd', [
+            'model' => $model,
+        ]);
     }
 }

@@ -30,18 +30,27 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'type',
+                'header' => '入账类型',
+                'value' => function($model) {
+                        return $model->type == 1 ? '奖金' : '充值';
+                    },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=> ['' => '不限',  1=> '奖金', 2 => '充值'],
+            ],
+            [
+                'attribute' => 'account_type',
                 'header' => '账户类型',
-                'content' => function($model) {
-                    return $model->bonus ? '分红' : '绩效';
+                'value' => function($model) {
+                    return $model->bonus ? '分红' : (($model->merit) ? '绩效' : '报单费');
                 },
                 'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=> ['' => '不限',  1=> '分红', 2 => '绩效'],
+                'filter'=> ['' => '不限',  1=> '分红', 2 => '绩效', 3 => '报单费'],
             ],
             [
                 'class' => 'yii\grid\Column',
                 'header' => '入账金额',
                 'content' => function($model) {
-                        return $model->bonus ? $model->bonus : $model->merit;
+                        return $model->bonus ? $model->bonus : ($model->baodan ? $model->baodan : $model->merit);
                     }
             ],
             [

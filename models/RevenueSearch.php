@@ -19,7 +19,7 @@ class RevenueSearch extends Revenue
     {
         return [
             [['id', 'user_id', 'approved', 'bonus', 'merit', 'baodan'], 'integer'],
-            [['note', 'created_at', 'updated_at'], 'safe'],
+            [['note', 'created_at', 'updated_at','type'], 'safe'],
         ];
     }
 
@@ -63,6 +63,7 @@ class RevenueSearch extends Revenue
             'user_id' => $this->user_id,
             'approved' => $this->approved,
             'bonus' => $this->bonus,
+            'type' => $this->type,
             'merit' => $this->merit,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

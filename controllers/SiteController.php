@@ -76,6 +76,8 @@ class SiteController extends Controller
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             $this->userRedirect();
+        } else {
+            Yii::$app->systemlog->add($model->username, '登录', '失败');
         }
 
         $this->layout = "login";

@@ -23,6 +23,9 @@ $this->params['breadcrumbs'][] = $this->title;
         总绩效金额 : <?= round($meritTotal, 2) ?>
     </div>
     <div>
+        总报单金额 : <?= round($baodanTotal, 2) ?>
+    </div>
+    <div>
         商城币金额 : <?= round($mallTotal, 2) ?>
     </div>
     <div>

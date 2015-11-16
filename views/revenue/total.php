@@ -27,7 +27,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => false,
             ],
             'bonus_total',
-            'merit_total',
+            [
+                'attribute' => 'merit_total',
+                'value' => function($model) {
+                        return $model->merit_total * 0.9;
+                    }
+            ],
+            [
+                'class' => 'yii\grid\Column',
+                'header' => '商城币总额',
+                'content' => function($model) {
+                        return  $model->merit_total * 0.1;
+                    }
+            ],
+            'baodan_total',
             [
                 'class' => 'yii\grid\Column',
                 'header' => '实发总额',

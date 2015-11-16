@@ -45,7 +45,12 @@ class Cash extends ActiveRecord
                     ActiveRecord::EVENT_BEFORE_INSERT => 'user_id',
                 ],
                 'value' => function ($event) {
-                      return Yii::$app->user->id;
+                        if (!$this->user_id) {
+                            return Yii::$app->user->id;
+                        } else {
+                            return $this->user_id;
+                        }
+
                  },
             ],
         ];
@@ -57,8 +62,8 @@ class Cash extends ActiveRecord
     public function rules()
     {
         return [
-            [[ 'bank', 'cardname', 'cardnumber', 'bankaddress', 'amount'], 'required'],
-            [['user_id'], 'trim'],
+            [['amount'], 'required'],
+            [['user_id', 'note', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'trim'],
             [['type'], 'integer']
         ];
     }
@@ -78,6 +83,8 @@ class Cash extends ActiveRecord
             'cardnumber' => '银行卡号',
             'bankaddress' => '开户支行',
             'amount' => '提现金额',
+            'total' => '出帐后余额',
+            'note' => '摘要',
             'password2' => '二级密码',
             'created_at' => '日期'
         ];
@@ -90,7 +97,7 @@ class Cash extends ActiveRecord
 
     public function getTypes($filter = false)
     {
-        return  $filter ? array(''=> '不限', 1 => '分红提现', 2 => '绩效提现', 3 => '报单费') : array(1 => '分红提现', 2 => '绩效提现', 3 => '报单费');
+        return  $filter ? array(''=> '不限', 1 => '分红提现', 2 => '绩效提现', 3 => '报单费', 4 => '分红支出', 5 => '绩效支出') : array(1 => '分红提现', 2 => '绩效提现', 3 => '报单费提现', 4 => '分红支出', 5 => '绩效支出');
     }
 
     public function getStatus($filter =false)

@@ -24,7 +24,7 @@ class Log  extends ActiveRecord
     public function rules()
     {
         return [
-            [['role', 'action'], 'required'],
+            [['role', 'action', 'result'], 'required'],
         ];
     }
 
@@ -36,15 +36,18 @@ class Log  extends ActiveRecord
         return [
             'role'   => '角色',
             'action' => '动作',
+            'result' => '结果',
             'created_at' => '时间',
         ];
     }
 
-    static function add($role, $action)
+    static function add($role, $action, $result= false, $note = '')
     {
         $log = new Log();
         $log->role =  $role;
         $log->action = $action;
+        $log->result = ($result) ? $result : '成功';
+        $log->note = ($note) ? $note : '';
         $log->save();
     }
 }

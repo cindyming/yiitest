@@ -26,13 +26,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'user_id',
                 'filter' => false,
             ],
+            [
+                'attribute' => 'type',
+                'header' => '入账类型',
+                'content' => function($model) {
+                        return $model->type == 1 ? '奖金' : '充值';
+                    },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=> ['' => '不限',  1=> '奖金', 2 => '充值'],
+            ],
             'bonus',
             'merit',
+            'baodan',
             [
                 'class' => 'yii\grid\Column',
                 'header' => '总额',
                 'content' => function($model) {
-                        return $model->bonus + $model->merit;
+                        return $model->bonus + $model->merit + $model->baodan;
                     }
             ],
             [

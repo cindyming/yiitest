@@ -482,4 +482,10 @@ class User extends ActiveRecord implements IdentityInterface
         }
         return $level;
     }
+
+    static public function isExist($id)
+    {
+        $user = User::findOne($id);
+        return ($user && $user->id) ?  true : false;
+    }
 }

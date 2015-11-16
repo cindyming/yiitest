@@ -29,7 +29,7 @@ class CashController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'adminreject', 'adminapprove', 'adminupdate',  'adminview', 'adminout'],
+                        'actions' => ['adminindex', 'adminreject', 'adminapprove', 'adminupdate',  'adminview', 'adminout', 'manualadd'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -238,5 +238,59 @@ class CashController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionManualadd()
+    {
+        $model = new Cash();
+
+        $data = Yii::$app->request->post();
+        $data['Cash']['status'] = 2;
+        if (Yii::$app->request->post() && $model->load($data)) {
+            $user = User::findOne($model->user_id);
+            if ($user && $user->id) {
+                $validateAmount = true;
+                if ($model->type == 4) {
+                    $compareAmount = Yii::$app->user->identity->bonus_remain;
+                } elseif($model->type == 5) {
+                    $compareAmount = Yii::$app->user->identity->merit_remain;
+                }
+
+                if ($model->amount > $compareAmount) {
+                    $validateAmount = false;
+                    $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain . '.');
+                }
+                if ($validateAmount) {
+                    $connection = Yii::$app->db;
+                    try {
+                        $transaction = $connection->beginTransaction();
+                        if ($model->type == 4) {
+                            $user->bonus_remain = $user->bonus_remain - $model->amount;
+                            $model->total = $user->bonus_remain;
+                        } elseif($model->type == 5) {
+                            $user->merit_remain = $user->merit_remain - $model->amount;
+                            $model->total = $user->merit_remain;
+                        }
+                        $model->save();
+                        $user->save();
+                        $transaction->commit();
+                        Yii::$app->systemlog->add('管理员', '添加货币 - 支出', '成功','会员: ' .$model->user_id . ' ; ' . $model->note );
+                        return $this->redirect(['adminout']);
+                    } catch (Exception $e) {
+                        $transaction->rollback();//回滚函数
+                        Yii::$app->log($e->getMessage());
+                    }
+                    $transaction = $connection->beginTransaction();
+                }
+
+            } else {
+                $model->addError('user_id', '会员编号不存在, 请确认后重新操作');
+            }
+            Yii::$app->systemlog->add('管理员', '添加货币 - 收入', '失败','会员: ' .$model->user_id  .serialize($model->getErrors()));
+        }
+
+        return $this->render('manualadd', [
+            'model' => $model,
+        ]);
     }
 }
