@@ -244,3 +244,5 @@ body.u_admin .top-header{background:url('bg.jpg') repeat scroll 20% 42% #2E363F}
 
 .select2-container--krajee .select2-selection--single{height:26px;line-height:13px}
 .select2-container--krajee .select2-selection--single .select2-selection__arrow{height:25px}
+
+li.jstree-node a.gray-icon{ color: #bbb; }

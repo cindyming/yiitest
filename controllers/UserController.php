@@ -257,10 +257,11 @@ class UserController extends Controller
     }
     public function actionTree()
     {
-        $users = User::find()->where(['=', 'role_id', 3])->andWhere(['>=', 'id', Yii::$app->user->identity->id])->orderBy(['id' => SORT_ASC])->all();
+        $users = User::find()->where(['in', 'role_id', '2,3'])->andWhere(['>=', 'id', Yii::$app->user->identity->id])->orderBy(['id' => SORT_ASC])->all();
 
         $result = array();
         $ids = array();
+        $id = Yii::$app->getRequest()->get('id');
         foreach($users as $use) {
             if ($use->id == Yii::$app->user->identity->id) {
                 $ids[] = $use->id;
@@ -271,11 +272,25 @@ class UserController extends Controller
                 );
             } elseif ($use->referer && in_array($use->referer, $ids)) {
                 $ids[] = $use->id;
-                $result[] = array(
-                    "id" => $use->id,
-                    "parent" => $use->referer,
-                    "text" => $use->id . "(昵称: " . $use->username  . ", 投资额 : " . ($use->investment / 10000) . "万, 总业绩 : "  . ($use->achievements/10000) . "万)"
-                );
+                if ($id == $use->id) {
+                    $result[] = array(
+                        "id" => $use->id,
+                        "parent" => (($use->referer == '#') || ($use->referer == 0)) ? '#' : $use->referer,
+                        'a_attr' => (($use->role_id == 2) ? array('class'=>"gray-icon") : array()),
+                        "text" => $use->id . "(昵称: " . $use->username  . ", 投资额 : " . ($use->investment / 10000) . "万, 总业绩 : "  . ($use->achievements/10000) . "万)" . (($use->role_id == 2) ? ' - 待审核' : ''),
+                        "state" => array(
+                            "opened" => true,
+                            "selected" => true
+                        )
+                    );
+                } else {
+                    $result[] = array(
+                        "id" => $use->id,
+                        "parent" => (($use->referer == '#') || ($use->referer == 0)) ? '#' : $use->referer,
+                        'a_attr' => (($use->role_id == 2) ? array('class'=>"gray-icon") : array()),
+                        "text" => $use->id . "(昵称: " . $use->username  . ", 投资额 : " . ($use->investment / 10000) . "万, 总业绩 : "  . ($use->achievements/10000) . "万)" . (($use->role_id == 2) ? ' - 待审核' : '')
+                    );
+                }
             }
         }
         return $this->render('admintree',array( 'data' => $result));
@@ -283,21 +298,37 @@ class UserController extends Controller
 
     public function actionAdmintree()
     {
-        $users = User::find()->where(['=', 'role_id', 3])->orderBy(['id' => SORT_ASC])->all();
+        $users = User::find()->where(['in', 'role_id', array(2,3)])->orderBy(['id' => SORT_ASC])->all();
 
         $result = array();
 
         $ids = array();
 
+        $id = Yii::$app->getRequest()->get('id');
+
         foreach ($users as $use) {
             $referer = (($use->referer == '#') || ($use->referer == 0)) ? '#' : $use->referer;
 
             if (($referer == '#')  || in_array($referer, $ids)) {
-                $result[] = array(
-                    "id" => $use->id,
-                    "parent" => (($use->referer == '#') || ($use->referer == 0)) ? '#' : $use->referer,
-                    "text" => $use->id . "(昵称: " . $use->username  . ", 投资额 : " . ($use->investment / 10000) . "万, 总业绩 : "  . ($use->achievements/10000) . "万)"
-                );
+                if ($id == $use->id) {
+                    $result[] = array(
+                        "id" => $use->id,
+                        "parent" => (($use->referer == '#') || ($use->referer == 0)) ? '#' : $use->referer,
+                        'a_attr' => (($use->role_id == 2) ? array('class'=>"gray-icon") : array()),
+                        "text" => $use->id . "(昵称: " . $use->username  . ", 投资额 : " . ($use->investment / 10000) . "万, 总业绩 : "  . ($use->achievements/10000) . "万)" . (($use->role_id == 2) ? ' - 待审核' : ''),
+                        "state" => array(
+                            "opened" => true,
+                            "selected" => true
+                        )
+                    );
+                } else {
+                    $result[] = array(
+                        "id" => $use->id,
+                        "parent" => (($use->referer == '#') || ($use->referer == 0)) ? '#' : $use->referer,
+                        'a_attr' => (($use->role_id == 2) ? array('class'=>"gray-icon") : array()),
+                        "text" => $use->id . "(昵称: " . $use->username  . ", 投资额 : " . ($use->investment / 10000) . "万, 总业绩 : "  . ($use->achievements/10000) . "万)" . (($use->role_id == 2) ? ' - 待审核' : '')
+                    );
+                }
                 $ids[] = $use->id;
             } else {
 

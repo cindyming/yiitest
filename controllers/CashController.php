@@ -133,7 +133,7 @@ class CashController extends Controller
 
             if ($model->amount > $compareAmount) {
                 $validateAmount = false;
-                $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 报单费余额: ' . Yii::$app->user->identity->baodan_remain  . '.');
+                $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 服务费余额: ' . Yii::$app->user->identity->baodan_remain  . '.');
             }
             if (Yii::$app->user->identity->validatePassword2($data['Cash']['password2'])) {
                 if ($validateAmount && $model->save()) {

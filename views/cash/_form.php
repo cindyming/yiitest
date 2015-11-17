@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
         <div class="form-group">
             <?= Html::submitButton('确认[分红]提现', ['class' => 'btn btn-primary', 'onClick' => "$('#cash-type').val(1)"]) ?>
             <?= Html::submitButton('确认[绩效]提现', ['class' => 'btn btn-primary', 'onClick' => "$('#cash-type').val(2)"]) ?>
-            <?= Html::submitButton('确认[报单费]提现', ['class' => 'btn btn-primary', 'onClick' => "$('#cash-type').val(3)"]) ?>
+            <?= Html::submitButton('确认[服务费]提现', ['class' => 'btn btn-primary', 'onClick' => "$('#cash-type').val(3)"]) ?>
         </div>
     <?php ActiveForm::end(); ?>
 

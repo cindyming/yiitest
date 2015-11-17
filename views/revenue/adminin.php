@@ -41,10 +41,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'account_type',
                 'header' => '账户类型',
                 'value' => function($model) {
-                    return $model->bonus ? '分红' : (($model->merit) ? '绩效' : '报单费');
+                    return $model->bonus ? '分红' : (($model->merit) ? '绩效' : '服务费');
                 },
                 'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=> ['' => '不限',  1=> '分红', 2 => '绩效', 3 => '报单费'],
+                'filter'=> ['' => '不限',  1=> '分红', 2 => '绩效', 3 => '服务费'],
             ],
             [
                 'class' => 'yii\grid\Column',

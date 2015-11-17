@@ -11,7 +11,7 @@ use yii\widgets\ActiveForm;
 <div class="user-search">
 
     <?php $form = ActiveForm::begin([
-        'action' => ['adminindex'],
+        'action' => ['admintree'],
         'method' => 'get',
     ]); ?>
 

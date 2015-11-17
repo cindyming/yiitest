@@ -26,7 +26,7 @@ echo Nav::widget([
                 ['label' => '正式会员', 'url' => yii\helpers\Url::to('/user/adminindexapprove')],
                 ['label' => '全部会员', 'url' => yii\helpers\Url::to('/user/adminindex')],
                 ['label' => '报单员申请', 'url' => yii\helpers\Url::to('/user/adminapplyindex')],
-                ['label' => '推荐图', 'url' => yii\helpers\Url::to('/user/admintree')],
+                ['label' => '网络图', 'url' => yii\helpers\Url::to('/user/admintree')],
             ],
         ],
         [
@@ -41,7 +41,7 @@ echo Nav::widget([
             ]
         ],
         [
-            'label' => '电子货币', 'url' => ['/blank'],
+            'label' => '电子货币', 'url' => ['/revenue/manualadd'],
         ],
         [
             'label' => '信息管理', 'url' => ['/news/adminindex'],
@@ -56,7 +56,7 @@ echo Nav::widget([
             'items' => [
                 ['label' => '密码修改', 'url' => yii\helpers\Url::to('/user/adminchange')],
                 ['label' => '系统设置', 'url' => yii\helpers\Url::to('/system/index')],
-                ['label' => '系统日志', 'url' => yii\helpers\Url::to('/blank')],
+                ['label' => '系统日志', 'url' => yii\helpers\Url::to('/system/log')],
             ]
         ],
 
