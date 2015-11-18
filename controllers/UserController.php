@@ -178,6 +178,7 @@ class UserController extends Controller
                 $data = array(
                     'user_id' => $addedBy->id,
                     'note' => '会员：' .$model->id . '的报单奖励',
+                    'type' => 1,
                     'baodan' => $meritAmount,
                     'total' => $meritAmount +  $addedBy->baodan_remain
                 );
@@ -257,7 +258,7 @@ class UserController extends Controller
     }
     public function actionTree()
     {
-        $users = User::find()->where(['in', 'role_id', '2,3'])->andWhere(['>=', 'id', Yii::$app->user->identity->id])->orderBy(['id' => SORT_ASC])->all();
+        $users = User::find()->where(['in', 'role_id', array(2,3)])->andWhere(['>=', 'id', Yii::$app->user->identity->id])->orderBy(['id' => SORT_ASC])->all();
 
         $result = array();
         $ids = array();

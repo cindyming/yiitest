@@ -13,10 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="user-search">
 
-        <?php $form = ActiveForm::begin([
-            'action' => ['admintree'],
-            'method' => 'get',
-        ]); ?>
+        <?php $form = ActiveForm::begin(['method' => 'get',]); ?>
 
         <?= $form->field(new app\models\User(), 'id')->textInput(['value' => Yii::$app->getRequest()->get('id'), 'name' => 'id']) ?>
 
