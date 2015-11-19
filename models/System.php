@@ -12,6 +12,7 @@ class System extends ActiveRecord
 
     public $dynTableName = '{{%system}}';
     public $open_member_tree;
+    public $enable_memmber_login;
 
     /**
      * @inheritdoc
@@ -36,6 +37,7 @@ class System extends ActiveRecord
     {
         return [
             'open_member_tree' => '会员推荐图功能',
+            'enable_memmber_login' => '会员登录功能'
             ];
     }
 

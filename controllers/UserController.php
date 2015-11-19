@@ -30,7 +30,7 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'admincreate', 'adminreject','success','adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
+                        'actions' => ['adminindex', 'admincreate', 'suggestindex', 'adminreject','success','adminresetpassword','adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -88,7 +88,6 @@ class UserController extends Controller
         $dataProvider->pagination = [
             'pageSize' => 20,
         ];
-
 
         return $this->render('adminindexapprove', [
             'dataProvider' => $dataProvider,
@@ -194,6 +193,36 @@ class UserController extends Controller
         } else {
             return $this->redirect(['adminindexunapprove']);
         }
+    }
+
+    public function actionAdminresetpassword($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->resetPasword()) {
+            Yii::$app->getSession()->set('message', '会员('. $id . ')密码重置成功');
+        } else {
+            Yii::$app->getSession()->set('message', '会员('. $id . ')密码重置失败, 请稍后再试');
+        }
+
+        return $this->redirect(['adminindexapprove']);
+    }
+
+    public function actionSuggestindex()
+    {
+        $searchModel = new UserSearch();
+
+        $dataProvider = $searchModel->suggestSearch(Yii::$app->request->queryParams);
+
+        $dataProvider->pagination = [
+            'pageSize' => 20,
+        ];
+
+
+        return $this->render('suggestindex', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
     }
 
     public function actionAdminreject($id)
@@ -458,7 +487,7 @@ class UserController extends Controller
         $query = User::find()->where(['!=','role_id',1]);
 
         if ($referer) {
-            $query->andWhere(['=','referer',$referer]);
+            $query->andWhere(['=','suggest_by',$referer]);
         }
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

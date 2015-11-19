@@ -24,6 +24,7 @@ echo Nav::widget([
                 ['label' => '追加投资', 'url' => yii\helpers\Url::to('/investment/adminindex')],
                 ['label' => '审核会员', 'url' => yii\helpers\Url::to('/user/adminindexunapprove')],
                 ['label' => '正式会员', 'url' => yii\helpers\Url::to('/user/adminindexapprove')],
+                ['label' => '推荐列表', 'url' => yii\helpers\Url::to('/user/suggestindex')],
                 ['label' => '全部会员', 'url' => yii\helpers\Url::to('/user/adminindex')],
                 ['label' => '报单员申请', 'url' => yii\helpers\Url::to('/user/adminapplyindex')],
                 ['label' => '网络图', 'url' => yii\helpers\Url::to('/user/admintree')],

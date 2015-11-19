@@ -13,6 +13,7 @@ use yii\widgets\ActiveForm;
         <?php $form = ActiveForm::begin(); ?>
 
         <?= $form->field($model, 'open_member_tree')->dropDownList([1 => '开放', 0 => '关闭']) ?>
+        <?= $form->field($model, 'enable_memmber_login')->dropDownList([1 => '开放', 0 => '关闭']) ?>
 
         <div class="form-group">
             <?= Html::submitButton($model->isNewRecord ? '保存' : '保存', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
