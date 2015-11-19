@@ -35,7 +35,7 @@ echo Nav::widget([
             'items' => [
                 ['label' => '奖金明细', 'url' => yii\helpers\Url::to('/revenue/adminindex')],
                 ['label' => '奖金统计', 'url' => yii\helpers\Url::to('/revenue/admintotal')],
-                ['label' => '拨比统计', 'url' => yii\helpers\Url::to('/revenue/adminglobal')],
+                ['label' => '拨比统计', 'url' => yii\helpers\Url::to('/globaltotal/index')],
                 ['label' => '出帐明细', 'url' => yii\helpers\Url::to('/cash/adminout')],
                 ['label' => '入账明细', 'url' => yii\helpers\Url::to('/revenue/adminin')],
                 ['label' => '提现管理', 'url' => yii\helpers\Url::to('/cash/adminindex')],
