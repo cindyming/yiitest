@@ -119,6 +119,7 @@ class UserSearch extends User
             'referer' => $this->referer,
             'level' => $this->level,
             'investment' => $this->investment,
+            'suggest_by' => $this->suggest_by,
             'approved_at' => $this->approved_at,
             'add_member' => $this->add_member,
         ]);
