@@ -39,7 +39,7 @@ class System extends ActiveRecord
     public function attributeLabels()
     {
         return [
-            'open_member_tree' => '会员推荐图功能',
+            'open_member_tree' => '会员网络图功能',
             'enable_memmber_login' => '会员登录功能',
             'stop_banus_times' => '分红封顶倍数',
             'lowest_cash_amount' => '最低提现额',
