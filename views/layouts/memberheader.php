@@ -77,9 +77,6 @@ echo Nav::widget([
             ]
         ],
         [
-            'label' => '电子货币', 'url' => ['/revenue/manualadd'],
-        ],
-        [
             'label' => '系统公告', 'url' => ['/news/index'],
             'items' => [
                 ['label' => '新闻公告', 'url' => ['/news/index']],
