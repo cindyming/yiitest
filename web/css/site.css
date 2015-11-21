@@ -247,8 +247,9 @@ body.u_admin .top-header{background:url('bg.jpg') repeat scroll 20% 42% #2E363F}
 
 
 ul.tabswitch{padding:0;list-style:none;margin-bottom:25px}
-ul.tabswitch li.active{display:inline-block;padding:1% 2% .5%;border-bottom:3px solid #27A9E3}
-ul.tabswitch li{border-bottom:3px solid transparent}
+ul.tabswitch li{border-bottom:3px solid transparent;display:inline-block;padding:1% 2% .5%;}
+ul.tabswitch li.active{border-bottom:3px solid #27A9E3}
+
 
 @media (max-width: 1208px){
 .container{}
