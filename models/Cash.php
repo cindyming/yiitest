@@ -36,8 +36,26 @@ class Cash extends ActiveRecord
                     ActiveRecord::EVENT_BEFORE_INSERT => 'status',
                 ],
                 'value' => function ($event) {
-                        return 1;
+                        if ($this->status) {
+                            return $this->status;
+                        } else {
+                            return 1;
+                        }
+
                     },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'real_amount',
+                ],
+                'value' => function ($event) {
+                    if ($this->type == 2 || $this->type == 5) {
+                        return  $this->amount * (1 - floatval(System::loadConfig('cash_factorage')  / 100));
+                    } else {
+                        return $this->amount;
+                    }
+                },
             ],
             [
                 'class' => AttributeBehavior::className(),
@@ -63,7 +81,7 @@ class Cash extends ActiveRecord
     {
         return [
             [['amount'], 'required'],
-            [['user_id', 'note', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'trim'],
+            [['user_id', 'note', 'bank', 'cardname', 'cardnumber', 'bankaddress', 'real_amount'], 'trim'],
             [['type'], 'integer']
         ];
     }

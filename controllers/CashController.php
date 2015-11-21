@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\System;
 use Yii;
 use app\models\Cash;
 use app\models\CashSearch;
@@ -135,6 +136,10 @@ class CashController extends Controller
                 $validateAmount = false;
                 $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 服务费余额: ' . Yii::$app->user->identity->baodan_remain  . '.');
             }
+            if ($model->amount < System::loadConfig('lowest_cash_amount')) {
+                $validateAmount = false;
+                $model->addError('amount', '最低提现额为: ' . System::loadConfig('lowest_cash_amount') . '.');
+            }
             if (Yii::$app->user->identity->validatePassword2($data['Cash']['password2'])) {
                 if ($validateAmount && $model->save()) {
                     return $this->redirect(['index']);
@@ -162,15 +167,19 @@ class CashController extends Controller
             $transaction = $connection->beginTransaction();
 
             $model->status = 2;
-            $model->save();
             $user = User::findById($model->user_id);
             if ($model->type == 1) {
+
                 $user->bonus_remain = $user->bonus_remain - $model->amount;
+                $model->total = $user->bonus_remain;
             } elseif($model->type == 2) {
                 $user->merit_remain = $user->merit_remain - $model->amount;
+                $model->total = $user->merit_remain;
             } elseif($model->type == 3) {
                 $user->baodan_remain = $user->baodan_remain - $model->amount;
+                $model->total = $user->baodan_remain;
             }
+            $model->save();
             $user->save();
             $transaction->commit();
         } catch (Exception $e) {
@@ -250,15 +259,20 @@ class CashController extends Controller
             $user = User::findOne($model->user_id);
             if ($user && $user->id) {
                 $validateAmount = true;
+                $model->status = 2;
                 if ($model->type == 4) {
-                    $compareAmount = Yii::$app->user->identity->bonus_remain;
+                    $compareAmount = $user->bonus_remain;
                 } elseif($model->type == 5) {
-                    $compareAmount = Yii::$app->user->identity->merit_remain;
+                    $compareAmount = $user->merit_remain;
                 }
 
                 if ($model->amount > $compareAmount) {
                     $validateAmount = false;
-                    $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain . '.');
+                    $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . $user->bonus_remain . ', 绩效余额: ' . $user->merit_remain . '.');
+                }
+                if ($model->amount < System::loadConfig('lowest_cash_amount')) {
+                    $validateAmount = false;
+                    $model->addError('amount', '最低提现额为: ' . System::loadConfig('lowest_cash_amount') . '.');
                 }
                 if ($validateAmount) {
                     $connection = Yii::$app->db;
