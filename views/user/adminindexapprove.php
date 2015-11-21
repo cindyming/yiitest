@@ -98,8 +98,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
             ],
             [
-                'class' => 'yii\grid\ActionColumn',
+                'class' => 'kartik\grid\ActionColumn',
                 'header' => '修改',
+                'hiddenFromExport' => true,
                 'template' => '{update} {resetpassword}',
                 'buttons' => [
                     'resetpassword' => function ($url, $model, $key) {
@@ -123,8 +124,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
             ],
             [
-                'class' => 'yii\grid\ActionColumn',
+                'class' => 'kartik\grid\ActionColumn',
                 'header' => '操作',
+                'hiddenFromExport' => true,
                 'template' => '{login}',
                 'buttons' => [
                     'login' => function ($url, $model, $key) {
