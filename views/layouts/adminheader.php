@@ -24,9 +24,10 @@ echo Nav::widget([
                 ['label' => '追加投资', 'url' => yii\helpers\Url::to('/investment/adminindex')],
                 ['label' => '审核会员', 'url' => yii\helpers\Url::to('/user/adminindexunapprove')],
                 ['label' => '正式会员', 'url' => yii\helpers\Url::to('/user/adminindexapprove')],
+                ['label' => '推荐列表', 'url' => yii\helpers\Url::to('/user/suggestindex')],
                 ['label' => '全部会员', 'url' => yii\helpers\Url::to('/user/adminindex')],
                 ['label' => '报单员申请', 'url' => yii\helpers\Url::to('/user/adminapplyindex')],
-                ['label' => '推荐图', 'url' => yii\helpers\Url::to('/user/admintree')],
+                ['label' => '网络图', 'url' => yii\helpers\Url::to('/user/admintree')],
             ],
         ],
         [
@@ -34,14 +35,14 @@ echo Nav::widget([
             'items' => [
                 ['label' => '奖金明细', 'url' => yii\helpers\Url::to('/revenue/adminindex')],
                 ['label' => '奖金统计', 'url' => yii\helpers\Url::to('/revenue/admintotal')],
-                ['label' => '拨比统计', 'url' => yii\helpers\Url::to('/revenue/adminglobal')],
+                ['label' => '拨比统计', 'url' => yii\helpers\Url::to('/globaltotal/index')],
                 ['label' => '出帐明细', 'url' => yii\helpers\Url::to('/cash/adminout')],
                 ['label' => '入账明细', 'url' => yii\helpers\Url::to('/revenue/adminin')],
                 ['label' => '提现管理', 'url' => yii\helpers\Url::to('/cash/adminindex')],
             ]
         ],
         [
-            'label' => '电子货币', 'url' => ['/blank'],
+            'label' => '电子货币', 'url' => ['/revenue/manualadd'],
         ],
         [
             'label' => '信息管理', 'url' => ['/news/adminindex'],
@@ -56,7 +57,7 @@ echo Nav::widget([
             'items' => [
                 ['label' => '密码修改', 'url' => yii\helpers\Url::to('/user/adminchange')],
                 ['label' => '系统设置', 'url' => yii\helpers\Url::to('/system/index')],
-                ['label' => '系统日志', 'url' => yii\helpers\Url::to('/blank')],
+                ['label' => '系统日志', 'url' => yii\helpers\Url::to('/system/log')],
             ]
         ],
 

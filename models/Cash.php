@@ -36,8 +36,26 @@ class Cash extends ActiveRecord
                     ActiveRecord::EVENT_BEFORE_INSERT => 'status',
                 ],
                 'value' => function ($event) {
-                        return 1;
+                        if ($this->status) {
+                            return $this->status;
+                        } else {
+                            return 1;
+                        }
+
                     },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'real_amount',
+                ],
+                'value' => function ($event) {
+                    if ($this->type == 2 || $this->type == 5) {
+                        return  $this->amount * (1 - floatval(System::loadConfig('cash_factorage')  / 100));
+                    } else {
+                        return $this->amount;
+                    }
+                },
             ],
             [
                 'class' => AttributeBehavior::className(),
@@ -63,7 +81,7 @@ class Cash extends ActiveRecord
     {
         return [
             [['amount'], 'required'],
-            [['user_id', 'note', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'trim'],
+            [['user_id', 'note', 'bank', 'cardname', 'cardnumber', 'bankaddress', 'real_amount'], 'trim'],
             [['type'], 'integer']
         ];
     }
@@ -97,7 +115,7 @@ class Cash extends ActiveRecord
 
     public function getTypes($filter = false)
     {
-        return  $filter ? array(''=> '不限', 1 => '分红提现', 2 => '绩效提现', 3 => '报单费', 4 => '分红支出', 5 => '绩效支出') : array(1 => '分红提现', 2 => '绩效提现', 3 => '报单费提现', 4 => '分红支出', 5 => '绩效支出');
+        return  $filter ? array(''=> '不限', 1 => '分红提现', 2 => '绩效提现', 3 => '服务费', 4 => '分红支出', 5 => '绩效支出') : array(1 => '分红提现', 2 => '绩效提现', 3 => '服务费提现', 4 => '分红支出', 5 => '绩效支出');
     }
 
     public function getStatus($filter =false)

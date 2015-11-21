@@ -19,7 +19,7 @@ class RevenueSearch extends Revenue
     {
         return [
             [['id', 'user_id', 'approved', 'bonus', 'merit', 'baodan'], 'integer'],
-            [['note', 'created_at', 'updated_at','type'], 'safe'],
+            [['note', 'created_at', 'updated_at','type', 'account_type'], 'safe'],
         ];
     }
 
@@ -68,6 +68,15 @@ class RevenueSearch extends Revenue
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
+        if ($this->account_type) {
+            if ($this->account_type == 1) {
+                $query->andFilterWhere(['>', 'bonus', 0]);
+            } else if ($this->account_type == 2) {
+                $query->andFilterWhere(['>', 'merit', 0]);
+            } else if ($this->account_type == 3) {
+                $query->andFilterWhere(['>', 'baodan', 0]);
+            }
+        }
 
         $query->andFilterWhere(['like', 'note', $this->note]);
 

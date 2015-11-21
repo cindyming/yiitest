@@ -37,6 +37,7 @@ class BonusController extends Controller
             }
             $data['total'] = $user->bonus_remain + $data['bonus'];
             $data['note'] = '分红结算: ' .  date('Y-m-d', time());
+            $data['type'] = 1;
             $user->bonus_total = $data['total'];
             $user->bonus_remain = $user->bonus_remain + $data['bonus'];
             $bonus = new Revenue();

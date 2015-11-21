@@ -488,4 +488,13 @@ class User extends ActiveRecord implements IdentityInterface
         $user = User::findOne($id);
         return ($user && $user->id) ?  true : false;
     }
+
+    public function resetPasword()
+    {
+        $this->password = '123456';
+        $this->password2 = '123456';
+        $this->password1 = '123456';
+        $this->password3 = '123456';
+        return $this->save();
+    }
 }

@@ -39,8 +39,13 @@ class SystemController extends Controller
             foreach ($postData as $key => $da) {
                 $system = System::findOne([ 'name'=> $key]);
                 if ($system && $system->id) {
+                    $oldValue = $system->value;
                     $system->value = $da;
-                    $system->save();
+                    if ($system->save() && ($da != $oldValue)) {
+                        Yii::$app->systemlog->add('管理员',  '修改系统参数','成功' , $key . ': 从 (' . $oldValue . ')改为（' . $da . ')');
+                    } else if(($da != $oldValue)){
+                        Yii::$app->systemlog->add('管理员',  '修改系统参数', '失败' ,$key . ': 从 (' . $oldValue . ')改为（' . $da . ')');
+                    }
                 } else {
                     $system = new System();
                     $system->name = $key;

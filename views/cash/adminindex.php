@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'bank',
                 'label'=>'银行名称',
                 'value' => function($model) {
-                        return $model->getBankNames()[$model->bank];
+                        return isset($model->getBankNames()[$model->bank]) ? $model->getBankNames()[$model->bank] : '';
                     },
                 'filter'=> true,
                 'filterType'=>GridView::FILTER_SELECT2,

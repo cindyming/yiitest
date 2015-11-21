@@ -13,6 +13,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
+    <div>
+        <?= Yii::$app->getSession()->get('message');
+        Yii::$app->getSession()->set('message',null);
+        ?>
+    </div>
 
 
     <?= GridView::widget([
@@ -20,6 +25,22 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'striped'=> true,
         'hover'=> true,
+        'export'=>[
+            'fontAwesome'=>true,
+            'showConfirmAlert'=>false,
+            'target'=>GridView::TARGET_BLANK
+        ],
+        'exportConfig' => [
+            GridView::EXCEL => ['label' => '保存为Excel文件']
+        ],
+        'toolbar'=>[
+            '{export}',
+            '{toggleData}'
+        ],
+        'panel'=>[
+            'type'=>GridView::TYPE_PRIMARY,
+        ],
+        'autoXlFormat' => true,
         //'summary' => '',
         'layout' => '{items} {summary} {pager}',
         'pjax' => true,
@@ -79,10 +100,24 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '修改',
-                'template' => '{update}',
+                'template' => '{update} {resetpassword}',
+                'buttons' => [
+                    'resetpassword' => function ($url, $model, $key) {
+                            $options = [
+                                'title' => Yii::t('yii', '重置密码'),
+                                'aria-label' => Yii::t('yii', '重置密码'),
+                                'data-confirm' => Yii::t('yii', '你确定要为会员[' . $model->id . ']重置密码?密码将被设置为123456'),
+                            ];
+                            return Html::a('重置密码', $url, $options);
+                        },
+                ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                         if ($action === 'update') {
                             $url ='/user/adminupdate?id='.$model->id;
+                            return $url;
+                        }
+                        if ($action === 'resetpassword') {
+                            $url ='/user/adminresetpassword?id='.$model->id;
                             return $url;
                         }
                     }

@@ -245,6 +245,7 @@ body.u_admin .top-header{background:url('bg.jpg') repeat scroll 20% 42% #2E363F}
 .select2-container--krajee .select2-selection--single{height:26px;line-height:13px}
 .select2-container--krajee .select2-selection--single .select2-selection__arrow{height:25px}
 
+
 ul.tabswitch{padding:0;list-style:none;margin-bottom:25px}
 ul.tabswitch li.active{display:inline-block;padding:1% 2% .5%;border-bottom:3px solid #27A9E3}
 ul.tabswitch li{border-bottom:3px solid transparent}
@@ -252,3 +253,6 @@ ul.tabswitch li{border-bottom:3px solid transparent}
 @media (max-width: 1208px){
 .container{}
 }
+
+li.jstree-node a.gray-icon{ color: #bbb; }
+

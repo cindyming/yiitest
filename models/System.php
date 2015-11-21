@@ -12,6 +12,10 @@ class System extends ActiveRecord
 
     public $dynTableName = '{{%system}}';
     public $open_member_tree;
+    public $enable_memmber_login;
+    public $lowest_cash_amount;
+    public $cash_factorage;
+    public $stop_banus_times;
 
     /**
      * @inheritdoc
@@ -36,6 +40,10 @@ class System extends ActiveRecord
     {
         return [
             'open_member_tree' => '会员推荐图功能',
+            'enable_memmber_login' => '会员登录功能',
+            'stop_banus_times' => '分红封顶倍数',
+            'lowest_cash_amount' => '最低提现额',
+            'cash_factorage' => '绩效提现手续费',
             ];
     }
 
