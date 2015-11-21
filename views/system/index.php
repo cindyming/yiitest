@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\System */
 ?>
 <div class="system-create">
-
+	<h1><?= Html::encode($this->title) ?></h1>
     <div class="system-form sm-form">
 
         <?php $form = ActiveForm::begin(); ?>

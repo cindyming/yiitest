@@ -13,12 +13,12 @@ $this->title = '添加货币';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <ul>
+    <ul class="tabswitch">
         <li><?= HTML::a('会员收入', ['/revenue/manualadd'])?></li>
-        <li>会员支出</li>
+        <li class="active">会员支出</li>
     </ul>
 
-    <div class="cash-_form">
+    <div class="cash-_form sm-form">
 
         <?php $form = ActiveForm::begin(); ?>
 
