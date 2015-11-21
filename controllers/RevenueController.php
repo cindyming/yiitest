@@ -142,7 +142,7 @@ class RevenueController extends Controller
         $dataProvider = new ActiveDataProvider([
             'query' => Revenue::find()
                         ->select(['id', 'sum(bonus) as bonus_total', 'sum(merit) as merit_total', 'sum(baodan) as baodan_total', 'user_id'])
-                        ->where(['=', 'user_id', Yii::$app->user->identity->id]),
+                        ->where(['=', 'user_id', Yii::$app->user->identity->id])->groupBy('user_id'),
         ]);
 
 
