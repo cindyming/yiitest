@@ -12,9 +12,9 @@ $this->title = '玫瑰家园 v2';
 <div class="loginbox">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <div>
+    <div class="notics-block">
         <?php if (!(\app\models\System::loadConfig('enable_memmber_login'))):?>
-            维护中
+            系统维护中，请稍后访问。
         <?php endif ?>
     </div>
 
