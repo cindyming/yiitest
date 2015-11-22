@@ -14,7 +14,7 @@ $this->title = '玫瑰家园 v2';
 
     <div id="maintaining">
         <?php if (!(\app\models\System::loadConfig('enable_memmber_login'))):?>
-            维护中
+            系统维护中，请稍后访问。
         <?php endif ?>
     </div>
 
