@@ -3,10 +3,14 @@
 namespace app\controllers;
 
 use app\models\Log;
+use app\models\User;
+use app\models\Backup;
 use Yii;
 use app\models\System;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\filters\AccessControl;
+use app\components\AccessRule;
 use yii\filters\VerbFilter;
 
 /**
@@ -17,6 +21,20 @@ class SystemController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'except' => ['login', 'logout', 'autologin'],
+                'ruleConfig' => [
+                    'class' => AccessRule::className(),
+                ],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['backup', 'backupindex', 'log','index'],
+                        'roles' => [User::ROLE_ADMIN]
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -89,5 +107,25 @@ class SystemController extends Controller
         ]);
     }
 
+    public function actionBackup()
+    {
+        exec('sh /home/backup/backup.sh');
+        Yii::$app->getSession()->set('backupmessage', '数据库备份成功.');
+        $this->redirect(array('/system/backupindex'));
+    }
+
+    public function actionBackupindex()
+    {
+        $dataProvider = new ActiveDataProvider([
+            'query' => Backup::find()->orderBy(['id' => SORT_DESC]),
+            'pagination' => [
+                'pageSize' => 20
+            ]
+        ]);
+
+        return $this->render('backup', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
 
 }

@@ -14,13 +14,9 @@ class BonusController extends Controller
 
     public function actionIndex()
     {
-        $query = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0]);
+        $users = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0])->all();
 
-        $users = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-
-        foreach ($users->models as $user) {
+        foreach ($users as $user) {
             $data = array(
                 'user_id' => $user->id,
             );
