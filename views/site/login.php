@@ -12,7 +12,7 @@ $this->title = '玫瑰家园 v2';
 <div class="loginbox">
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <div>
+    <div id="maintaining">
         <?php if (!(\app\models\System::loadConfig('enable_memmber_login'))):?>
             维护中
         <?php endif ?>
