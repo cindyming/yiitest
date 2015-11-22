@@ -111,7 +111,7 @@ class SystemController extends Controller
     {
         $filename = 'backup_'.date('d_m_Y_h_i_s', time()) . '.sql.gz';
         system('mysqldump -uroot  -palks@111 mgjiayuan --add-drop-table | gzip > /home/backup/' . $filename, $output);
-        system('mysql -uroot -palks@111 mgjiayuan -e "insert into backup (filename) values (\"' . $filename  . '\") ', $output);
+        system('mysql -uroot -palks@111 mgjiayuan -e "insert into backup (filename) values ("' . $filename  . '") ', $output);
         Yii::$app->getSession()->set('backupmessage', '数据库备份成功.');
         $this->redirect(array('/system/backupindex'));
     }
