@@ -109,8 +109,9 @@ class SystemController extends Controller
 
     public function actionBackup()
     {
-        system('sudo sh /home/backup/backup.sh', $output);
-        var_dump($output);die;
+        $filename = 'backup'.date('d-m-Y-h-i-s', time()) . '.sql.gz';
+        system('mysqldump -uroot  -palks@111 mgjiayuan --add-drop-table | gzip > /home/backup/' . $filename, $output);
+        system('mysql -uroot -palks@111 mgjiayuan -e "insert into backup (filename) values (\"' . $filename  . '\") ', $output);
         Yii::$app->getSession()->set('backupmessage', '数据库备份成功.');
         $this->redirect(array('/system/backupindex'));
     }
