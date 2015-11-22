@@ -12,6 +12,12 @@ $this->title = '玫瑰家园 v2';
 <div class="loginbox">
     <h1><?= Html::encode($this->title) ?></h1>
 
+    <div>
+        <?php if (!(\app\models\System::loadConfig('enable_memmber_login'))):?>
+            维护中
+        <?php endif ?>
+    </div>
+
     <?php $form = ActiveForm::begin([
         'id' => 'loginform',
         'options' => ['class' => 'form-horizontal'],
