@@ -257,4 +257,5 @@ ul.tabswitch li.active{border-bottom:3px solid #27A9E3}
 
 li.jstree-node a.gray-icon{ color: #bbb; }
 #maintaining{font-size:18px;padding:5px 0;color:red;background:#FFC7C7;text-align: center;margin-bottom:20px }
-.panel-primary > .panel-heading{float:left;padding: 10px 0;}
+.panel-primary > .panel-heading{float:left;padding: 10px 0;color: #333;background:transparent;border-color:transparent;}
+.panel-primary{border-color:transparent;}
