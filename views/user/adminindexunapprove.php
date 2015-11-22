@@ -6,7 +6,7 @@ use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '会员管理';
+$this->title = '待审核会员';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
