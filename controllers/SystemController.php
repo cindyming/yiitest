@@ -109,7 +109,7 @@ class SystemController extends Controller
 
     public function actionBackup()
     {
-        system('sh /home/backup/backup.sh');
+        passthru('sh /home/backup/backup.sh');
         Yii::$app->getSession()->set('backupmessage', '数据库备份成功.');
         $this->redirect(array('/system/backupindex'));
     }
