@@ -24,7 +24,7 @@ class Backup  extends ActiveRecord
     public function rules()
     {
         return [
-            [['filename', 'created_at'], 'required'],
+            [['filename'], 'required'],
         ];
     }
 
