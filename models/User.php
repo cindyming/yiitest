@@ -497,4 +497,17 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password3 = '123456';
         return $this->save();
     }
+
+    public function haveTree()
+    {
+        if (System::loadConfig('open_member_tree')) {
+            return true;
+        }
+
+        if (System::loadConfig('open_baodan_tree')  &&  (Yii::$app->user->identity->add_member == 2 )) {
+            return true;
+        }
+
+        return false;
+    }
 }

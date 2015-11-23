@@ -55,7 +55,7 @@ echo Nav::widget([
                     ['label' => '会员注册', 'url' => ['/user/create']]:
                   ['label' => '申请成为报单员', 'url' => ['/user/applyaddmember']],
                 ['label' => '我的推荐', 'url' => ['/user/index', 'referer' => Yii::$app->user->identity->id]],
-                \app\models\System::loadConfig('open_member_tree') ? ['label' => '网络图', 'url' => ['/user/tree']] : '',
+                Yii::$app->user->identity->haveTree() ? ['label' => '网络图', 'url' => ['/user/tree']] : '',
             ]
         ],
         [

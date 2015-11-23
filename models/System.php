@@ -16,6 +16,7 @@ class System extends ActiveRecord
     public $lowest_cash_amount;
     public $cash_factorage;
     public $stop_banus_times;
+    public $open_baodan_tree;
 
     /**
      * @inheritdoc
@@ -44,6 +45,7 @@ class System extends ActiveRecord
             'stop_banus_times' => '分红封顶倍数',
             'lowest_cash_amount' => '最低提现额',
             'cash_factorage' => '绩效提现手续费',
+            'open_baodan_tree' => '报单员网络图'
             ];
     }
 
