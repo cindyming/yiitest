@@ -30,6 +30,9 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'type',
                 'header' => '入账类型',
+                'value' => function($model) {
+                        return $model->type == 1 ? '奖金' : '充值';
+                    },
             ],
             'bonus',
             'merit',
