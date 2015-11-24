@@ -90,6 +90,100 @@ class RevenueSearch extends Revenue
      *
      * @return ActiveDataProvider
      */
+    public function searchForCaiwu($params)
+    {
+        $query = Revenue::find()->where(['=', 'type', 1])->orderBy(['id' => SORT_DESC]);
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'user_id' => $this->user_id,
+            'approved' => $this->approved,
+            'bonus' => $this->bonus,
+            'type' => $this->type,
+            'merit' => $this->merit,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ]);
+        if ($this->account_type) {
+            if ($this->account_type == 1) {
+                $query->andFilterWhere(['>', 'bonus', 0]);
+            } else if ($this->account_type == 2) {
+                $query->andFilterWhere(['>', 'merit', 0]);
+            } else if ($this->account_type == 3) {
+                $query->andFilterWhere(['>', 'baodan', 0]);
+            }
+        }
+
+        $query->andFilterWhere(['like', 'note', $this->note]);
+
+        return $dataProvider;
+    }
+
+    public function searchForHuobi($params)
+    {
+        $query = Revenue::find()->where(['=', 'type', 2])->orderBy(['id' => SORT_DESC]);
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'user_id' => $this->user_id,
+            'approved' => $this->approved,
+            'bonus' => $this->bonus,
+            'type' => $this->type,
+            'merit' => $this->merit,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ]);
+        if ($this->account_type) {
+            if ($this->account_type == 1) {
+                $query->andFilterWhere(['>', 'bonus', 0]);
+            } else if ($this->account_type == 2) {
+                $query->andFilterWhere(['>', 'merit', 0]);
+            } else if ($this->account_type == 3) {
+                $query->andFilterWhere(['>', 'baodan', 0]);
+            }
+        }
+
+        $query->andFilterWhere(['like', 'note', $this->note]);
+
+        return $dataProvider;
+    }
+    /**
+     * Creates data provider instance with search query applied
+     *
+     * @param array $params
+     *
+     * @return ActiveDataProvider
+     */
     public function searchTotal($params)
     {
         $query = Revenue::find()->select(['COUNT(*) AS cnt', 'SUM(bonus) as bonus_total', 'SUM(merit) as merit_total','sum(baodan) as baodan_total', 'id', 'user_id']);

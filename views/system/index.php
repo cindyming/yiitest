@@ -15,7 +15,7 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'open_member_tree')->dropDownList([1 => '开放', 0 => '关闭']) ?>
         <?= $form->field($model, 'open_baodan_tree')->dropDownList([1 => '开放', 0 => '关闭']) ?>
         <?= $form->field($model, 'enable_memmber_login')->dropDownList([1 => '开放', 0 => '关闭']) ?>
-        <?= $form->field($model, 'lowest_cash_amount')->textInput() ?>
+        <?= $form->field($model, 'lowest_cash_amount',[ 'template' => "{label}\n{input}百，如你输入1就代表1百\n{hint}\n{error}"])->textInput() ?>
         <?= $form->field($model, 'cash_factorage', [ 'template' => "{label}\n{input}%\n{hint}\n{error}"])->textInput() ?>
 
         <div class="form-group">

@@ -55,6 +55,9 @@ class SystemController extends Controller
         $postData = Yii::$app->request->post('System');
         if (count($postData)) {
             foreach ($postData as $key => $da) {
+                if ($key == 'lowest_cash_amount') {
+                    $da = $da * 100;
+                }
                 $system = System::findOne([ 'name'=> $key]);
                 if ($system && $system->id) {
                     $oldValue = $system->value;

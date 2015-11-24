@@ -50,7 +50,7 @@ class Cash extends ActiveRecord
                     ActiveRecord::EVENT_BEFORE_INSERT => 'real_amount',
                 ],
                 'value' => function ($event) {
-                    if ($this->type == 2 || $this->type == 5) {
+                    if ($this->type == 2) {
                         return  $this->amount * (1 - floatval(System::loadConfig('cash_factorage')  / 100));
                     } else {
                         return $this->amount;

@@ -56,7 +56,7 @@ class RevenueController extends Controller
     {
         $searchModel = new RevenueSearch();
 
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchForCaiwu(Yii::$app->request->queryParams);
 
         $dataProvider->pagination = [
             'pageSize' => 20,
@@ -98,12 +98,11 @@ class RevenueController extends Controller
     {
         $searchModel = new RevenueSearch();
 
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchForHuobi(Yii::$app->request->queryParams);
 
         $dataProvider->pagination = [
             'pageSize' => 20,
         ];
-
 
         return $this->render('adminin', [
             'dataProvider' => $dataProvider,

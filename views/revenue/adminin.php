@@ -34,8 +34,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value' => function($model) {
                         return $model->type == 1 ? '奖金' : '充值';
                     },
-                'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=> ['' => '不限',  1=> '奖金', 2 => '充值'],
             ],
             [
                 'attribute' => 'account_type',
