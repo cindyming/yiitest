@@ -56,7 +56,7 @@ class CashController extends Controller
     public function actionAdminindex()
     {
         $searchModel = new CashSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->searchForAdmininex(Yii::$app->request->queryParams);
 
         return $this->render('adminindex', [
             'searchModel' => $searchModel,
