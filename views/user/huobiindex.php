@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= HTML::a('增减货币', ['/revenue/manualadd'])?>
+    <?= HTML::a('增减货币', ['/revenue/manualadd'],['class' => 'btn btn-success'])?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
