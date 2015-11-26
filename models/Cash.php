@@ -93,16 +93,16 @@ class Cash extends ActiveRecord
     {
         return [
             'id'   => '编号',
-            'user_id' => '编号',
-            'type'  => '提现类型',
+            'user_id' => '会员编号',
+            'type'  => '账户类型',
             'status' => '状态',
             'bank' => '开户银行',
             'cardname' => '开户名',
             'cardnumber' => '银行卡号',
             'bankaddress' => '开户支行',
             'amount' => '提现金额',
-            'total' => '出帐后余额',
-            'note' => '摘要',
+            'total' => '出账后余额',
+            'note' => '备注',
             'password2' => '二级密码',
             'created_at' => '日期'
         ];

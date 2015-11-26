@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'class' => 'yii\grid\Column',
-                'header' => '出帐类型',
+                'header' => '出账类型',
                 'content' => function($model){
                         return '提现';
                     }
@@ -56,7 +56,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'total',
-                'label' => '出帐后余额',
+                'label' => '出账后余额',
                 'value' => function($model) {
                         return $model->total ? $model->total :  $model->getStatus()[$model->status];;
                     }

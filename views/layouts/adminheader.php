@@ -41,8 +41,8 @@ echo Nav::widget([
         [
             'label' => '货币管理', 'url' => ['/revenue/manualadd'],
             'items' => [
-                ['label' => '添加货币', 'url' => yii\helpers\Url::to('/revenue/manualadd')],
-                ['label' => '出帐明细', 'url' => yii\helpers\Url::to('/cash/adminout')],
+                ['label' => '增减货币', 'url' => yii\helpers\Url::to('/user/huobi')],
+                ['label' => '出账明细', 'url' => yii\helpers\Url::to('/cash/adminout')],
                 ['label' => '入账明细', 'url' => yii\helpers\Url::to('/revenue/adminin')],
                 ['label' => '提现管理', 'url' => yii\helpers\Url::to('/cash/adminindex')],
             ]

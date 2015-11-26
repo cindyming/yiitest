@@ -30,7 +30,7 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'admincreate', 'suggestindex', 'adminreject','success','adminresetpassword','adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
+                        'actions' => ['adminindex', 'huobi', 'admincreate', 'suggestindex', 'adminreject','success','adminresetpassword','adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -613,5 +613,25 @@ class UserController extends Controller
     {
         $user = $this->findModel($id);
         return $this->render('success', ['model' => $user]);
+    }
+
+    public function actionHuobi()
+    {
+        $searchModel = new UserSearch();
+
+        $data = Yii::$app->request->queryParams;
+
+        $data['UserSearch']['role_id'] =  3;
+
+        $dataProvider = $searchModel->search($data);
+
+        $dataProvider->pagination = [
+            'pageSize' => 20,
+        ];
+
+        return $this->render('huobiindex', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
     }
 }
