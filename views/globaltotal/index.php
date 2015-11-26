@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\Column',
                 'header' => '比率',
                 'content' => function($model){
-                        return ($model->total_in && $model->total_out) ? ($model->total_out / $model->total_in) : 0;
+                        return (($model->total_in > 0) && ($model->total_out>0)) ? ($model->total_out / $model->total_in) : 0;
                     }
             ],
             'created_at',
