@@ -18,8 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= $form->field(new app\models\User(), 'id')->textInput(['value' => Yii::$app->getRequest()->get('id'), 'name' => 'id']) ?>
 
         <div class="form-group">
-            <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-            <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+            <?= Html::submitButton('搜索', ['class' => 'btn btn-primary']) ?>
         </div>
 
         <?php ActiveForm::end(); ?>
