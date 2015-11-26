@@ -14,8 +14,8 @@ $this->title = '添加货币';
     <h1><?= Html::encode($this->title) ?></h1>
 
     <ul class="tabswitch">
-        <li><?= HTML::a('会员收入', ['/revenue/manualadd'])?></li>
-        <li class="active">会员支出</li>
+        <li><?= HTML::a('添入会员账户', ['/revenue/manualadd'])?></li>
+        <li class="active">扣出会员账户</li>
     </ul>
 
     <div class="cash-_form sm-form">
@@ -24,7 +24,7 @@ $this->title = '添加货币';
 
         <?= $form->field($model, 'user_id')->textInput(); ?>
         <?= $form->field($model, 'amount') ?>
-        <?= $form->field($model, 'type')->radioList([4 => '分红', 5=> '绩效']); ?>
+        <?= $form->field($model, 'type')->radioList([4 => '分红', 5=> '绩效', '6' => '服务费', '7' => '商城币']); ?>
         <?= $form->field($model, 'note')->textInput(['value' => '扣除金额']) ?>
         <div class="form-group">
             <?= Html::submitButton('保存', ['class' => 'btn btn-primary']) ?>

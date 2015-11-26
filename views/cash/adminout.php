@@ -7,7 +7,7 @@ use kartik\grid\GridView;
 /* @var $searchModel app\models\CashSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '出帐明细';
+$this->title = '会员出账明细';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="cash-index">
@@ -54,7 +54,16 @@ $this->params['breadcrumbs'][] = $this->title;
                         return $model->amount-$model->real_amount ;
                     }
             ],
+            [
+                'attribute' => 'total',
+                'label' => '出帐后余额',
+                'value' => function($model) {
+                        return $model->total ? $model->total :  $model->getStatus()[$model->status];;
+                    }
+
+            ],
             'created_at',
+            'note'
         ],
     ]); ?>
 

@@ -27,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'bank',
                 'label'=>'银行名称',
                 'value' => function($model) {
-                        return $model->getBankNames()[$model->bank];
+                        return $model->bank ? $model->getBankNames()[$model->bank] : '';
                     }
             ],
             'cardname',

@@ -170,6 +170,8 @@ class RevenueSearch extends Revenue
                 $query->andFilterWhere(['>', 'merit', 0]);
             } else if ($this->account_type == 3) {
                 $query->andFilterWhere(['>', 'baodan', 0]);
+            } else if ($this->account_type == 4) {
+                $query->andFilterWhere(['>', 'mall', 0]);
             }
         }
 

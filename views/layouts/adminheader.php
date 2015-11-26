@@ -31,7 +31,7 @@ echo Nav::widget([
             ],
         ],
         [
-            'label' => '财务管理', 'url' => ['/invest/adminabout'],
+            'label' => '财务统计', 'url' => ['/invest/adminabout'],
             'items' => [
                 ['label' => '奖金明细', 'url' => yii\helpers\Url::to('/revenue/adminindex')],
                 ['label' => '奖金统计', 'url' => yii\helpers\Url::to('/revenue/admintotal')],

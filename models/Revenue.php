@@ -45,7 +45,7 @@ class Revenue extends ActiveRecord
     {
         return [
             [['user_id'], 'required'],
-            [['bonus', 'merit', 'note', 'total', 'baodan', 'type', 'amount'], 'trim'],
+            [['bonus', 'merit', 'note', 'total', 'baodan', 'type', 'amount', 'mall'], 'trim'],
         ];
     }
 
@@ -66,6 +66,7 @@ class Revenue extends ActiveRecord
             'bonus_total' => '分红',
             'merit_total' => '绩效',
             'baodan_total' => '服务费',
+            'mall' => '商城币',
             'note' => '备注',
             'created_at' => '结算时间',
             'updated_at' => '发放时间',

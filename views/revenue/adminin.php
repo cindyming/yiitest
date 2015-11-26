@@ -6,7 +6,7 @@ use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '入账明细';
+$this->title = '会员入账明细';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="revenue-index">
@@ -39,16 +39,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'account_type',
                 'header' => '账户类型',
                 'value' => function($model) {
-                    return $model->bonus ? '分红' : (($model->merit) ? '绩效' : '服务费');
+                    return $model->bonus ? '分红' : (($model->merit) ? '绩效' : ($model->baodan ? '服务费' : '商城币'));
                 },
                 'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=> ['' => '不限',  1=> '分红', 2 => '绩效', 3 => '服务费'],
+                'filter'=> ['' => '不限',  1=> '分红', 2 => '绩效', 3 => '服务费', 4=> '商城币'],
             ],
             [
                 'class' => 'yii\grid\Column',
                 'header' => '入账金额',
                 'content' => function($model) {
-                        return $model->bonus ? $model->bonus : ($model->baodan ? $model->baodan : $model->merit);
+                        return $model->bonus ? $model->bonus : ($model->baodan ? $model->baodan : ($model->merit ? $model->merit : $model->mall));
                     }
             ],
             [
@@ -58,7 +58,6 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'created_at',
                 'label' => '日期',
-                'filter' => true,
             ],
             [
                 'attribute' => 'note',

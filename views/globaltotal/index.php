@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\GlobalTotalSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '拨比结算';
+$this->title = '总账拨比统计';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="global-total-index">
@@ -28,6 +28,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => '序号'
             ],
             'total_in',
+            'merit',
+            'bonus',
+            'mall',
+            'baodan',
             'total_out',
             [
                 'class' => 'yii\grid\Column',

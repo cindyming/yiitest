@@ -81,7 +81,7 @@ class Cash extends ActiveRecord
     {
         return [
             [['amount'], 'required'],
-            [['user_id', 'note', 'bank', 'cardname', 'cardnumber', 'bankaddress', 'real_amount'], 'trim'],
+            [['user_id', 'note', 'bank', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total'], 'trim'],
             [['type'], 'integer']
         ];
     }
@@ -115,7 +115,8 @@ class Cash extends ActiveRecord
 
     public function getTypes($filter = false)
     {
-        return  $filter ? array(''=> '不限', 1 => '分红提现', 2 => '绩效提现', 3 => '服务费', 4 => '分红支出', 5 => '绩效支出') : array(1 => '分红提现', 2 => '绩效提现', 3 => '服务费提现', 4 => '分红支出', 5 => '绩效支出');
+        return  $filter ? array(''=> '不限', 1 => '分红提现', 2 => '绩效提现', 3 => '服务费', 4 => '分红支出', 5 => '绩效支出', '6' => '服务费支出', '7' => '商城币支出')
+            : array(1 => '分红提现', 2 => '绩效提现', 3 => '服务费提现', 4 => '分红支出', 5 => '绩效支出', '6' => '服务费支出', '7' => '商城币支出');
     }
 
     public function getStatus($filter =false)

@@ -38,11 +38,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'bonus',
             'merit',
             'baodan',
+            'mall',
             [
                 'class' => 'yii\grid\Column',
                 'header' => '总额',
                 'content' => function($model) {
-                        return $model->bonus + $model->merit + $model->baodan;
+                        return $model->bonus + $model->merit + $model->baodan + $model->mall;
                     }
             ],
             [

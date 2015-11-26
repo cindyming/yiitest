@@ -169,7 +169,6 @@ class CashController extends Controller
             $model->status = 2;
             $user = User::findById($model->user_id);
             if ($model->type == 1) {
-
                 $user->bonus_remain = $user->bonus_remain - $model->amount;
                 $model->total = $user->bonus_remain;
             } elseif($model->type == 2) {
@@ -262,8 +261,20 @@ class CashController extends Controller
                 $model->status = 2;
                 if ($model->type == 4) {
                     $compareAmount = $user->bonus_remain;
+                    $user->bonus_remain = $user->bonus_remain - $model->amount;
+                    $model->total = $user->bonus_remain;
                 } elseif($model->type == 5) {
                     $compareAmount = $user->merit_remain;
+                    $user->merit_remain = $user->merit_remain - $model->amount;
+                    $model->total = $user->merit_remain;
+                } elseif($model->type == 6) {
+                    $compareAmount = $user->baodan_remain;
+                    $user->baodan_remain = $user->baodan_remain - $model->amount;
+                    $model->total = $user->baodan_remain;
+                } elseif($model->type == 7) {
+                    $compareAmount = $user->mall_remain;
+                    $user->mall_remain = $user->mall_remain - $model->amount;
+                    $model->total = $user->mall_remain;
                 }
 
                 if ($model->amount > $compareAmount) {
@@ -278,13 +289,7 @@ class CashController extends Controller
                     $connection = Yii::$app->db;
                     try {
                         $transaction = $connection->beginTransaction();
-                        if ($model->type == 4) {
-                            $user->bonus_remain = $user->bonus_remain - $model->amount;
-                            $model->total = $user->bonus_remain;
-                        } elseif($model->type == 5) {
-                            $user->merit_remain = $user->merit_remain - $model->amount;
-                            $model->total = $user->merit_remain;
-                        }
+
                         $model->save();
                         $user->save();
                         $transaction->commit();

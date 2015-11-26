@@ -185,6 +185,7 @@ class MeritController extends Controller
                 'total' => $merit_remain +  $user->merit_remain
             );
             $user->mall_remain += ($merit_amount - $merit_remain);
+            $user->mall_total += ($merit_amount - $merit_remain);
             $user->merit_total += $merit_amount;
             $user->merit_remain += $merit_remain;
 

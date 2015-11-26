@@ -69,12 +69,18 @@ class GlobaltotalController extends Controller
 
         $connection=Yii::$app->db;
 
-        $invertTotal = $connection->createCommand('SELECT sum(investment) as "total", sum(merit_total) as "merit_total", sum(bonus_total) as "bonus_total",  sum(baodan_total) as "baodan_total" FROM user WHERE role_id=3')->queryAll();
+        $invertTotal = $connection->createCommand('SELECT sum(investment) as "total", sum(merit_total) as "merit_total", sum(bonus_total) as "bonus_total",  sum(baodan_total) as "baodan_total" FROM user WHERE role_id=3')->queryOne();
+
+        $kouchTotal = $connection->createCommand('SELECT sum(amount) as "kouchu_total"  FROM cach WHERE type in (4,5,6,7)')->queryOne();
 
         $data = array(
             'GlobalTotal' => array(
-                'total_in' => $invertTotal[0]['total'],
-                'total_out' => $invertTotal[0]['merit_total'] + $invertTotal[0]['bonus_total'] + $invertTotal[0]['baodan_total']
+                'total_in' => $invertTotal['total'] + (float)$kouchTotal['kouchu_total'],
+                'mall' => (float)$invertTotal['merit_total'] * 0.1,
+                'bonus' => (float)$invertTotal['bonus_total'],
+                'baodan' => (float)$invertTotal['baodan_total'],
+                'merit' => (float)$invertTotal['merit_total'] * 0.9,
+                'total_out' => $invertTotal['merit_total'] + $invertTotal['bonus_total'] + $invertTotal['baodan_total']
             )
         );
 
