@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'merit_total',
                 'value' => function($model) {
-                        return $model->mert_total-$model->mall_total;
+                        return $model->merit_total-$model->mall_total;
                     }
             ],
             'baodan_total',
