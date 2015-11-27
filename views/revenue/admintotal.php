@@ -24,11 +24,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => '序号'
             ],
             [
-                'attribute' => 'user_id',
+                'attribute' => 'id',
                 'filter' => true,
             ],
             'bonus_total',
-            'merit_total',
+            [
+                'attribute' => 'merit_total',
+                'value' => function($model) {
+                        return $model->mert_total-$model->mall_total;
+                    }
+            ],
             'baodan_total',
             'mall_total',
             [

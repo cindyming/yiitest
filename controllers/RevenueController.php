@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\RevenueSearch;
+use app\models\UserSearch;
 use Yii;
 use app\models\Revenue;
 use yii\data\ActiveDataProvider;
@@ -117,7 +118,7 @@ class RevenueController extends Controller
     public function actionAdmintotal()
     {
 
-        $searchModel = new RevenueSearch();
+        $searchModel = new UserSearch();
 
         $dataProvider = $searchModel->searchTotal(Yii::$app->request->queryParams);
 
