@@ -30,11 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
             'bonus_total',
             'merit_total',
             'baodan_total',
+            'mall_total',
             [
                 'class' => 'yii\grid\Column',
                 'header' => '实发总额',
                 'content' => function($model) {
-                        return $model->bonus_total + $model->merit_total;
+                        return $model->bonus_total + $model->merit_total + $model->baodan_total;
                     }
             ],
         ],
