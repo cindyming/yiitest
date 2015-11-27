@@ -80,7 +80,7 @@ class CashController extends Controller
     public function actionOut()
     {
         $searchModel = new CashSearch();
-        $data = Yii::$app->request->queryParams;
+
         $dataProvider = $searchModel->searchForMeber(Yii::$app->request->queryParams);
 
         return $this->render('out', [
@@ -99,9 +99,7 @@ class CashController extends Controller
 
         $data = Yii::$app->request->queryParams;
 
-        $data['CashSearch']['user_id'] = Yii::$app->user->identity->id;
-
-        $dataProvider = $searchModel->search($data);
+        $dataProvider = $searchModel->searchForMemberIndex($data);
         $dataProvider->pagination = [
             'pageSize' => 10
         ];
