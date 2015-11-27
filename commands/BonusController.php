@@ -44,16 +44,19 @@ class BonusController extends Controller
         } else {
             $data['bonus'] =  $amount * 0.01 * $rate;
         }
-        $data['bonus'] = round($data['bonus'], 2);
-        $data['note'] = '分红结算: ' .  date('Y-m-d', time());
-        $data['type'] = 1;
-        $data['user_id'] = $user->id;
-        $data['total'] = $user->bonus_remain + $data['bonus'];
-        $user->bonus_total = $user->bonus_total + $data['bonus'];
-        $user->bonus_remain = $user->bonus_remain + $data['bonus'];
-        $bonus = new Revenue();
-        $bonus->load($data, '');
-        $bonus->save();
+        if ($data['bonus'] > 0) {
+            $data['bonus'] = round($data['bonus'], 2);
+            $data['note'] = '分红结算: ' .  date('Y-m-d', time());
+            $data['type'] = 1;
+            $data['user_id'] = $user->id;
+            $data['total'] = $user->bonus_remain + $data['bonus'];
+            $user->bonus_total = $user->bonus_total + $data['bonus'];
+            $user->bonus_remain = $user->bonus_remain + $data['bonus'];
+            $bonus = new Revenue();
+            $bonus->load($data, '');
+            $bonus->save();
+        }
+
     }
 
     public function actionIndex()

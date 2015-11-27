@@ -34,9 +34,22 @@ $this->params['breadcrumbs'][] = $this->title;
                         return $model->type == 1 ? '奖金' : '充值';
                     },
             ],
-            'bonus',
-            'merit',
-            'baodan',
+            [
+                'attribute' => 'account_type',
+                'header' => '账户类型',
+                'value' => function($model) {
+                        return $model->bonus ? '分红' : (($model->merit) ? '绩效' : ($model->baodan ? '服务费' : '商城币'));
+                    },
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=> ['' => '不限',  1=> '分红', 2 => '绩效', 3 => '服务费'],
+            ],
+            [
+                'class' => 'yii\grid\Column',
+                'header' => '入账金额',
+                'content' => function($model) {
+                        return $model->bonus ? $model->bonus : ($model->baodan ? $model->baodan : ($model->merit ? $model->merit : $model->mall));
+                    }
+            ],
             [
                 'attribute' => 'total',
                 'label' => '入账后余额',

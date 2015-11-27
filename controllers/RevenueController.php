@@ -34,7 +34,7 @@ class RevenueController extends Controller
                         ],
                         [
                             'allow' => true,
-                            'actions' => ['index', 'total'],
+                            'actions' => ['index', 'total', 'in'],
                             'roles' => [User::ROLE_USER],
                         ],
                     ],
@@ -161,6 +161,7 @@ class RevenueController extends Controller
         $data = Yii::$app->request->queryParams;
 
         $data['RevenueSearch']['user_id'] = Yii::$app->user->identity->id;
+        $data['RevenueSearch']['type'] = 1;
 
         $dataProvider = $searchModel->search($data);
 
@@ -170,6 +171,27 @@ class RevenueController extends Controller
 
 
         return $this->render('index', [
+            'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
+        ]);
+
+    }
+
+    public function actionIn()
+    {
+        $searchModel = new RevenueSearch();
+
+        $data = Yii::$app->request->queryParams;
+
+        $data['RevenueSearch']['user_id'] = Yii::$app->user->identity->id;
+        $data['RevenueSearch']['type'] = 2;
+
+        $dataProvider = $searchModel->search($data);
+
+        $dataProvider->pagination = [
+            'pageSize' => 10,
+        ];
+        return $this->render('in', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
         ]);

@@ -6,7 +6,7 @@ use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '奖金明细';
+$this->title = '入账明细';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="revenue-index">

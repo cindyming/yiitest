@@ -77,6 +77,44 @@ class CashSearch extends Cash
         return $dataProvider;
     }
 
+    public function searchForMeber($params)
+    {
+        $query = Cash::find()->orderBy(['id' => SORT_DESC]);
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id' => $this->id,
+            'user_id' => Yii::$app->user->identity->id,
+            'type' => $this->type,
+            'status' => $this->status,
+            'amount' => $this->amount,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ]);
+
+        $query->andFilterWhere(['like', 'bank', $this->bank])
+            ->andFilterWhere(['like', 'cardname', $this->cardname])
+            ->andFilterWhere(['like', 'cardnumber', $this->cardnumber])
+            ->andFilterWhere(['like', 'bankaddress', $this->bankaddress])
+            ->orderBy(['id' => SORT_DESC]);
+
+        return $dataProvider;
+    }
+
     public function searchForAdmininex($params)
     {
         $query = Cash::find()->where(['in', 'type', array(1,2,3)])->orderBy(['id' => SORT_DESC, 'status' => SORT_ASC]);

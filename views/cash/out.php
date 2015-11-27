@@ -7,7 +7,7 @@ use kartik\grid\GridView;
 /* @var $searchModel app\models\CashSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '提现管理';
+$this->title = '出账明细';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="cash-index">
@@ -22,31 +22,37 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\SerialColumn',
                 'header' => '序号'
             ],
-            'user_id',
             [
-                'attribute' => 'bank',
-                'label'=>'银行名称',
-                'value' => function($model) {
-                        return $model->bank ? $model->getBankNames()[$model->bank] : '';
-                    }
+                'attribute' => 'user_id',
+                'filter' => true,
             ],
-            'cardname',
-            'cardnumber',
             [
-                'attribute' => 'bankaddress',
-                'label'=>'开户行',
+                'class' => 'yii\grid\Column',
+                'header' => '出账类型',
+                'content' => function($model){
+                        return '提现';
+                    }
             ],
             [
                 'attribute' => 'type',
                 'label'=>'账户类型',
+                'filter'=> true,
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter' =>$searchModel->getTypes(true),
                 'value' => function($model) {
                         return $model->getType();
                     }
             ],
-            'amount',
             [
-                'attribute' => 'real_amount',
-                'label'=>'实发金额',
+                'attribute' => 'amount',
+                'label' => '出账金额',
+            ],
+            [
+                'attribute' => 'amount',
+                'label'=>'手续费',
+                'value' => function($model) {
+                        return $model->amount-$model->real_amount ;
+                    }
             ],
             [
                 'attribute' => 'total',
@@ -57,15 +63,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ],
             'created_at',
-            [
-                'attribute' => 'status',
-                'filter'=> true,
-                'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=>$searchModel->getStatus(true),
-                'value' => function($model) {
-                        return $model->getStatus()[$model->status];
-                    }
-            ],
+            'note'
         ],
     ]); ?>
 
