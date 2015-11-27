@@ -252,7 +252,7 @@ class RevenueController extends Controller
                     $user->save();
                     $transaction->commit();
                     Yii::$app->systemlog->add('管理员', '添加货币 - 收入', '成功','会员: ' .$model->user_id . ' ; ' . $model->note );
-                    return $this->redirect(['adminin']);
+                    return $this->redirect(['/user/huobi']);
                 } catch (Exception $e) {
                     $transaction->rollback();//回滚函数
                     Yii::$app->log($e->getMessage());
