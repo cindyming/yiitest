@@ -27,7 +27,7 @@ $this->title = '增减货币';
         <?= $form->field($model, 'user_id')->textInput(['value' => Yii::$app->getRequest()->get('id')]); ?>
         <?= $form->field($model, 'amount') ?>
         <?= $form->field($model, 'type')->radioList([4 => '分红', 5=> '绩效', '6' => '服务费', '7' => '商城币']); ?>
-        <?= $form->field($model, 'note')->textInput(['value' => '扣除金额']) ?>
+        <?= $form->field($model, 'note')->textInput(['value' => '系统扣除金额']) ?>
         <div class="form-group">
             <?= Html::submitButton('保存', ['class' => 'btn btn-primary']) ?>
         </div>
