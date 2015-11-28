@@ -142,6 +142,10 @@ class CashController extends Controller
             } elseif($model->type == 3) {
                 $compareAmount = Yii::$app->user->identity->baodan_remain;
             }
+            if ((float)$model->amount <= 0) {
+                $validateAmount = false;
+                $model->addError('amount', '提现金额必须大于0.');
+            }
 
             if ($model->amount > $compareAmount) {
                 $validateAmount = false;
@@ -331,6 +335,7 @@ class CashController extends Controller
             $user = User::findOne($model->user_id);
             if ($user && $user->id) {
                 $validateAmount = true;
+                $model->amount = (float)$model->amount;
                 $model->status = 2;
                 if ($model->type == 4) {
                     $compareAmount = $user->bonus_remain;
@@ -341,7 +346,10 @@ class CashController extends Controller
                 } elseif($model->type == 7) {
                     $compareAmount = $user->mall_remain;
                 }
-
+                if ($model->amount <= 0) {
+                    $validateAmount = false;
+                    $model->addError('amount', '提现金额必须大于0.');
+                }
                 if ($model->amount > $compareAmount) {
                     $validateAmount = false;
                     $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . $user->bonus_remain . ', 绩效余额: ' . $user->merit_remain .  ', 服务费余额: ' . (float)$user->baodan_remain  .  ', 商城币余额: ' . (float)$user->mall_remain  . '.');

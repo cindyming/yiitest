@@ -221,9 +221,15 @@ class RevenueController extends Controller
 
         if ($model->load(Yii::$app->request->post())) {
             $user = User::findOne($model->user_id);
-            if ($user && $user->id) {
+            $validateAmount = true;
+            if ((float)$model->amount <= 0) {
+                $validateAmount = false;
+                $model->addError('amount', '提现金额必须大于0.');
+            }
+            if ($user && $user->id && $validateAmount) {
                 $connection = Yii::$app->db;
                 try {
+
                     $transaction = $connection->beginTransaction();
                     if ($model->type == 1) {
                         $user->bonus_remain = $user->bonus_remain + $model->amount;
