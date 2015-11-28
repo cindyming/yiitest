@@ -13,6 +13,13 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="cash-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+
+    <div class="Message">
+        <?= Yii::$app->getSession()->get('message');
+        Yii::$app->getSession()->set('message',null);
+        ?>
+    </div>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

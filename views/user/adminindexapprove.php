@@ -13,7 +13,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <div>
+    <div class="Message">
         <?= Yii::$app->getSession()->get('message');
         Yii::$app->getSession()->set('message',null);
         ?>

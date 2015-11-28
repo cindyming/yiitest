@@ -167,6 +167,7 @@ class CashController extends Controller
                         $user->save();
                         if ($model->save()) {
                             $transaction->commit();
+                            Yii::$app->getSession()->set('message', '提现申请提交成功');
                             return $this->redirect(['index']);
                         } else {
                             $transaction->rollback();
@@ -355,6 +356,7 @@ class CashController extends Controller
                         $user->save();
                         $transaction->commit();
                         Yii::$app->systemlog->add('管理员', '添加货币 - 支出', '成功','会员: ' .$model->user_id . ' ; ' . $model->note );
+                        Yii::$app->getSession()->set('message', '会员:(' . $model->user_id . ')扣除货币成功');
                         return $this->redirect(['/user/huobi']);
                     } catch (Exception $e) {
                         $transaction->rollback();//回滚函数
