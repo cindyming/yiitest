@@ -376,7 +376,7 @@ class CashController extends Controller
                     $connection = Yii::$app->db;
                     try {
                         $transaction = $connection->beginTransaction();
-
+                        $model->note = $model->note . '(管理员扣除: ' . date('Y-m-d', time()) . ')';
                         $model->save();
                         $user->save();
                         $transaction->commit();
