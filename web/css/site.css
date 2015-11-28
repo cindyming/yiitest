@@ -14,6 +14,8 @@ body {
 .wrap > .container {
     padding: 20px 15px 20px;
 }
+h1{font-size:22px;margin:20px 0}
+.container h1{display:inline-block;}
 
 .footer {
     height: 60px;
@@ -168,7 +170,7 @@ a.desc:after {
 label{font-weight:normal;}
 body.login{background: #2E363F url(bg1.jpg) no-repeat center center;background-size:cover}
 .loginbox{margin:0 auto;width: 400px;padding:1px 20px 20px;background:rgba(255,255,255,0.4);margin:5% auto 0}
-.loginbox h1{color:#4A4A4A;font-size:19px;text-align: center;margin:3% -20px 8%;border-bottom: 1px solid #fff;padding:1% 0 4%;}
+.container .loginbox h1{color:#4A4A4A;font-size:19px;text-align: center;display:block;margin:3% -20px 8%;border-bottom: 1px solid #fff;padding:1% 0 4%;}
 .loginbox .col-lg-1{width:26%}
 .loginbox .col-lg-3{width:73%;display:inline-block;padding-left:0}
 .loginbox .col-lg-8{padding-left:26%;width:100%;font-size:12px}
@@ -218,8 +220,6 @@ nav.navbar .container{padding:0}
 .top-header .m-info li:last-child{border-right:none 0;padding-right:0}
 .qk-links{}
 .qk-links nav{float:right;background:transparent;border:none 0}
-h1{font-size:22px;margin:20px 0}
-.container h1{display:inline-block;}
 
 .user-form > div{width:48%;margin-right:2%;display:inline-block;}
 .user-form > div:last-child{margin-right:0}
@@ -268,9 +268,5 @@ li.jstree-node a.gray-icon{ color: #bbb; }
 .kv-panel-pager .pagination{float:left;margin-right:10px}
 input#pageNo{width:34px;height:34px;border:1px solid #ddd;padding:5px;margin-right:5px}
 .kv-panel-pager button{background-color: #337ab7;border: 1px solid #337ab7;color: #fff;height: 34px;}
-.fail{background-color: #FFD5D5;
-  border: 1px solid #DD7777;
-  line-height: 30px;
-  padding: 2px 15px;
-  margin-bottom: 15px;
-  color: #D81919;}
+.fail{background-color: #FFD5D5;border: 1px solid #DD7777;line-height: 30px;padding: 2px 15px;margin-bottom: 15px;color: #D81919;}
+.Message{background-color:#EAFAEF;border: 1px solid #42BB76;line-height: 30px;padding: 2px 15px;margin-bottom: 15px;color: #228B27;}

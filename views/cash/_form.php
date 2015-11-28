@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\Cash */
 /* @var $form ActiveForm */
 ?>
-<div class="cash-_form">
+<div class="cash-_form sm-form">
 
     <?php $form = ActiveForm::begin(); ?>
 
