@@ -188,9 +188,9 @@ class UserController extends Controller
                 $addedBy->baodan_remain += $meritAmount;
                 $addedBy->baodan_total += $meritAmount;
                 $addedBy->save();
-                Yii::$app->getSession()->set('message', '会员(' .$id. ')审核成功');
-            }
 
+            }
+            Yii::$app->getSession()->set('message', '会员(' .$id. ')审核成功');
             return $this->redirect(['adminindexapprove']);
         } else {
             return $this->redirect(['adminindexunapprove']);
