@@ -91,6 +91,7 @@ class MessageController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->getSession()->set('message', '留言回复成功');
             return $this->redirect(['adminview', 'id' => $model->id]);
         } else {
             return $this->render('adminupdate', [
@@ -167,6 +168,7 @@ class MessageController extends Controller
         $model = new Message();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->getSession()->set('message', '留言提交成功');
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [

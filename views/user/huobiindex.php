@@ -13,14 +13,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php if (Yii::$app->getSession()->get('message')): ?>
-        <div class="Message">
-            <?= Yii::$app->getSession()->get('message');
-            Yii::$app->getSession()->set('message',null);
-            ?>
-        </div>
-    <?php endif ?>
-
     <p>
     <?= HTML::a('增减货币', ['/revenue/manualadd'],['class' => 'btn btn-success'])?>
     </p>

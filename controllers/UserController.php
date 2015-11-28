@@ -526,11 +526,13 @@ class UserController extends Controller
 
         $data = Yii::$app->request->post('User');
         if (count($data)) {
+            $message = '';
             if (isset($data['password'])) {
                 if ($model->validatePassword($data['password_old'])) {
                     $model->setAttributes($data);
                     if ($model->save()) {
                         $success = true;
+                        $message = '一级密码修改成功';
                     }
                 } else {
                     $model->addError('password_old', '原一级密码不正确');
@@ -539,6 +541,7 @@ class UserController extends Controller
                 if ($model->validatePassword2($data['password2_old'])) {
                     $model->setAttributes($data);
                     if ($model->save()) {
+                        $message = '二级密码修改成功';
                         $success = true;
                     }
                 } else {
@@ -548,6 +551,7 @@ class UserController extends Controller
         }
 
         if ($success) {
+            Yii::$app->getSession()->set('message', $message);
             return $this->render('view', [
                 'model' => $this->findModel($model->id),
             ]);
@@ -592,8 +596,10 @@ class UserController extends Controller
                 if ($model->validatePassword($data['password_old'])) {
                     $model->setAttributes($data);
                     if ($model->save()) {
+                        Yii::$app->getSession()->set('message', '密码修改成功');
                         $result['status'] = true;
                     } else {
+                        Yii::$app->getSession()->set('message', '密码修改失败');
                         $result= array ('status' => false, 'message' => '密码修改失败');
                     }
                 } else {

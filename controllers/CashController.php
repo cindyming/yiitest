@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Revenue;
 use app\models\System;
 use Yii;
 use app\models\Cash;
@@ -215,6 +216,7 @@ class CashController extends Controller
             } elseif($model->type == 3) {
                 $model->total = $user->baodan_remain;
             }
+            Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放成功');
             $model->save();
             $user->save();
             $transaction->commit();
@@ -237,13 +239,27 @@ class CashController extends Controller
             $model->status = 3;
 
             $user = User::findById($model->user_id);
+            $data = array(
+                'user_id' => $model->user_id,
+                'type' => 2,
+                'note' => '拒绝提现'
+            );
             if ($model->type == 1) {
                 $user->bonus_remain = $user->bonus_remain + $model->amount;
+                $data['bonus'] =  $model->amount;
+                $data['total'] =  $user->bonus_remain;
             } elseif($model->type == 2) {
                 $user->merit_remain = $user->merit_remain + $model->amount;
+                $data['merit'] =  $model->amount;
+                $data['total'] =  $user->merit_remain;
             } elseif($model->type == 3) {
                 $user->baodan_remain = $user->baodan_remain + $model->amount;
+                $data['baodan'] =  $model->amount;
+                $data['total'] =  $user->baodan_remain;
             }
+            $revenue = new Revenue();
+            $revenue->load($data, '');
+            $revenue->save();
             $user->save();
             $model->save();
             $transaction->commit();

@@ -14,14 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php if (Yii::$app->getSession()->get('message')): ?>
-    <div class="Message">
-        <?= Yii::$app->getSession()->get('message');
-        Yii::$app->getSession()->set('message',null);
-        ?>
-    </div>
-    <?php endif ?>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,

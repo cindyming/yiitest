@@ -112,6 +112,7 @@ class InvestmentController extends Controller
             }
             if (($user && $user->getId()) && ($user->role_id == 3)) {
                 if ($validateAmount && $model->save()) {
+                    Yii::$app->getSession()->set('message', '追加投资添加成功');
                     return $this->redirect(['adminindex']);
                 }
             } else {

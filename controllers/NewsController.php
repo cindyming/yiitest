@@ -91,6 +91,7 @@ class NewsController extends Controller
         $model = new News();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            Yii::$app->getSession()->set('message', '公告发布成功');
             return $this->redirect(['adminview', 'id' => $model->id]);
         } else {
             return $this->render('admincreate', [

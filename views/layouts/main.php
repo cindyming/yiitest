@@ -38,6 +38,13 @@ $isAdmin = Yii::$app->user->identity->isAdmin();
     </div>
 
     <div class="container">
+        <?php if (Yii::$app->getSession()->get('message')): ?>
+            <div class="Message">
+                <?= Yii::$app->getSession()->get('message');
+                Yii::$app->getSession()->set('message',null);
+                ?>
+            </div>
+        <?php endif ?>
         <!-- Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) -->

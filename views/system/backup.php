@@ -14,12 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <div>
-        <?= Yii::$app->getSession()->get('backupmessage');
-        Yii::$app->getSession()->set('backupmessage',null);
-        ?>
-    </div>
-
     <p>
         <?= Html::a('备份数据库', ['backup'], ['class' => 'btn btn-success']) ?>
     </p>

@@ -17,11 +17,7 @@ $this->title = '密码修改';
     <div class="user-form">
 
         <div id="changeFirstPassword" class="two-cols">
-            <?php if ($status !== null): ?>
-                <div class="<?php echo ($status) ? 'success' : 'fail'?>">
-                     <?= $message ?>
-                </div>
-            <?php endif ?>
+
             <?php $form = ActiveForm::begin(); ?>
 
             <?= $form->field($model, 'old_username')->textInput(['minlength' => 6, 'readonly' => true, 'value' => $model->username]) ?>

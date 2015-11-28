@@ -73,7 +73,7 @@ class SystemController extends Controller
                     $system->value = $da;
                     $system->save();
                 }
-
+                Yii::$app->getSession()->set('message', '保存成功.');
             }
             Yii::$app->cache->set('SYSTEM_CONFIG', null);
         }
@@ -117,7 +117,7 @@ class SystemController extends Controller
         $backup = new Backup();
         $backup->filename = $filename;
         $backup->save();
-        Yii::$app->getSession()->set('backupmessage', '数据库备份成功.');
+        Yii::$app->getSession()->set('message', '数据库备份成功.');
         $this->redirect(array('/system/backupindex'));
     }
 
