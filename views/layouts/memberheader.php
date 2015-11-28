@@ -73,7 +73,6 @@ echo Nav::widget([
                         ['label' => '申请提现', 'url' => ['/cash/create']],
                     ]
                 ],
-                ['label' => '汇款提醒', 'url' => ['/blank']],
             ]
         ],
         [
