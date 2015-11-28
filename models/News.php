@@ -36,7 +36,7 @@ class News extends ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'be_top', 'content'], 'required'],
+            [['title', 'be_top', 'content', 'public_at'], 'required'],
             [['public_at'], 'trim']
         ];
     }
