@@ -261,6 +261,7 @@ class CashController extends Controller
                 $data['baodan'] =  $model->amount;
                 $data['total'] =  $user->baodan_remain;
             }
+            Yii::$app->getSession()->set('message', '提现申请拒绝成功');
             $revenue = new Revenue();
             $revenue->load($data, '');
             $revenue->save();
