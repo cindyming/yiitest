@@ -153,6 +153,7 @@ class UserController extends Controller
         $model->add_member = 2;
 
         if ( $model->save()) {
+            Yii::$app->getSession()->set('message', '会员(' .$id. ')报单员审核成功');
             return $this->redirect(['adminindexapprove']);
         } else {
             return $this->redirect(['adminapplyindex']);
@@ -187,6 +188,7 @@ class UserController extends Controller
                 $addedBy->baodan_remain += $meritAmount;
                 $addedBy->baodan_total += $meritAmount;
                 $addedBy->save();
+                Yii::$app->getSession()->set('message', '会员(' .$id. ')审核成功');
             }
 
             return $this->redirect(['adminindexapprove']);
@@ -231,7 +233,7 @@ class UserController extends Controller
         $data = array('User' => array('role_id'=> 4));
 
         if ($model->load($data) && $model->save()) {
-
+            Yii::$app->getSession()->set('message', '会员('. $id . ')拒绝成功');
         }
 
         return $this->redirect(['adminindexunapprove']);
