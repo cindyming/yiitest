@@ -6,15 +6,15 @@ use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '全部会员';
+$this->title = '增减货币';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+    <p>
     <?= HTML::a('增减货币', ['/revenue/manualadd'],['class' => 'btn btn-success'])?>
-
+    </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
