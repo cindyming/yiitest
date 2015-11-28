@@ -219,6 +219,7 @@ nav.navbar .container{padding:0}
 .qk-links{}
 .qk-links nav{float:right;background:transparent;border:none 0}
 h1{font-size:22px;margin:20px 0}
+.container h1{display:inline-block;}
 
 .user-form > div{width:48%;margin-right:2%;display:inline-block;}
 .user-form > div:last-child{margin-right:0}
@@ -259,5 +260,16 @@ li.jstree-node a.gray-icon{ color: #bbb; }
 #maintaining{font-size:18px;padding:5px 0;color:red;background:#FFC7C7;text-align: center;margin-bottom:20px }
 .panel-primary > .panel-heading{float:left;padding: 10px 0;color: #333;background:transparent;border-color:transparent;}
 .panel-primary{border-color:transparent;}
-.field-system-cash_factorage label{display:block;}
-.field-system-cash_factorage input{display:inline-block;width:100px;margin-right: 5px}
+.field-system-cash_factorage label,
+.field-system-lowest_cash_amount label{display:block;}
+.field-system-cash_factorage input,
+.field-system-lowest_cash_amount input{display:inline-block;width:100px;margin-right: 5px}
+.kv-panel-pager .pagination{float:left;margin-right:10px}
+input#pageNo{width:34px;height:34px;border:1px solid #ddd;padding:5px;margin-right:5px}
+.kv-panel-pager button{background-color: #337ab7;border: 1px solid #337ab7;color: #fff;height: 34px;}
+.fail{background-color: #FFD5D5;
+  border: 1px solid #DD7777;
+  line-height: 30px;
+  padding: 2px 15px;
+  margin-bottom: 15px;
+  color: #D81919;}
