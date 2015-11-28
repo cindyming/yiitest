@@ -153,7 +153,7 @@ class CashSearch extends Cash
 
     public function searchForAdmininex($params)
     {
-        $query = Cash::find()->where(['in', 'type', array(1,2,3)])->orderBy(['status' => SORT_ASC]);
+        $query = Cash::find()->where(['in', 'type', array(1,2,3)])->orderBy(['status' => SORT_ASC, 'id' => SORT_DESC]);
 
         // add conditions that should always apply here
 
@@ -184,7 +184,7 @@ class CashSearch extends Cash
             ->andFilterWhere(['like', 'cardname', $this->cardname])
             ->andFilterWhere(['like', 'cardnumber', $this->cardnumber])
             ->andFilterWhere(['like', 'bankaddress', $this->bankaddress])
-            ->orderBy(['id' => SORT_DESC]);
+            ->orderBy(['status' => SORT_ASC, 'id' => SORT_DESC]);
 
         return $dataProvider;
     }
