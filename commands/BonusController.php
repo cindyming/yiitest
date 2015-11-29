@@ -52,7 +52,7 @@ class BonusController extends Controller
         $this->_startTime = date("Y-m-d",strtotime("-15 days")) . ' 00:00:00';
         $this->lessThan15Investment();
 
-        $users = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0])->andWhere(['=', 'id', '10000056'])->all();
+        $users = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0])->all();
 
         foreach ($users as $user) {
             if (($user->bonus_total + $user->merit_total) > ($user->investment * 2 )) {
