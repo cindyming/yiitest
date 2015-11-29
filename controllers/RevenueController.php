@@ -6,6 +6,7 @@ use app\models\RevenueSearch;
 use app\models\UserSearch;
 use Yii;
 use app\models\Revenue;
+use yii\base\Exception;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -251,6 +252,9 @@ class RevenueController extends Controller
                         $user->mall_total = $user->mall_total + $model->amount;
                         $model->mall = $model->amount;
                         $model->total = $user->mall_remain;
+                    } else {
+                        $model->addError('type', '请选择账户类型.');
+                        throw new Exception('账户类型错误');
                     }
                     $model->type = 2;
                     $model->note = $model->note . '(管理员充值: ' . date('Y-m-d', time()) . ')';
@@ -262,7 +266,6 @@ class RevenueController extends Controller
                     return $this->redirect(['/user/huobi']);
                 } catch (Exception $e) {
                     $transaction->rollback();//回滚函数
-                    Yii::$app->log($e->getMessage());
                 }
 
             } else {

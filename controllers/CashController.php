@@ -135,22 +135,28 @@ class CashController extends Controller
         $data = Yii::$app->request->post();
         if ($model->load(Yii::$app->request->post()) && isset($data['Cash']) && isset($data['Cash']['password2'])) {
             $validateAmount = true;
-            if ($model->type == 1) {
-                $compareAmount = Yii::$app->user->identity->bonus_remain;
-            } elseif($model->type == 2) {
-                $compareAmount = Yii::$app->user->identity->merit_remain;
-            } elseif($model->type == 3) {
-                $compareAmount = Yii::$app->user->identity->baodan_remain;
+            if (!in_array($model->type, array(1,2,3))){
+                $model->addError('type', '请选择账户类型.');
+            } else {
+                if ($model->type == 1) {
+                    $compareAmount = Yii::$app->user->identity->bonus_remain;
+                } elseif($model->type == 2) {
+                    $compareAmount = Yii::$app->user->identity->merit_remain;
+                } elseif($model->type == 3) {
+                    $compareAmount = Yii::$app->user->identity->baodan_remain;
+                }
+                if ($model->amount > $compareAmount) {
+                    $validateAmount = false;
+                    $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 服务费余额: ' . (float)Yii::$app->user->identity->baodan_remain  . '.');
+                }
             }
+
             if ((float)$model->amount <= 0) {
                 $validateAmount = false;
                 $model->addError('amount', '提现金额必须大于0.');
             }
 
-            if ($model->amount > $compareAmount) {
-                $validateAmount = false;
-                $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 服务费余额: ' . (float)Yii::$app->user->identity->baodan_remain  . '.');
-            }
+
             if ($model->amount < System::loadConfig('lowest_cash_amount')) {
                 $validateAmount = false;
                 $model->addError('amount', '最低提现额为: ' . System::loadConfig('lowest_cash_amount') . '.');
@@ -338,23 +344,31 @@ class CashController extends Controller
                 $validateAmount = true;
                 $model->amount = (float)$model->amount;
                 $model->status = 2;
-                if ($model->type == 4) {
-                    $compareAmount = $user->bonus_remain;
-                } elseif($model->type == 5) {
-                    $compareAmount = $user->merit_remain;
-                } elseif($model->type == 6) {
-                    $compareAmount = $user->baodan_remain;
-                } elseif($model->type == 7) {
-                    $compareAmount = $user->mall_remain;
+
+                if(in_array($model->type, array(4,5,6,7))) {
+                    if ($model->type == 4) {
+                        $compareAmount = $user->bonus_remain;
+                    } elseif($model->type == 5) {
+                        $compareAmount = $user->merit_remain;
+                    } elseif($model->type == 6) {
+                        $compareAmount = $user->baodan_remain;
+                    } elseif($model->type == 7) {
+                        $compareAmount = $user->mall_remain;
+                    }
+                    if ($model->amount > $compareAmount) {
+                        $validateAmount = false;
+                        $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . $user->bonus_remain . ', 绩效余额: ' . $user->merit_remain .  ', 服务费余额: ' . (float)$user->baodan_remain  .  ', 商城币余额: ' . (float)$user->mall_remain  . '.');
+                    }
+                } else {
+                    $validateAmount = false;
+                    $model->addError('type', '请选择账户类型.');
                 }
+
                 if ($model->amount <= 0) {
                     $validateAmount = false;
                     $model->addError('amount', '提现金额必须大于0.');
                 }
-                if ($model->amount > $compareAmount) {
-                    $validateAmount = false;
-                    $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . $user->bonus_remain . ', 绩效余额: ' . $user->merit_remain .  ', 服务费余额: ' . (float)$user->baodan_remain  .  ', 商城币余额: ' . (float)$user->mall_remain  . '.');
-                }
+
                 if ($model->amount < System::loadConfig('lowest_cash_amount')) {
                     $validateAmount = false;
                     $model->addError('amount', '最低提现额为: ' . System::loadConfig('lowest_cash_amount') . '.');
