@@ -240,17 +240,17 @@ class RevenueController extends Controller
                         $user->merit_remain = $user->merit_remain + $model->amount;
                         $user->merit_total = $user->merit_total + $model->amount;
                         $model->merit = $model->amount;
-                        $model->total = $user->merit_total;
+                        $model->total = $user->merit_remain;
                     } elseif($model->type == 3) {
                         $user->baodan_remain = $user->baodan_remain + $model->amount;
                         $user->baodan_total = $user->baodan_total + $model->amount;
                         $model->baodan = $model->amount;
-                        $model->total = $user->baodan_total;
+                        $model->total = $user->baodan_remain;
                     } elseif($model->type == 4) {
                         $user->mall_remain = $user->mall_remain + $model->amount;
                         $user->mall_total = $user->mall_total + $model->amount;
                         $model->mall = $model->amount;
-                        $model->total = $user->mall_total;
+                        $model->total = $user->mall_remain;
                     }
                     $model->type = 2;
                     $model->note = $model->note . '(管理员充值: ' . date('Y-m-d', time()) . ')';
