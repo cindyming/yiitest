@@ -17,7 +17,7 @@ class BonusController extends Controller
 
     public function lessThan15Investment()
     {
-        $invertMents = Investment::find()->where(['>', 'created_at', $this->_startTime])->all();
+        $invertMents = Investment::find()->where(['>', 'created_at', $this->_startTime])->orderBy(['created_at' => SORT_DESC])->all();
         $inverts = array();
         foreach ($invertMents as $iv) {
             $user_id = $iv->user_id;
@@ -32,31 +32,19 @@ class BonusController extends Controller
         $this->_lessInvestiments = $inverts;
     }
 
-    public function addBonus(&$user, $created_at, $amount)
+    public function addBonus($inverstiment, $days)
     {
         $rate = 1;
-        if ($created_at > $this->_startTime) {
-            $days = (int)(strtotime(date('Y-m-d', time())) - strtotime(date('Y-m-d', strtotime($created_at)))) / 86400;
+        if ($days < 15) {
             $rate = $days / 15;
         }
-        if ($user->investment >= $this->_diff) {
-            $data['bonus'] =  $amount * 0.015 * $rate;
-        } else {
-            $data['bonus'] =  $amount * 0.01 * $rate;
-        }
-        if ($data['bonus'] > 0) {
-            $data['bonus'] = round($data['bonus'], 2);
-            $data['note'] = '分红结算: ' .  date('Y-m-d', time());
-            $data['type'] = 1;
-            $data['user_id'] = $user->id;
-            $data['total'] = $user->bonus_remain + $data['bonus'];
-            $user->bonus_total = $user->bonus_total + $data['bonus'];
-            $user->bonus_remain = $user->bonus_remain + $data['bonus'];
-            $bonus = new Revenue();
-            $bonus->load($data, '');
-            $bonus->save();
-        }
 
+        if ($inverstiment >= $this->_diff) {
+            $amount =  $inverstiment * 0.015 * $rate;
+        } else {
+            $amount =  $inverstiment * 0.01 * $rate;
+        }
+        return $amount;
     }
 
     public function actionIndex()
@@ -64,7 +52,7 @@ class BonusController extends Controller
         $this->_startTime = date("Y-m-d",strtotime("-15 days")) . ' 00:00:00';
         $this->lessThan15Investment();
 
-        $users = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0])->all();
+        $users = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0])->andWhere(['=', 'id', '10000056'])->all();
 
         foreach ($users as $user) {
             if (($user->bonus_total + $user->merit_total) > ($user->investment * 2 )) {
@@ -72,22 +60,47 @@ class BonusController extends Controller
                 $user->save();
                 continue;
             }
+
             $total = $user->investment;
+            $bonusTotal = 0;
+            $lastDate = (int)(strtotime(date('Y-m-d', time())));
             if (isset($this->_lessInvestiments[$user->id])) {
                  foreach ($this->_lessInvestiments[$user->id] as $item){
-                     $this->addBonus($user, $item['created_at'], $item['amount']);
-                     if ($item['merited']) {
+                     if (date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate)))) {
+                         $days = ($lastDate - strtotime(date('Y-m-d', strtotime($item['created_at'])))) / 86400;var_dump($days);
+                         $bonusTotal += $this->addBonus($total, $days);var_dump($bonusTotal);
                          $total -= $item['amount'];
+                         $lastDate =strtotime(date('Y-m-d', strtotime($item['created_at'])));
                      }
                  }
             }
-            $this->addBonus($user, $user->created_at, $total);
-
-            if (($user->bonus_total + $user->merit_total) > ($user->investment * 2 )) {
-                $user->stop_bonus = 1;
+            if (date('Y-m-d', strtotime($this->_startTime)) > date('Y-m-d', strtotime($lastDate))) {
+                $days = ($lastDate - strtotime(date('Y-m-d', strtotime($this->_startTime))))  / 86400;
+            } else {
+                $days = ($lastDate - strtotime(date('Y-m-d', strtotime($user->created_at)))) / 86400;
             }
 
-            $user->save();
+            $bonusTotal += $this->addBonus($total, $days);
+
+            if ($bonusTotal > 0 ) {
+                $data['bonus'] = round($bonusTotal, 2);
+                $data['note'] = '分红结算: ' .  date('Y-m-d', time());
+                $data['type'] = 1;
+                $data['user_id'] = $user->id;
+                $data['total'] = $user->bonus_remain + $data['bonus'];
+                $user->bonus_total = $user->bonus_total + $data['bonus'];
+                $user->bonus_remain = $user->bonus_remain + $data['bonus'];
+                $bonus = new Revenue();
+                $bonus->load($data, '');
+                $bonus->save();
+
+                if (($user->bonus_total + $user->merit_total) > ($user->investment * 2 )) {
+                    $user->stop_bonus = 1;
+                }
+
+                $user->save();
+            }
+
         }
     }
 }
