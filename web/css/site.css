@@ -265,9 +265,9 @@ li.jstree-node a.gray-icon{ color: #bbb; }
 .field-system-lowest_cash_amount label{display:block;}
 .field-system-cash_factorage input,
 .field-system-lowest_cash_amount input{display:inline-block;width:100px;margin-right: 5px}
-.kv-panel-pager .pagination{float:left;margin-right:10px}
+.pagination{float:left;margin-right:10px}
 input#pageNo{width:34px;height:34px;border:1px solid #ddd;padding:5px;margin-right:5px}
-.kv-panel-pager button{background-color: #337ab7;border: 1px solid #337ab7;color: #fff;height: 34px;}
+button.goToButon{background-color: #337ab7;border: 1px solid #337ab7;color: #fff;height: 34px;}
 .fail{background-color: #FFD5D5;border: 1px solid #DD7777;line-height: 30px;padding: 2px 15px;margin-bottom: 15px;color: #D81919;}
 .Message{background-color:#EAFAEF;border: 1px solid #42BB76;line-height: 30px;padding: 2px 15px;margin-bottom: 15px;color: #228B27;}
 .notice{background-color: #FAFAEA;border: 1px solid #D0CE00;line-height: 30px;padding: 2px 15px;margin-bottom: 15px;color: #A38800;}
