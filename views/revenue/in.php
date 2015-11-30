@@ -53,14 +53,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'total',
                 'label' => '入账后余额',
             ],
-            'note',
+
             'created_at',
-            [
-                'attribute' => 'approved',
-                'value' => function($model) {
-                        return '已发放';
-                    }
-            ],
+            'note',
         ],
     ]); ?>
 

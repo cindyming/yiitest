@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\Column',
                 'header' => '出账类型',
                 'content' => function($model){
-                        return '提现';
+                        return in_array($model->type, array(1,2,3)) ? '提现' : '其他';
                     }
             ],
             [
