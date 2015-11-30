@@ -547,7 +547,7 @@ class UserController extends Controller
                         $success = true;
                     }
                 } else {
-                    $model->addError('password_old', '原二级密码不正确');
+                    $model->addError('password2_old', '原二级密码不正确');
                 }
             }
         }
