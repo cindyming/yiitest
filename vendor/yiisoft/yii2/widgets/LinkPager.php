@@ -193,7 +193,7 @@ class LinkPager extends Widget
             $buttons[] = $this->renderPageButton($lastPageLabel, $pageCount - 1, $this->lastPageCssClass, $currentPage >= $pageCount - 1, false);
         }
 
-        return Html::tag('ul', implode("\n", $buttons), $this->options) . '<input id="pageNo"/><button onClick="var hurl=\'' . $this->pagination->createUrl(1) . '\';window.location=(hurl).replace(\'page=2\', \'page=\' + parseInt(jQuery(\'#pageNo\').val()));
+        return Html::tag('ul', implode("\n", $buttons), $this->options) . '<input id="pageNo"/><button class="goToButon" onClick="var hurl=\'' . $this->pagination->createUrl(1) . '\';window.location=(hurl).replace(\'page=2\', \'page=\' + parseInt(jQuery(\'#pageNo\').val()));
 ">GO</button>';
     }
 
