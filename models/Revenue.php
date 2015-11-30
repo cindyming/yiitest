@@ -67,7 +67,7 @@ class Revenue extends ActiveRecord
             'merit_total' => '绩效',
             'baodan_total' => '服务费',
             'mall' => '商城币',
-            'note' => '备注',
+            'note' => '摘要',
             'created_at' => '结算时间',
             'updated_at' => '发放时间',
         ];
