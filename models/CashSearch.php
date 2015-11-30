@@ -176,9 +176,16 @@ class CashSearch extends Cash
             'type' => $this->type,
             'status' => $this->status,
             'amount' => $this->amount,
-            'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
+
+        if ($this->created_at) {
+            $date = explode(' - ', $this->created_at);
+            if (count($date)  == 2) {
+                $query->andFilterWhere(['>=', 'created_at', $date[0]]);
+                $query->andFilterWhere(['<=', 'created_at', $date[1]]);
+            }
+        }
 
         $query->andFilterWhere(['like', 'bank', $this->bank])
             ->andFilterWhere(['like', 'cardname', $this->cardname])

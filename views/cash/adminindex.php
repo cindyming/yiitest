@@ -73,7 +73,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         return ($model->type == 2) ? ($model->amount * 0.95) : $model->amount ;
                     }
             ],
-            'created_at',
+            ['attribute' => 'created_at',
+                'filter' => true,
+                'filterType'=>GridView::FILTER_DATE_RANGE,
+                ],
             [
                 'attribute' => 'status',
                 'filter'=> true,

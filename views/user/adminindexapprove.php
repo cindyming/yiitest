@@ -82,7 +82,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'identity',
                 'filter' => true,
             ],
-            'approved_at',
+            [
+                'attribute' => 'approved_at',
+                'filter' => true,
+                'filterType'=>GridView::FILTER_DATE_RANGE,
+            ],
             [
                 'attribute' => 'locked',
                 'label' => '状态',

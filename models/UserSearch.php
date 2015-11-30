@@ -67,9 +67,16 @@ class UserSearch extends User
             'referer' => $this->referer,
             'level' => $this->level,
             'investment' => $this->investment,
-            'approved_at' => $this->approved_at,
             'add_member' => $this->add_member,
         ]);
+
+        if ($this->approved_at) {
+            $date = explode(' - ', $this->approved_at);
+            if (count($date)  == 2) {
+                $query->andFilterWhere(['>=', 'approved_at', $date[0]]);
+                $query->andFilterWhere(['<=', 'approved_at', $date[1]]);
+            }
+        }
 
         $query->andFilterWhere(['like', 'auth_key', $this->auth_key])
             ->andFilterWhere(['like', 'access_token', $this->access_token])
