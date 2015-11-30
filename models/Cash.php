@@ -102,7 +102,7 @@ class Cash extends ActiveRecord
             'bankaddress' => '开户支行',
             'amount' => '提现金额',
             'total' => '出账后余额',
-            'note' => '备注',
+            'note' => '摘要',
             'password2' => '二级密码',
             'created_at' => '日期'
         ];
