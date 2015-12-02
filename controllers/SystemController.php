@@ -113,7 +113,7 @@ class SystemController extends Controller
     public function actionBackup()
     {
         $filename = 'backup_'.date('d_m_Y_h_i_s', time()) . '.sql.gz';
-        system('mysqldump -uroot  -p6f5a1948a4 mgjiayuan --add-drop-table | gzip > /home/backup/' . $filename, $output);
+        system('/alidata/server/mysql/bin/mysqldump -uroot  -p6f5a1948a4 mgjiayuan --add-drop-table | gzip  > /home/backup/' . $filename, $output);
         $backup = new Backup();
         $backup->filename = $filename;
         $backup->save();
