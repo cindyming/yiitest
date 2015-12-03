@@ -38,7 +38,7 @@ class UserController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'changepassword', 'create', 'success', 'view', 'applyaddmember', 'tree'],
+                        'actions' => ['index', 'changepassword', 'validate', 'create', 'success', 'view', 'applyaddmember', 'tree'],
                         'roles' => [User::ROLE_USER],
                     ],
                 ],
@@ -467,7 +467,7 @@ class UserController extends Controller
         }
 
         $user =  User::findOne($model->suggest_by);
-        if ((!$user || !$user->getId())) {
+        if (($model->suggest_by !== '#' && !$user)) {
             $validate = false;
             $model->addError('suggest_by', '推荐人的会员ID不正确, 请确认之后重新输入');
         }
