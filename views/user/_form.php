@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 
 <div class="user-form">
 
-    <div id="errorMessageContainer" style="display:none">
+    <div id="errorMessageContainerTest" style="display:none">
           <div id="errorMessage">
               <div id="errorMessageHtml">
               </div>
