@@ -39,11 +39,14 @@ class BonusController extends Controller
             $rate = $days / 15;
         }
 
-        if ($inverstiment >= $this->_diff) {
-            $amount =  $inverstiment * 0.015 * $rate;
+        if ($inverstiment < 100000) {
+            $amount =  $inverstiment * 0.0125;
+        } else if ($inverstiment < 200000) {
+            $amount =  $inverstiment * 0.015;
         } else {
-            $amount =  $inverstiment * 0.01 * $rate;
+            $amount =  $inverstiment * 0.02;
         }
+        $amount = $amount * $rate;
         return $amount;
     }
 

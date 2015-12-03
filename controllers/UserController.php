@@ -431,9 +431,9 @@ class UserController extends Controller
             $model->achievements = $model->investment * 10000;
         }
 
-        if ($model->investment < 5){
+        if ($model->investment < 3){
             $validate = false;
-            $model->addError('investment', '投资额不可以少于5W, 请重新输入');
+            $model->addError('investment', '投资额不可以少于3W, 请重新输入');
         }
 
         $userNameUser = User::findByUsername($model->username);
