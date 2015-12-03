@@ -4,14 +4,17 @@ namespace app\controllers;
 
 use Yii;
 use app\models\User;
+use yii\widgets\ActiveForm;
 use app\models\Revenue;
 use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
+use yii\helpers\Html;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\UserSearch;
 use app\components\AccessRule;
+use yii\web\Response;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -30,7 +33,7 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'huobi', 'admincreate', 'suggestindex', 'adminreject','success','adminresetpassword','adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
+                        'actions' => ['adminindex','validate', 'huobi', 'admincreate', 'suggestindex', 'adminreject','success','adminresetpassword','adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -265,6 +268,21 @@ class UserController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+    public function actionValidate()
+    {
+        $model = new User();
+
+        if ($model->load(Yii::$app->request->post())) {
+            $result = ActiveForm::validate($model);
+            $this->validateUserData($model);
+            foreach ($model->getErrors() as $attribute => $errors) {
+                $result[Html::getInputId($model, $attribute)] = $errors;
+            }
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return $result;
+        }
     }
 
     /**

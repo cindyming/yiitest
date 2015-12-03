@@ -629,6 +629,18 @@
                 } else {
                     $error.html(messages[attribute.id][0]);
                 }
+                if ($input.hasClass('popup') && $('#errorMessageContainer').length) {
+                    $('#errorMessageHtml').html(messages[attribute.id][0]);
+                    $('#errorMessageContainer').show();
+                    $('#skipError').click(function() {
+                        $('#errorMessageContainer').hide();
+                    });
+                    $('#fixError').click(function() {
+                        $('#errorMessageContainer').hide();
+                        $input.focus();
+                    });
+                }
+
                 $container.removeClass(data.settings.validatingCssClass + ' ' + data.settings.successCssClass)
                     .addClass(data.settings.errorCssClass);
             } else {
