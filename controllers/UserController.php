@@ -307,7 +307,7 @@ class UserController extends Controller
     }
     public function actionTree()
     {
-        $users = User::find()->where(['in', 'role_id', array(2,3)])->andWhere(['>=', 'id', Yii::$app->user->identity->id])->orderBy(['id' => SORT_ASC])->all();
+        $users = User::find()->where(['in', 'role_id', array(2,3)])->orderBy(['id' => SORT_ASC])->all();
 
         $result = array();
         $ids = array();
