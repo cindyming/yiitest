@@ -58,15 +58,6 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => 'random',
-                ],
-                'value' => function ($event) {
-                    return rand(10,100);
-                },
-            ],
-            [
-                'class' => AttributeBehavior::className(),
-                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'level',
                 ],
                 'value' => function ($event) {
