@@ -42,7 +42,7 @@ class UserSearch extends User
      */
     public function search($params)
     {
-        $query = User::find()->where(['!=','role_id',1])->orderBy(['id' => SORT_DESC]);
+        $query = User::find()->where(['!=','role_id',1])->orderBy(['created_at' => SORT_DESC]);
 
         // add conditions that should always apply here
 
@@ -93,7 +93,7 @@ class UserSearch extends User
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'qq', $this->qq])
             ->andFilterWhere(['like', 'qq', $this->qq])
-            ->orderBy(['id' => SORT_DESC]);
+            ->orderBy(['created_at' => SORT_DESC]);
 
         return $dataProvider;
     }
@@ -101,7 +101,7 @@ class UserSearch extends User
     public function suggestSearch($params)
     {
         $query = User::find()->where(['!=','role_id',1])
-            ->orderBy(['id' => SORT_DESC]);
+            ->orderBy(['created_at' => SORT_DESC]);
 
         // add conditions that should always apply here
 
@@ -146,7 +146,7 @@ class UserSearch extends User
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', 'qq', $this->qq])
             ->andFilterWhere(['>', 'suggest_by', 0])
-            ->orderBy(['id' => SORT_DESC]);
+            ->orderBy(['created_at' => SORT_DESC]);
 
 
         return $dataProvider;
