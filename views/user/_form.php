@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin([
             'enableAjaxValidation' => true,
             'validateOnBlur' => true,
-            'validationUrl' => '/user/validate',
+            'validationUrl' => '/user/validate?' . ($model->id ? 'id=' . $model->id : ''),
             'attributes' => array(
                 'username',
                 'referer'
