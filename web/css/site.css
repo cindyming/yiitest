@@ -97,13 +97,13 @@ a.desc:after {
     color:rgba(255,255,255,0.75)
 }
 .btn-primary {
-    background-color:#5bb75b;
-    *background-color:#5bb75b;
+    background-color:#FF9318;
+    *background-color:#FF9318;
     border:none 0;
 }
 .btn-primary:hover,.btn-primary:focus,.btn-primary:active,.btn-primary.active,.btn-primary.disabled,.btn-primary[disabled] {
-    background-color:#51a351;
-    *background-color:#51a351
+    background-color:#FFA744;
+    *background-color:#FFA744
 }
 .btn-primary:active,.btn-primary.active {
     background-color:#039 \9
@@ -151,31 +151,27 @@ a.desc:after {
 .btn-success {
     color:#fff;
     text-shadow:0 -1px 0 rgba(0,0,0,0.25);
-    background-color:#5bb75b;
-    *background-color:#51a351;
+    background-color:#FF9318;
+    *background-color:#FFA744;
     background-repeat:repeat-x;
-    background-image: linear-gradient(to bottom,#62c462,#51a351);
-    border-left-color: #51a351;
-    border-right-color: #51a351;
-    border-top-color: #51a351;
-    border-bottom-color: #387038;
+    border:none 0
 }
 .btn-success:hover,.btn-success:focus,.btn-success:active,.btn-success.active,.btn-success.disabled,.btn-success[disabled] {
     color:#fff;
-    background-color:#51a351;
-    *background-color:#499249
+    background-color:#FFA744;
+    *background-color:#499249;
 }
 
 /* login  */
 label{font-weight:normal;}
 body.login{background: #2E363F url(bg1.jpg) no-repeat center center;background-size:cover}
-.loginbox{margin:0 auto;width: 400px;padding:1px 20px 20px;background:rgba(255,255,255,0.4);margin:5% auto 0}
-.container .loginbox h1{color:#4A4A4A;font-size:19px;text-align: center;display:block;margin:3% -20px 8%;border-bottom: 1px solid #fff;padding:1% 0 4%;}
+.loginbox{margin:0 auto;width: 400px;padding:1px 20px 20px;background:rgba(255,255,255,0.5);margin:5% auto 0}
+.container .loginbox h1{color: #fff;font-size:19px;text-align: center;display:block;margin:3% -20px 8%;border-bottom: 1px solid #fff;padding:1% 0 4%;}
 .loginbox .col-lg-1{width:26%}
 .loginbox .col-lg-3{width:73%;display:inline-block;padding-left:0}
 .loginbox .col-lg-8{padding-left:26%;width:100%;font-size:12px}
 .loginbox .col-lg-11{padding:0 15px;margin:0;width:100%}
-.loginbox .form-horizontal .control-label{color:#777;}
+.loginbox .form-horizontal .control-label{color: #fff;}
 .loginbox .form-group{margin-bottom:6px}
 #loginform-captcha{width:135px }
 .field-loginform-captcha{}
@@ -190,7 +186,7 @@ nav.navbar .container{padding:0}
 .menubar{background:#2E363F;}
 .menubar .panel-default{margin-bottom:0;background:transparent;border:none 0}
 .menubar .kv-sidenav li a{border:none 0;color:#939da8}
-.menubar .kv-sidenav li a:hover{background:#27a9e3;color:#fff}
+.menubar .kv-sidenav li a:hover{background:#E39227;color:#fff}
 .menubar .kv-sidenav a .indicator{color:#939da8}
 .menubar .kv-sidenav a:hover .indicator{color:#fff}
 .navbar-default .navbar-nav > li > a{color:#E2E2E2;padding: 10px 15px;}
@@ -200,19 +196,19 @@ nav.navbar .container{padding:0}
 .navbar-default .navbar-nav > .open > a:hover,
 .navbar-default .navbar-nav > .open > a:focus {
   color: #fff;
-  background-color: #27a9e3;
+  background-color: #E39227;
 }
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
   color: #fff;
-  background-color: #27a9e3;
+  background-color: #E39227;
 }
 .dropdown-menu {border: none 0;box-shadow: none;}
 .dropdown-menu > li > a{padding:8px 20px}
 .dropdown-menu > .active > a{background:transparent;color:#333}
 /* header */
-.top-header{background:url('bg.jpg') repeat scroll right 65% #2E363F;color:#fff;padding:1% 0 0}
+.top-header{background:url('bg1.jpg') no-repeat scroll center bottom #2E363F;color:#fff;padding:1% 0 0;background-size:cover}
 .top-header h2{float:left;margin:0;font-size:28px;line-height:36px}
 .top-header h3{margin:0}
 .top-header .m-info{color:#E2E2E2;margin:10px 0;text-align: right;font-size:12px;}
@@ -250,7 +246,7 @@ body.u_admin .top-header{background:url('bg.jpg') repeat scroll 20% 42% #2E363F}
 
 ul.tabswitch{padding:0;list-style:none;margin-bottom:25px}
 ul.tabswitch li{border-bottom:3px solid transparent;display:inline-block;padding:1% 2% .5%;}
-ul.tabswitch li.active{border-bottom:3px solid #27A9E3}
+ul.tabswitch li.active{border-bottom:3px solid #E39227}
 
 
 @media (max-width: 1208px){
@@ -271,3 +267,7 @@ button.goToButon{background-color: #337ab7;border: 1px solid #337ab7;color: #fff
 .fail{background-color: #FFD5D5;border: 1px solid #DD7777;line-height: 30px;padding: 2px 15px;margin-bottom: 15px;color: #D81919;}
 .Message{background-color:#EAFAEF;border: 1px solid #42BB76;line-height: 30px;padding: 2px 15px;margin-bottom: 15px;color: #228B27;}
 .notice{background-color: #FAFAEA;border: 1px solid #D0CE00;line-height: 30px;padding: 2px 15px;margin-bottom: 15px;color: #A38800;}
+
+#errorMessageContainer{width: 100%;background-color: rgba(0, 0, 0, 0.32);line-height: 30px;color: #D81919;position: absolute;left: 0;height: 118%;top: 0;padding: 0;}
+#errorMessage{position:absolute;background:#fff;width:20%;margin:10% 40%;padding:1%}
+#errorMessage button{background-color: #FF9318;border: 1px solid #337ab7;color: #fff;height: 34px;border:none 0;border-radius: 4px;}
