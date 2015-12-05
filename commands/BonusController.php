@@ -40,7 +40,7 @@ class BonusController extends Controller
         }
 
         if ($inverstiment < 100000) {
-            $amount =  $inverstiment * 0.0125;
+            $amount =  $inverstiment * 0.01;
         } else if ($inverstiment < 200000) {
             $amount =  $inverstiment * 0.015;
         } else {
