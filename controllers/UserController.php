@@ -177,7 +177,7 @@ class UserController extends Controller
         if ($model->load($data) && $model->save()) {
             $addedBy = User::findOne($model->added_by);
             if ($addedBy && $addedBy->getId() && ($addedBy->role_id == 3)) {
-                $meritAmount = round($model->investment * 0.01, 2);
+                $meritAmount = round($model->investment * 0.02, 2);
                 $data = array(
                     'user_id' => $addedBy->id,
                     'note' => '会员：' .$model->id . '的报单奖励',
