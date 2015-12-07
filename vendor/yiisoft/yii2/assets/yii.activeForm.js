@@ -629,6 +629,19 @@
                 } else {
                     $error.html(messages[attribute.id][0]);
                 }
+                if ($input.hasClass('popup') && $('#errorMessageContainer').length) {
+                    $('#errorMessageContainer').attr('style', 'height:' + $(document).height() + 'px');
+                    $('#errorMessageHtml').html(messages[attribute.id][0]);
+                    $('#errorMessage').attr('style', 'margin-top:' + ((($(window).height() - $input.offset().top) > 0) ?  ($input.offset().top) : ($input.offset().top - ($(window).height() / 2) + 20)) + 'px');
+                    $('#errorMessageContainer').show();
+                    $('#skipError').click(function() {
+                        $('#errorMessageContainer').hide();
+                    });
+                    $('#fixError').click(function() {
+                        $('#errorMessageContainer').hide();
+                        $input.focus();
+                    });
+                }
                 $container.removeClass(data.settings.validatingCssClass + ' ' + data.settings.successCssClass)
                     .addClass(data.settings.errorCssClass);
             } else {

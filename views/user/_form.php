@@ -10,14 +10,31 @@ use yii\widgets\ActiveForm;
 
 <div class="user-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <div id="errorMessageContainer" style="display:none">
+        <div id="errorMessage">
+            <div id="errorMessageHtml">
+            </div>
+            <button id="skipError">确认</button>
+        </div>
+    </div>
+
+    <?php $form = ActiveForm::begin([
+            'enableAjaxValidation' => true,
+            'validateOnBlur' => true,
+            'validationUrl' => '/user/validate?' . ($model->id ? 'id=' . $model->id : ''),
+            'attributes' => array(
+                'username',
+                'referer'
+            )
+        ]
+    ); ?>
 
     <?php if (!$model->isNewRecord): ?>
         <?= $form->field($model, 'id')->textInput(['maxlength' => true, 'readonly' => true]) ?>
         <?= $form->field($model, 'locked')->dropDownList([0 => '未锁定', 1 => '锁定']) ?>
     <?php endif ?>
 
-    <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'username')->textInput(['maxlength' => true, ]) ?>
 
     <?= $form->field($model, 'title')->dropDownList(['Mr' => '先生', 'Ms' => '女士']) ?>
 

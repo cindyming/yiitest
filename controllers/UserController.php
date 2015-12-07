@@ -30,12 +30,12 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'huobi', 'admincreate', 'suggestindex', 'adminreject','success','adminresetpassword','adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
+                        'actions' => ['adminindex', 'huobi','validate', 'admincreate', 'suggestindex', 'adminreject','success','adminresetpassword','adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'changepassword', 'create', 'success', 'view', 'applyaddmember', 'tree'],
+                        'actions' => ['index', 'changepassword', 'validate', 'create', 'success', 'view', 'applyaddmember', 'tree'],
                         'roles' => [User::ROLE_USER],
                     ],
                 ],
@@ -253,6 +253,21 @@ class UserController extends Controller
         Yii::$app->user->login($model);
 
         return $this->redirect(['news/index']);
+    }
+
+    public function actionValidate()
+    {
+        $model = new User();
+
+        if ($model->load(Yii::$app->request->post())) {
+            $result = ActiveForm::validate($model);
+            $this->validateUserData($model);
+            foreach ($model->getErrors() as $attribute => $errors) {
+                $result[Html::getInputId($model, $attribute)] = $errors;
+            }
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return $result;
+        }
     }
 
     /**
