@@ -11,6 +11,9 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use app\models\UserSearch;
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
+use yii\web\Response;
 use app\components\AccessRule;
 
 /**
@@ -18,6 +21,7 @@ use app\components\AccessRule;
  */
 class UserController extends Controller
 {
+    private $successInfo = array();
     public function behaviors()
     {
         return [
@@ -265,6 +269,9 @@ class UserController extends Controller
             foreach ($model->getErrors() as $attribute => $errors) {
                 $result[Html::getInputId($model, $attribute)] = $errors;
             }
+            foreach ($this->successInfo as $attribute => $message) {
+                $result[Html::getInputId($model, $attribute) . '-success'] = $message;
+            }
             Yii::$app->response->format = Response::FORMAT_JSON;
             return $result;
         }
@@ -461,12 +468,16 @@ class UserController extends Controller
         if ($model->referer !== '#' && !$user) {
             $validate = false;
             $model->addError('referer', '接点人的会员ID不正确, 请确认之后重新输入');
+        } else {
+            $this->successInfo['referer'] = '接点人验证成功，网络昵称:' . $user->username;
         }
 
         $user =  User::findOne($model->suggest_by);
         if ((!$user || !$user->getId())) {
             $validate = false;
             $model->addError('suggest_by', '推荐人的会员ID不正确, 请确认之后重新输入');
+        } else {
+            $this->successInfo['suggest_by'] = '推荐人验证成功，网络昵称:' . $user->username;
         }
         return $validate;
     }

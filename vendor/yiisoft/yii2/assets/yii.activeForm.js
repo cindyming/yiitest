@@ -621,6 +621,7 @@
         attribute.status = 1;
         if ($input.length) {
             hasError = messages[attribute.id].length > 0;
+            hasSuccess = messages[attribute.id + '-success'] ? messages[attribute.id + '-success'].length > 0 : false;
             var $container = $form.find(attribute.container);
             var $error = $container.find(attribute.error);
             if (hasError) {
@@ -634,6 +635,7 @@
                     $('#errorMessageHtml').html(messages[attribute.id][0]);
                     $('#errorMessage').attr('style', 'margin-top:' + ((($(window).height() - $input.offset().top) > 0) ?  ($input.offset().top) : ($input.offset().top - ($(window).height() / 2) + 20)) + 'px');
                     $('#errorMessageContainer').show();
+                    $('#errorMessage').removeClass('success');
                     $('#skipError').click(function() {
                         $('#errorMessageContainer').hide();
                     });
@@ -645,6 +647,16 @@
                 $container.removeClass(data.settings.validatingCssClass + ' ' + data.settings.successCssClass)
                     .addClass(data.settings.errorCssClass);
             } else {
+                if (hasSuccess && $input.hasClass('popup')) {
+                    $('#errorMessageContainer').attr('style', 'height:' + $(document).height() + 'px');
+                    $('#errorMessageHtml').html(messages[attribute.id + '-success']);
+                    $('#errorMessage').attr('style', 'margin-top:' + ((($(window).height() - $input.offset().top) > 0) ?  ($input.offset().top) : ($input.offset().top - ($(window).height() / 2) + 20)) + 'px');
+                    $('#errorMessage').addClass('success');
+                    $('#errorMessageContainer').show();
+                    $('#skipError').click(function() {
+                        $('#errorMessageContainer').hide();
+                    });
+                }
                 $error.empty();
                 $container.removeClass(data.settings.validatingCssClass + ' ' + data.settings.errorCssClass + ' ')
                     .addClass(data.settings.successCssClass);

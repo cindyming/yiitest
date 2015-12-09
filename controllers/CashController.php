@@ -231,6 +231,9 @@ class CashController extends Controller
             $model->save();
             $user->save();
             $transaction->commit();
+
+            $this->redirect(Yii::$app->request->referrer);
+            return;
         } catch (Exception $e) {
             $transaction->rollback();//回滚函数
         }
