@@ -473,7 +473,7 @@ class UserController extends Controller
         }
 
         $user =  User::findOne($model->suggest_by);
-        if ((!$user || !$user->getId())) {
+        if ($model->referer !== '#' && (!$user || !$user->getId())) {
             $validate = false;
             $model->addError('suggest_by', '推荐人的会员ID不正确, 请确认之后重新输入');
         } else {
