@@ -461,12 +461,16 @@ class UserController extends Controller
         if ($model->referer !== '#' && !$user) {
             $validate = false;
             $model->addError('referer', '接点人的会员ID不正确, 请确认之后重新输入');
+        } else {
+            $this->successInfo['suggest_by'] = '接点人验证成功，网络昵称:' . $user->username;
         }
 
         $user =  User::findOne($model->suggest_by);
         if (($model->suggest_by !== '#' && !$user)) {
             $validate = false;
             $model->addError('suggest_by', '推荐人的会员ID不正确, 请确认之后重新输入');
+        } else {
+            $this->successInfo['suggest_by'] = '推荐人验证成功，网络昵称:' . $user->username;
         }
         return $validate;
     }
@@ -486,6 +490,7 @@ class UserController extends Controller
             if ($validate && $model->save()) {
                 return $this->redirect(['success', 'id' => $model->id]);
             }
+
         }
         return $this->render('create', [
             'model' => $model,
