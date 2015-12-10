@@ -21,6 +21,7 @@ use yii\web\Response;
  */
 class UserController extends Controller
 {
+    private $successInfo = array();
     public function behaviors()
     {
         return [
@@ -279,6 +280,9 @@ class UserController extends Controller
             $this->validateUserData($model);
             foreach ($model->getErrors() as $attribute => $errors) {
                 $result[Html::getInputId($model, $attribute)] = $errors;
+            }
+            foreach ($this->successInfo as $attribute => $message) {
+                $result[Html::getInputId($model, $attribute) . '-success'] = $message;
             }
             Yii::$app->response->format = Response::FORMAT_JSON;
             return $result;
