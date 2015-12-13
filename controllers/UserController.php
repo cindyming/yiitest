@@ -469,7 +469,7 @@ class UserController extends Controller
         if ($model->referer !== '#' && !$user) {
             $validate = false;
             $model->addError('referer', '接点人的会员ID不正确, 请确认之后重新输入');
-        } else {
+        } elseif ($model->referer !== '#') {
             $this->successInfo['referer'] = '接点人验证成功，网络昵称:' . $user->username;
         }
 
@@ -477,7 +477,7 @@ class UserController extends Controller
         if ($model->suggest_by !== '#' && (!$user || !$user->getId())) {
             $validate = false;
             $model->addError('suggest_by', '推荐人的会员ID不正确, 请确认之后重新输入');
-        } else {
+        } elseif ($model->suggest_by !== '#') {
             $this->successInfo['suggest_by'] = '推荐人验证成功，网络昵称:' . $user->username;
         }
         return $validate;
