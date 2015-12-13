@@ -459,7 +459,8 @@ class UserController extends Controller
         }
 
         $userNameUser = User::findByUsername($model->username);
-        if ($userNameUser && $userNameUser->id) {
+        $id = Yii::$app->getRequest()->get('id');
+        if ($userNameUser && $userNameUser->id && ((!$id || ($id != $userNameUser->id)))) {
             $validate = false;
             $model->addError('username', '此网络昵称已经被注册, 请重新输入');
         }
@@ -473,7 +474,7 @@ class UserController extends Controller
         }
 
         $user =  User::findOne($model->suggest_by);
-        if ($model->referer !== '#' && (!$user || !$user->getId())) {
+        if ($model->suggest_by !== '#' && (!$user || !$user->getId())) {
             $validate = false;
             $model->addError('suggest_by', '推荐人的会员ID不正确, 请确认之后重新输入');
         } else {
