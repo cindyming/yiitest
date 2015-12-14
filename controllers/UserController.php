@@ -502,6 +502,8 @@ class UserController extends Controller
             }
         } else {
             Yii::$app->getSession()->set('message', '您没有报单权限，继续努力哦');
+            $this->redirect(['news/index']);
+            return;
         }
 
         return $this->render('create', [
