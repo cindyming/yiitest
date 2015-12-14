@@ -489,12 +489,17 @@ class UserController extends Controller
     {
         $model = new User();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $validate = $this->validateUserData($model);
-            if ($validate && $model->save()) {
-                return $this->redirect(['success', 'id' => $model->id]);
+        if (Yii::$app->user->identity->add_member == 2) {
+            if ($model->load(Yii::$app->request->post())) {
+                $validate = $this->validateUserData($model);
+                if ($validate && $model->save()) {
+                    return $this->redirect(['success', 'id' => $model->id]);
+                }
             }
-
+        } else {
+            Yii::$app->getSession()->set('message', '您没有报单权限，继续努力哦');
+            $this->redirect(['news/index']);
+            return;
         }
         return $this->render('create', [
             'model' => $model,
