@@ -69,6 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'amount',
                 'label'=>'实发金额',
+                'format' => 'decimal',
                 'value' => function($model) {
                         return ($model->type == 2) ? ($model->amount * 0.95) : $model->amount ;
                     }
