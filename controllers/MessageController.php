@@ -55,7 +55,7 @@ class MessageController extends Controller
     public function actionAdminindex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Message::find(),
+            'query' => Message::find()->orderBy(array('created_at' => SORT_DESC)),
             'pagination' => [
                 'pageSize' => 20,
             ],
