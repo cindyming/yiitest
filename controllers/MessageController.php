@@ -55,7 +55,7 @@ class MessageController extends Controller
     public function actionAdminindex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Message::find(),
+            'query' => Message::find()->orderBy(array('created_at' => SORT_DESC)),
             'pagination' => [
                 'pageSize' => 20,
             ],
@@ -136,7 +136,7 @@ class MessageController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ActiveDataProvider([
-            'query' => Message::find()->where(['=', 'user_id', Yii::$app->user->identity->id]),
+            'query' => Message::find()->where(['=', 'user_id', Yii::$app->user->identity->id])->orderBy(array('created_at' => SORT_DESC)),
             'pagination' => [
                 'pageSize' => 20,
             ],
