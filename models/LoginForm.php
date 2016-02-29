@@ -86,7 +86,7 @@ class LoginForm extends Model
         if ($this->_user === null) {
             $this->_user = User::findById($this->username);
         }
-        if ($this->_user && ($this->_user->role_id != 1) && !System::loadConfig('enable_memmber_login')) {
+        if (($this->_user && ($this->_user->role_id != 1) && !System::loadConfig('enable_memmber_login')) || ($this->_user && $this->_user->locked)) {
             $this->_user = null;
             $this->addError('password', '系统关闭了会员登录功能，请联系管理员');
         }

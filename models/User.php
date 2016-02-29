@@ -165,7 +165,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['password3'], 'compare', 'compareAttribute' => 'password2'],
             [['password3', 'password', 'password1', 'password2'], 'string', 'min' => 6],
             [['approved_at'], 'string'],
-            [['referer', 'added_by', 'achievements', 'suggest_by'], 'trim'],
+            [['referer', 'added_by', 'achievements', 'suggest_by', 'locked'], 'trim'],
             [['role_id', 'merited', 'level', 'add_member', 'stop_bonus'], 'number'],
             [['bonus_total', 'merit_total'], 'double'],
             [['email'], 'email'],
@@ -417,7 +417,7 @@ class User extends ActiveRecord implements IdentityInterface
                 5 => '一级总监',
                 6 => '二级总监',
                 7 => '三级总监',
-                8 => '区域总监',
+            //    8 => '区域总监',
                 9 => '全国总监',
                 10 => '钻石级总监',
             );
@@ -430,7 +430,7 @@ class User extends ActiveRecord implements IdentityInterface
                 5 => '一级总监',
                 6 => '二级总监',
                 7 => '三级总监',
-                8 => '区域总监',
+             //   8 => '区域总监',
                 9 => '全国总监',
                 10 => '钻石级总监',
             );
@@ -447,7 +447,7 @@ class User extends ActiveRecord implements IdentityInterface
             5 => 0.16,
             6 => 0.19,
             7 => 0.22,
-            8 => 0.25,
+          //  8 => 0.25,
             9 => 0.28
         );
         return $merits[$level ? $level : $this->level];
@@ -489,7 +489,7 @@ class User extends ActiveRecord implements IdentityInterface
                 $level = 5;
             } elseif ($minAchivements < 10000000) {
                 $level = 6;
-            } elseif ($minAchivements < 15000000) {
+            } elseif ($minAchivements < 15000000 && false) {
                 $level = 7;
             } elseif ($minAchivements < 20000000) {
                 $level = 8;
