@@ -103,6 +103,15 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'show_tree',
+                ],
+                'value' => function ($event) {
+                    return 0;
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'password_check',
                 ],
                 'value' => function ($event) {
@@ -154,7 +163,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['password3'], 'compare', 'compareAttribute' => 'password2'],
             [['password3', 'password', 'password1', 'password2'], 'string', 'min' => 6],
             [['approved_at'], 'string'],
-            [['referer', 'added_by', 'achievements', 'suggest_by', 'locked'], 'trim'],
+            [['referer', 'added_by', 'achievements', 'suggest_by', 'locked', 'show_tree'], 'trim'],
             [['role_id', 'merited', 'level', 'add_member', 'stop_bonus'], 'number'],
             [['bonus_total', 'merit_total'], 'double'],
             [['email'], 'email'],
@@ -183,6 +192,7 @@ class User extends ActiveRecord implements IdentityInterface
             'suggest_by' => '推荐人',
             'investment' => '投资额',
             'add_member' => '开放报单员权限',
+            'show_tree' => '开放网络图',
             'bank' => '银行名称',
             'level' => '会员等级',
             'cardname' => '开户名',
@@ -508,7 +518,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function haveTree()
     {
-        if (System::loadConfig('open_member_tree')) {
+        if (System::loadConfig('open_member_tree') && Yii::$app->user->identity->show_tree) {
             return true;
         }
 
