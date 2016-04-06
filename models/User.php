@@ -488,7 +488,7 @@ class User extends ActiveRecord implements IdentityInterface
                 $level = 5;
             } elseif ($minAchivements < 10000000) {
                 $level = 6;
-            } elseif ($minAchivements < 15000000) {
+            } elseif ($minAchivements < 20000000) {
                 $level = 7;
             } elseif ($minAchivements < 20000000 && false) {
                 $level = 8;
