@@ -447,7 +447,7 @@ class User extends ActiveRecord implements IdentityInterface
             6 => 0.19,
             7 => 0.22,
            // 8 => 0.25,
-            9 => 0.28
+            9 => 0.25
         );
         return $merits[$level ? $level : $this->level];
     }
@@ -481,7 +481,7 @@ class User extends ActiveRecord implements IdentityInterface
         } elseif ( $achievements < 9000000) {
             $level = 4;
         } else {
-            $minAchivements = $this->diamondLevel();var_dump('user:' . $this->id . ':minAchive:' .$minAchivements );
+            $minAchivements = $this->diamondLevel();var_dukmp('user:' . $this->id . ':minAchive:' .$minAchivements );
             if ($minAchivements < 3000000) {
                 $level = 4;
             } elseif ($minAchivements < 6000000) {
