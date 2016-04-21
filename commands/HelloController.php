@@ -8,6 +8,7 @@
 namespace app\commands;
 
 use yii\console\Controller;
+use yii\data\Sort;
 
 /**
  * This command echoes the first argument that you have entered.
@@ -25,6 +26,42 @@ class HelloController extends Controller
      */
     public function actionIndex($message = 'hello world')
     {
-        echo $message . "\n";
+
+        $userParents = array();
+
+        $userQuery = User::find()->orderBy('id', SORT_ASC);
+
+        $provider = new ActiveDataProvider([
+            'query' => $userQuery,
+            'pagination' => [
+                'pageSize' => 1000,
+            ],
+        ]);
+        $provider->prepare();
+
+        for($i=1; $i<=$provider->getPagination()->getPageCount();$i++) {
+            if ($i != 1) {
+                $provider = new ActiveDataProvider([
+                    'query' => $userQuery,
+                    'pagination' => [
+                        'pageSize' => 1000,
+                        'page' => $i - 1,
+                    ],
+                ]);
+            }
+            $users = $provider->getModels();
+            foreach ($users as $user) {
+                if (($user->referer)) {
+                    if (isset($userParents[$user->referer])) {
+                        $user->parentIds = $userParents[$user->referer]  . $user->id . ',';
+                    } else {
+                        $user->parentIds = $user->id . ',';
+                    }
+                    $userParents[$user->id] = $user->parentIds;
+                    $user->save();
+                }
+
+            }
+        }
     }
 }

@@ -202,7 +202,7 @@ class MeritController extends Controller
         /**
          * 在这里不计算级别和总投资的原因是因为不合适
          */
-        $parent = $user->getParennt()->one();
+        $parent = $user->getSuggest()->one();
         if ($parent && $parent->role_id != 1) {
              $level = $parent->level;
 
