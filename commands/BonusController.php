@@ -52,55 +52,79 @@ class BonusController extends Controller
         $this->_startTime = date("Y-m-d",strtotime("-15 days")) . ' 00:00:00';
         $this->lessThan15Investment();
 
-        $users = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0])->all();
+        $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0]);
 
-        foreach ($users as $user) {
-            if (($user->bonus_total + $user->merit_total) > ($user->investment * 2 )) {
-                $user->stop_bonus = 1;
-                $user->save();
-                continue;
+        $provider = new ActiveDataProvider([
+            'query' => $userQuery,
+            'pagination' => [
+                'pageSize' => 1000,
+            ],
+        ]);
+        $provider->prepare();
+        $j = 0;var_dump($provider->getTotalCount());
+
+        for($i=1; $i<=$provider->getPagination()->getPageCount();$i++) {
+            var_dump($i);
+            if($i != 1) {
+                $provider = new ActiveDataProvider([
+                    'query' => $userQuery,
+                    'pagination' => [
+                        'pageSize' => 1000,
+                        'page' => $i-1,
+                    ],
+                ]);
             }
-
-            $total = $user->investment;
-            $bonusTotal = 0;
-            $lastDate = (int)(strtotime(date('Y-m-d', time())));
-            if (isset($this->_lessInvestiments[$user->id])) {
-                 foreach ($this->_lessInvestiments[$user->id] as $item){
-                     if (date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate)))) {
-                         $days = ($lastDate - strtotime(date('Y-m-d', strtotime($item['created_at'])))) / 86400;var_dump($days);
-                         $bonusTotal += $this->addBonus($total, $days);var_dump($bonusTotal);
-                         $total -= $item['amount'];
-                         $lastDate =strtotime(date('Y-m-d', strtotime($item['created_at'])));
-                     }
-                 }
-            }
-            if (date('Y-m-d', strtotime($this->_startTime)) > date('Y-m-d', strtotime($user->created_at))) {
-                $days = ($lastDate - strtotime(date('Y-m-d', strtotime($this->_startTime))))  / 86400;
-            } else {
-                $days = ($lastDate - strtotime(date('Y-m-d', strtotime($user->created_at)))) / 86400;
-            }
-
-            $bonusTotal += $this->addBonus($total, $days);
-
-            if ($bonusTotal > 0 ) {
-                $data['bonus'] = round($bonusTotal, 2);
-                $data['note'] = '分红结算: ' .  date('Y-m-d', time());
-                $data['type'] = 1;
-                $data['user_id'] = $user->id;
-                $data['total'] = $user->bonus_remain + $data['bonus'];
-                $user->bonus_total = $user->bonus_total + $data['bonus'];
-                $user->bonus_remain = $user->bonus_remain + $data['bonus'];
-                $bonus = new Revenue();
-                $bonus->load($data, '');
-                $bonus->save();
-
+            $users = $provider->getModels();
+            foreach ($users as $user) {$j++;
                 if (($user->bonus_total + $user->merit_total) > ($user->investment * 2 )) {
                     $user->stop_bonus = 1;
+                    $user->save();
+                    continue;
+                }continue;
+
+                $total = $user->investment;
+                $bonusTotal = 0;
+                $lastDate = (int)(strtotime(date('Y-m-d', time())));
+                if (isset($this->_lessInvestiments[$user->id])) {
+                    foreach ($this->_lessInvestiments[$user->id] as $item){
+                        if (date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate)))) {
+                            $days = ($lastDate - strtotime(date('Y-m-d', strtotime($item['created_at'])))) / 86400;
+                            $bonusTotal += $this->addBonus($total, $days);
+                            $total -= $item['amount'];
+                            $lastDate =strtotime(date('Y-m-d', strtotime($item['created_at'])));
+                        }
+                    }
+                }
+                if (date('Y-m-d', strtotime($this->_startTime)) > date('Y-m-d', strtotime($user->created_at))) {
+                    $days = ($lastDate - strtotime(date('Y-m-d', strtotime($this->_startTime))))  / 86400;
+                } else {
+                    $days = ($lastDate - strtotime(date('Y-m-d', strtotime($user->created_at)))) / 86400;
                 }
 
-                $user->save();
-            }
+                $bonusTotal += $this->addBonus($total, $days);
 
+                if ($bonusTotal > 0 ) {
+                    $data['bonus'] = round($bonusTotal, 2);
+                    $data['note'] = '分红结算: ' .  date('Y-m-d', time());
+                    $data['type'] = 1;
+                    $data['user_id'] = $user->id;
+                    $data['total'] = $user->bonus_remain + $data['bonus'];
+                    $user->bonus_total = $user->bonus_total + $data['bonus'];
+                    $user->bonus_remain = $user->bonus_remain + $data['bonus'];
+                    $bonus = new Revenue();
+                    $bonus->load($data, '');
+                    $bonus->save();
+
+                    if (($user->bonus_total + $user->merit_total) > ($user->investment * 2 )) {
+                        $user->stop_bonus = 1;
+                    }
+
+                    $user->save();
+                }
+
+            }
         }
+        var_dump($j);
+
     }
 }
