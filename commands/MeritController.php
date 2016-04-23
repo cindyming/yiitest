@@ -150,29 +150,25 @@ class MeritController extends Controller
         }
     }
 
-    public function dealWithMeritMembers($parents, $newInvestment, $note)
+
+    public function dealWithParentMembers($parents, $newInvestment, $note)
     {
         if (count($parents)) {
             $lastMeritRate = 0;
             foreach ($parents as $level => $pars) {
                 var_dump ('level: ' . $level);
                 if($level == 10) {
-//                    foreach ($pars as $per) {
-//                        var_dump ('slibing parents: ' . $per->id);
-//                        $this->excludeDiamondMembers[] = $per->id;
-//                        $this->addMeritForMember($per, $newInvestment);
-//                    }
                 } else {
                     $firstParent = array_shift($pars);
                     $meritRate = $firstParent->getMeritRate($level);
                     $merit_amount = $newInvestment * ($meritRate - $lastMeritRate);
-                    $this->addMeritForMember($firstParent, 0, $merit_amount, $note);
+                    $this->addMeritForMember($firstParent, $newInvestment, $merit_amount, $note);
                     var_dump ('first parent: ' . $firstParent->id . 'level:' .$firstParent->level);
 
                     $total = count($pars);
                     foreach ($pars as $per) {
                         var_dump ('slibing parents: ' . $per->id);
-                        $this->addMeritForMember($per, 0, round($newInvestment * 0.02 / $total, 2), '加权平均绩效:' . $note);
+                        $this->addMeritForMember($per, $newInvestment, round($newInvestment * 0.02 / $total, 2), '加权平均绩效:' . $note);
                     }
                     $lastMeritRate = $meritRate;
                 }
@@ -180,7 +176,8 @@ class MeritController extends Controller
         }
     }
 
-    public function dealWithInvestmentMembers($parents, $newInvestment, $note)
+
+    public function dealWithInvestmentMembers($parents, $newInvestment)
     {
         if (count($parents)) {
             foreach ($parents as $level => $pars) {
