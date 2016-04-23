@@ -159,7 +159,7 @@ class MeritController extends Controller
         if (count($parents)) {
             foreach ($parents as $per) {
                 var_dump ('low level  parents: ' . $per->id);
-                $this->addMeritForMember($per, $amount);
+                $this->addMeritForMember($per, 0);
             }
         }
     }
@@ -176,13 +176,13 @@ class MeritController extends Controller
                     $firstParent = array_shift($pars);
                     $meritRate = $firstParent->getMeritRate($level);
                     $merit_amount = $newInvestment * ($meritRate - $lastMeritRate);
-                    $this->addMeritForMember($firstParent, $newInvestment, $merit_amount, $note);
+                    $this->addMeritForMember($firstParent, 0, $merit_amount, $note);
                     var_dump ('first parent: ' . $firstParent->id . 'level:' .$firstParent->level);
 
                     $total = count($pars);
                     foreach ($pars as $per) {
                         var_dump ('slibing parents: ' . $per->id);
-                        $this->addMeritForMember($per, $newInvestment, round($newInvestment * 0.02 / $total, 2), '加权平均绩效:' . $note);
+                        $this->addMeritForMember($per, 0, round($newInvestment * 0.02 / $total, 2), '加权平均绩效:' . $note);
                     }
                     $lastMeritRate = $meritRate;
                 }
