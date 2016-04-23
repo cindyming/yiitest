@@ -38,10 +38,6 @@ class MeritController extends Controller
             $user = User::findOne($addtionalInvest->user_id);
 
             var_dump ('start calculate addintional investment for user: ' . $user->id);
-            $parents = array();
-            $lowLevelParents = array();
-
-            $this->listParentsAddMerit($user, $parents, $lowLevelParents);
 
             $connection=Yii::$app->db;
             try {
@@ -56,6 +52,24 @@ class MeritController extends Controller
                         $user->stop_bonus = 0;
                     }
                 }
+
+
+                $user->merited = 1;
+                $amount =  $user->investment;
+
+
+                $investmentParents = array();
+                $investmentLowParents = array();
+                $this->listParentsAddInvestment($user, $investmentParents, $investmentLowParents);
+                $this->dealWithInvestmentMembers($investmentParents, $amount);
+
+                $this->dealWithInvestmentMembers($investmentLowParents, $amount);
+
+
+                $parents = array();
+                $lowLevelParents = array();
+
+                $this->listParentsAddMerit($user, $parents, $lowLevelParents);
 
                 $this->addMeritForMember($user, $newInvestment);
 
