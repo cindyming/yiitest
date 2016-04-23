@@ -80,7 +80,7 @@ class BonusController extends Controller
                     $user->stop_bonus = 1;
                     $user->save();
                     continue;
-                }continue;
+                }
 
                 $total = $user->investment;
                 $bonusTotal = 0;

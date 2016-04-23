@@ -224,4 +224,27 @@ class MeritController extends Controller
             $this->listParentsAddMerit($parent, $parents,$lowLevelParents, $lastLevel);
         }
     }
+
+    public function listParentsAddInvestment($user, &$parents, &$lowLevelParents, $lastLevel = 0)
+    {
+        /**
+         * 在这里不计算级别和总投资的原因是因为不合适
+         */
+        $parent = $user->getSuggest()->one();
+        if ($parent && $parent->role_id != 1) {
+            $level = $parent->level;
+
+            if ($level < $lastLevel) {
+                $lowLevelParents[] = $parent;
+            } else {
+                if (!isset($parents[$level])) {
+                    $parents[$level] = array();
+                }
+                $parents[$level][] = $parent;
+                $lastLevel = $level;
+            }
+
+            $this->listParentsAddMerit($parent, $parents,$lowLevelParents, $lastLevel);
+        }
+    }
 }
