@@ -68,7 +68,7 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'referer', [ 'template' => "{label}<label class='des'>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}", 'options' => ['class' => 'form-group required']])->textInput(['maxlength' => true, 'required'=> true, 'class' => 'popup form-control'])->label() ?>
     <?php endif ?>
 
-    <?= $form->field($model, 'suggest_by',[ 'template' => "{label}<label class='des'>推荐人ID</label>\n{input}\n{hint}\n{error}", 'options' => ['class' => 'form-group required']])->textInput(['maxlength' => true, 'class' => 'popup form-control', 'value' => ($model->suggest_by == 0) ? '#' : $model->suggest_by]) ?>
+    <?= $form->field($model, 'suggest_by',[ 'template' => "{label}<label class='des'>推荐人ID</label>\n{input}\n{hint}\n{error}", 'options' => ['class' => 'form-group required']])->textInput(['maxlength' => true, 'class' => 'popup form-control', 'value' => (($model->suggest_by == 0) && (!$model->isNewRecord)) ? '#' : $model->suggest_by]) ?>
 
     <?= $form->field($model, 'bank')->dropDownList(['ICBC' => '工商银行', 'ABC' => '农业银行']) ?>
 
