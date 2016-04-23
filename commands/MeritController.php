@@ -52,7 +52,7 @@ class MeritController extends Controller
                         $user->stop_bonus = 0;
                     }
                 }
-                
+
 
 
                 $investmentParents = array();
