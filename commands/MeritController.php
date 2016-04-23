@@ -52,18 +52,15 @@ class MeritController extends Controller
                         $user->stop_bonus = 0;
                     }
                 }
-
-
-                $user->merited = 1;
-                $amount =  $user->investment;
+                
 
 
                 $investmentParents = array();
                 $investmentLowParents = array();
                 $this->listParentsAddInvestment($user, $investmentParents, $investmentLowParents);
-                $this->dealWithInvestmentMembers($investmentParents, $amount);
+                $this->dealWithInvestmentMembers($investmentParents, $newInvestment);
 
-                $this->dealWithInvestmentMembers($investmentLowParents, $amount);
+                $this->dealWithInvestmentMembers($investmentLowParents, $newInvestment);
 
 
                 $parents = array();
