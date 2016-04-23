@@ -84,10 +84,7 @@ class MeritController extends Controller
         foreach ($users as $user) {
             $diamondMembers = $this->loadDiamondMembers();
             var_dump ('start calculate for user: ' . $user->id);
-            $parents = array();
-            $lowLevelParents = array();
 
-            $this->listParentsAddMerit($user, $parents, $lowLevelParents);
 
             $connection=Yii::$app->db;
             try {
@@ -95,6 +92,21 @@ class MeritController extends Controller
 
                 $user->merited = 1;
                 $amount =  $user->investment;
+
+
+                $investmentParents = array();
+                $investmentLowParents = array();
+                $this->listParentsAddInvestment($user, $investmentParents, $investmentLowParents);
+                $this->dealWithInvestmentMembers($investmentParents, $amount);
+
+                $this->dealWithInvestmentMembers($investmentLowParents, $amount);
+
+
+                $parents = array();
+                $lowLevelParents = array();
+
+                $this->listParentsAddMerit($user, $parents, $lowLevelParents);
+
 
                 $this->addMeritForMember($user);
 
@@ -138,31 +150,55 @@ class MeritController extends Controller
         }
     }
 
-    public function dealWithParentMembers($parents, $newInvestment, $note)
+    public function dealWithMeritMembers($parents, $newInvestment, $note)
     {
         if (count($parents)) {
             $lastMeritRate = 0;
             foreach ($parents as $level => $pars) {
                 var_dump ('level: ' . $level);
                 if($level == 10) {
-                    foreach ($pars as $per) {
-                        var_dump ('slibing parents: ' . $per->id);
-                        $this->excludeDiamondMembers[] = $per->id;
-                        $this->addMeritForMember($per, $newInvestment);
-                    }
+//                    foreach ($pars as $per) {
+//                        var_dump ('slibing parents: ' . $per->id);
+//                        $this->excludeDiamondMembers[] = $per->id;
+//                        $this->addMeritForMember($per, $newInvestment);
+//                    }
                 } else {
                     $firstParent = array_shift($pars);
                     $meritRate = $firstParent->getMeritRate($level);
                     $merit_amount = $newInvestment * ($meritRate - $lastMeritRate);
-                    $this->addMeritForMember($firstParent, $newInvestment, $merit_amount, $note);
+                    $this->addMeritForMember($firstParent, 0, $merit_amount, $note);
                     var_dump ('first parent: ' . $firstParent->id . 'level:' .$firstParent->level);
 
                     $total = count($pars);
                     foreach ($pars as $per) {
                         var_dump ('slibing parents: ' . $per->id);
-                        $this->addMeritForMember($per, $newInvestment, round($newInvestment * 0.02 / $total, 2), '加权平均绩效:' . $note);
+                        $this->addMeritForMember($per, 0, round($newInvestment * 0.02 / $total, 2), '加权平均绩效:' . $note);
                     }
                     $lastMeritRate = $meritRate;
+                }
+            }
+        }
+    }
+
+    public function dealWithInvestmentMembers($parents, $newInvestment, $note)
+    {
+        if (count($parents)) {
+            foreach ($parents as $level => $pars) {
+                var_dump ('level: ' . $level);
+                if($level == 10) {
+                    foreach ($pars as $per) {
+                        $this->addMeritForMember($per, $newInvestment);
+                    }
+                } else {
+                    $firstParent = array_shift($pars);
+
+                    $this->addMeritForMember($firstParent, $newInvestment);
+                    var_dump ('first parent: ' . $firstParent->id . 'level:' .$firstParent->level);
+
+                    foreach ($pars as $per) {
+                        var_dump ('slibing parents: ' . $per->id);
+                        $this->addMeritForMember($per, $newInvestment);
+                    }
                 }
             }
         }
@@ -230,7 +266,7 @@ class MeritController extends Controller
         /**
          * 在这里不计算级别和总投资的原因是因为不合适
          */
-        $parent = $user->getSuggest()->one();
+        $parent = $user->getParennt()->one();
         if ($parent && $parent->role_id != 1) {
             $level = $parent->level;
 
