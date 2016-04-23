@@ -51,6 +51,11 @@ class MeritController extends Controller
                 $addtionalInvest->save();
                 $newInvestment = $addtionalInvest->amount;
                 $user->investment += $newInvestment;
+                if ($user->stop_bonus) {
+                    if (($user->bonus_total + $user->merit_total) < ($user->investment * 2 )) {
+                        $user->stop_bonus = 0;
+                    }
+                }
 
                 $this->addMeritForMember($user, $newInvestment);
 
