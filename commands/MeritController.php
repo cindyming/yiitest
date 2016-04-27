@@ -38,6 +38,10 @@ class MeritController extends Controller
             $user = User::findOne($addtionalInvest->user_id);
 
             var_dump ('start calculate addintional investment for user: ' . $user->id);
+            $newInvestment = $addtionalInvest->amount;
+            $investmentParents = array();
+            $this->listParentsAddInvestment($user, $investmentParents);
+            $this->dealWithInvestmentMembers($investmentParents, $newInvestment);
 
             $connection=Yii::$app->db;
             try {
@@ -45,7 +49,7 @@ class MeritController extends Controller
 
                 $addtionalInvest->merited = 1;
                 $addtionalInvest->save();
-                $newInvestment = $addtionalInvest->amount;
+
                 $user->investment += $newInvestment;
                 if ($user->stop_bonus) {
                     if (($user->bonus_total + $user->merit_total) < ($user->investment * 2 )) {
@@ -54,9 +58,7 @@ class MeritController extends Controller
                 }
 
 
-                $investmentParents = array();
-                $this->listParentsAddInvestment($user, $investmentParents);
-                $this->dealWithInvestmentMembers($investmentParents, $newInvestment);
+
 
 
                 $parents = array();
@@ -88,19 +90,19 @@ class MeritController extends Controller
         foreach ($users as $user) {
             $diamondMembers = $this->loadDiamondMembers();
             var_dump ('start calculate for user: ' . $user->id);
-
+            $amount =  $user->investment;
+            $investmentParents = array();
+            $this->listParentsAddInvestment($user, $investmentParents);
+            $this->dealWithInvestmentMembers($investmentParents, $amount);
 
             $connection=Yii::$app->db;
             try {
                 $transaction = $connection->beginTransaction();
 
                 $user->merited = 1;
-                $amount =  $user->investment;
 
 
-                $investmentParents = array();
-                $this->listParentsAddInvestment($user, $investmentParents);
-                $this->dealWithInvestmentMembers($investmentParents, $amount);
+
 
 
                 $parents = array();
