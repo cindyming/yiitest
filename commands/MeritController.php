@@ -54,26 +54,19 @@ class MeritController extends Controller
                 }
 
 
-
                 $investmentParents = array();
-                $investmentLowParents = array();
-                $this->listParentsAddInvestment($user, $investmentParents, $investmentLowParents);
+                $this->listParentsAddInvestment($user, $investmentParents);
                 $this->dealWithInvestmentMembers($investmentParents, $newInvestment);
-
-                $this->dealWithInvestmentMembers($investmentLowParents, $newInvestment);
 
 
                 $parents = array();
-                $lowLevelParents = array();
 
-                $this->listParentsAddMerit($user, $parents, $lowLevelParents);
+                $this->listParentsAddMerit($user, $parents, 0, true);
 
                 $this->addMeritForMember($user, $newInvestment);
 
                 $note = '追加投资 - ' . $addtionalInvest->id . ' - 会员(' . $user->id . ')';
                 $this->dealWithParentMembers($parents ,$newInvestment, $note);
-
-                $this->dealWithLowLevelMembers($lowLevelParents, $newInvestment);
 
 
                 $note = '钻石总监绩效 - '. $note;
@@ -106,25 +99,19 @@ class MeritController extends Controller
 
 
                 $investmentParents = array();
-                $investmentLowParents = array();
-                $this->listParentsAddInvestment($user, $investmentParents, $investmentLowParents);
+                $this->listParentsAddInvestment($user, $investmentParents);
                 $this->dealWithInvestmentMembers($investmentParents, $amount);
-
-                $this->dealWithInvestmentMembers($investmentLowParents, $amount);
 
 
                 $parents = array();
-                $lowLevelParents = array();
 
-                $this->listParentsAddMerit($user, $parents, $lowLevelParents);
+                $this->listParentsAddMerit($user, $parents, 0, true);
 
 
                 $this->addMeritForMember($user);
 
                 $note = '新会员绩效 -  ' . $user->id;
                 $this->dealWithParentMembers($parents, $amount, $note);
-
-                $this->dealWithLowLevelMembers($lowLevelParents, $amount);
 
                 $note = '钻石总监绩效 - 新会员 - ' . $user->id;
                 $this->dealWithDiamondMembers($diamondMembers, $amount, $note);
@@ -151,16 +138,6 @@ class MeritController extends Controller
         }
     }
 
-    public function dealWithLowLevelMembers($parents,$amount)
-    {
-        if (count($parents)) {
-            foreach ($parents as $per) {
-                var_dump ('low level  parents: ' . $per->id);
-                $this->addMeritForMember($per, 0);
-            }
-        }
-    }
-
 
     public function dealWithParentMembers($parents, $newInvestment, $note)
     {
@@ -174,11 +151,9 @@ class MeritController extends Controller
                     $meritRate = $firstParent->getMeritRate($level);
                     $merit_amount = $newInvestment * ($meritRate - $lastMeritRate);
                     $this->addMeritForMember($firstParent, 0, $merit_amount, $note);
-                    var_dump ('first parent: ' . $firstParent->id . 'level:' .$firstParent->level);
 
                     $total = count($pars);
                     foreach ($pars as $per) {
-                        var_dump ('slibing parents: ' . $per->id);
                         $this->addMeritForMember($per, 0, round($newInvestment * 0.02 / $total, 2), '加权平均绩效:' . $note);
                     }
                     $lastMeritRate = $meritRate;
@@ -191,23 +166,8 @@ class MeritController extends Controller
     public function dealWithInvestmentMembers($parents, $newInvestment)
     {
         if (count($parents)) {
-            foreach ($parents as $level => $pars) {
-                var_dump ('level: ' . $level);
-                if($level == 10) {
-                    foreach ($pars as $per) {
-                        $this->addMeritForMember($per, $newInvestment);
-                    }
-                } else {
-                    $firstParent = array_shift($pars);
-
-                    $this->addMeritForMember($firstParent, $newInvestment);
-                    var_dump ('first parent: ' . $firstParent->id . 'level:' .$firstParent->level);
-
-                    foreach ($pars as $per) {
-                        var_dump ('slibing parents: ' . $per->id);
-                        $this->addMeritForMember($per, $newInvestment);
-                    }
-                }
+            foreach ($parents as $level => $per) {
+                $this->addMeritForMember($per, $newInvestment);
             }
         }
     }
@@ -218,7 +178,7 @@ class MeritController extends Controller
             $user->achievements += $newInvestment;
         }
 
-        $calLevel = $user->calculateLevel(); var_dump('calculate level : ' . $calLevel . ', true level: ' . $user->level);
+        $calLevel = $user->calculateLevel();
         if (($user->level < $calLevel)) {
             $user->level =  $calLevel;
         }
@@ -246,49 +206,41 @@ class MeritController extends Controller
     }
 
 
-    public function listParentsAddMerit($user, &$parents, &$lowLevelParents, $lastLevel = 0)
+    public function listParentsAddMerit($user, &$parents, $lastLevel = 0, $isFirst=false)
     {
         /**
          * 在这里不计算级别和总投资的原因是因为不合适
          */
-        $parent = $user->getSuggest()->one();
+        if ($isFirst) {
+            $parent = $user->getSuggest()->one();
+        } else {
+            $parent = $user->getParennt()->one();
+        }
+
         if ($parent && $parent->role_id != 1) {
              $level = $parent->level;
 
-             if ($level < $lastLevel) {
-                 $lowLevelParents[] = $parent;
-             } else {
+             if ($level >= $lastLevel) {
                 if (!isset($parents[$level])) {
-                    $parents[$level] = array();
-                }
-                $parents[$level][] = $parent;
-                $lastLevel = $level;
+                     $parents[$level] = array();
+                 }
+                 $parents[$level][] = $parent;
+                 $lastLevel = $level;
              }
-
-            $this->listParentsAddMerit($parent, $parents,$lowLevelParents, $lastLevel);
+            $this->listParentsAddMerit($parent, $parents, $lastLevel);
         }
     }
 
-    public function listParentsAddInvestment($user, &$parents, &$lowLevelParents, $lastLevel = 0)
+    public function listParentsAddInvestment($user, &$parents )
     {
         /**
          * 在这里不计算级别和总投资的原因是因为不合适
          */
         $parent = $user->getParennt()->one();
         if ($parent && $parent->role_id != 1) {
-            $level = $parent->level;
+            $parents[] = $parent;
 
-            if ($level < $lastLevel) {
-                $lowLevelParents[] = $parent;
-            } else {
-                if (!isset($parents[$level])) {
-                    $parents[$level] = array();
-                }
-                $parents[$level][] = $parent;
-                $lastLevel = $level;
-            }
-
-            $this->listParentsAddMerit($parent, $parents,$lowLevelParents, $lastLevel);
+            $this->listParentsAddInvestment($parent, $parents);
         }
     }
 }
