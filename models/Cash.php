@@ -47,6 +47,20 @@ class Cash extends ActiveRecord
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'cash_type',
+                ],
+                'value' => function ($event) {
+                    if ($this->cash_type) {
+                        return $this->cash_type;
+                    } else {
+                        return 2;
+                    }
+
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'real_amount',
                 ],
                 'value' => function ($event) {
@@ -81,7 +95,7 @@ class Cash extends ActiveRecord
     {
         return [
             [['amount'], 'required'],
-            [['user_id', 'note', 'bank', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total'], 'trim'],
+            [['user_id', 'note', 'bank', 'cash_type', 'stack_number', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total'], 'trim'],
             [['type'], 'integer']
         ];
     }
@@ -100,6 +114,7 @@ class Cash extends ActiveRecord
             'cardname' => '开户名',
             'cardnumber' => '银行卡号',
             'bankaddress' => '开户支行',
+            'stack_number' => '股票会员编号',
             'amount' => '提现金额',
             'total' => '出账后余额',
             'note' => '摘要',
