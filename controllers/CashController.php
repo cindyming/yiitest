@@ -130,6 +130,7 @@ class CashController extends Controller
      */
     public function actionCreate()
     {
+        $type = Yii::$app->request->getQueryParam('type');
         $model = new Cash();
 
         $data = Yii::$app->request->post();
@@ -164,6 +165,9 @@ class CashController extends Controller
             if (Yii::$app->user->identity->validatePassword2($data['Cash']['password2'])) {
 
                 if ($validateAmount) {
+                    if ($type == 'transfer') {
+                        $model->cash_type = 1;
+                    }
                     $connection = Yii::$app->db;
                     try {
                         $transaction = $connection->beginTransaction();
@@ -182,31 +186,26 @@ class CashController extends Controller
                             return $this->redirect(['index']);
                         } else {
                             $transaction->rollback();
-                            return $this->render('create', [
-                                'model' => $model,
-                            ]);
                         }
                     }  catch (Exception $e) {
                         $transaction->rollback();//回滚函数
-                        return $this->render('create', [
-                            'model' => $model,
-                        ]);
                     }
-
-
-                } else {
-                    return $this->render('create', [
-                        'model' => $model,
-                    ]);
                 }
             } else {
                 $model->addError('password2', '二级密码不正确, 请输入正确的二级密码');
             }
         }
+//var_dump($type);die;
+        if ($type == 'transfer') {
+            return $this->render('transfer', [
+                'model' => $model,
+            ]);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
     }
 
     public function actionAdminapprove($id)
