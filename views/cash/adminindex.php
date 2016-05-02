@@ -43,6 +43,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => true,
             ],
             [
+                'attribute' => 'cash_type',
+                'label'=>'提现方式',
+                'value' => function($model) {
+                    return ($model->cash_type ==  1) ? '股票提现' : '现金提现';
+                }
+            ],
+            [
+                'attribute' => 'stack_number',
+            ],
+            [
                 'attribute' => 'bank',
                 'label'=>'银行名称',
                 'value' => function($model) {
