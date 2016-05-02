@@ -141,6 +141,7 @@ class CashSearch extends Cash
             'amount' => $this->amount,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'cash_type' => $this->cash_type,
         ]);
 
         $query->andFilterWhere(['like', 'bank', $this->bank])
@@ -177,6 +178,7 @@ class CashSearch extends Cash
             'type' => $this->type,
             'status' => $this->status,
             'amount' => $this->amount,
+            'cash_type' => $this->cash_type,
             'updated_at' => $this->updated_at,
         ]);
 
