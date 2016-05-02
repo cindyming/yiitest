@@ -19,7 +19,7 @@ class CashSearch extends Cash
     {
         return [
             [['id', 'user_id', 'type', 'status', 'amount'], 'integer'],
-            [['bank', 'cardname', 'cardnumber', 'bankaddress', 'created_at', 'updated_at'], 'safe'],
+            [['bank', 'cardname', 'cardnumber', 'bankaddress', 'created_at', 'updated_at', 'cash_type'], 'safe'],
         ];
     }
 
@@ -65,6 +65,7 @@ class CashSearch extends Cash
             'status' => $this->status,
             'amount' => $this->amount,
             'created_at' => $this->created_at,
+            'cash_type' => $this->cash_type,
             'updated_at' => $this->updated_at,
         ]);
 

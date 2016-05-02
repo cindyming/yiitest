@@ -45,6 +45,8 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'cash_type',
                 'label'=>'提现方式',
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter' => array(1 => '股票提现', 2 => '现金提现'),
                 'value' => function($model) {
                     return ($model->cash_type ==  1) ? '股票提现' : '现金提现';
                 }
