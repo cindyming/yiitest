@@ -17,6 +17,7 @@ class System extends ActiveRecord
     public $cash_factorage;
     public $stop_banus_times;
     public $open_baodan_tree;
+    public $last_ip;
 
     /**
      * @inheritdoc
