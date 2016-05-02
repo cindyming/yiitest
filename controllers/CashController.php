@@ -224,7 +224,7 @@ class CashController extends Controller
             } elseif($model->type == 3) {
                 $model->total = $user->baodan_remain;
             }
-            $model->note = '提现成功';
+            $model->note = (($model->cash_type == 1) ? '股票' : '现金') .'提现成功';
             Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放成功');
             $model->save();
             $user->save();
@@ -271,7 +271,7 @@ class CashController extends Controller
                 $data['total'] =  $user->baodan_remain;
                 $model->total = $user->baodan_remain;
             }
-            $model->note .= '拒绝提现,货币返还.';
+            $model->note .= '拒绝'  . (($model->cash_type == 1) ? '股票' : '现金') . '提现,货币返还.';
             Yii::$app->getSession()->set('message', '提现申请拒绝成功');
             $revenue = new Revenue();
             $revenue->load($data, '');
