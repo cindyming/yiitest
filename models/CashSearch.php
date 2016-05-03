@@ -19,7 +19,7 @@ class CashSearch extends Cash
     {
         return [
             [['id', 'user_id', 'type', 'status', 'amount'], 'integer'],
-            [['bank', 'cardname', 'cardnumber', 'bankaddress', 'created_at', 'updated_at'], 'safe'],
+            [['bank', 'cardname', 'cardnumber', 'bankaddress', 'created_at', 'updated_at', 'cash_type'], 'safe'],
         ];
     }
 
@@ -66,6 +66,7 @@ class CashSearch extends Cash
             'amount' => $this->amount,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'cash_type' => $this->cash_type
         ]);
 
         $query->andFilterWhere(['like', 'bank', $this->bank])
@@ -103,6 +104,7 @@ class CashSearch extends Cash
             'status' => 2,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'cash_type' => $this->cash_type
         ]);
 
         $query->andFilterWhere(['like', 'bank', $this->bank])
@@ -140,6 +142,7 @@ class CashSearch extends Cash
             'amount' => $this->amount,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'cash_type' => $this->cash_type
         ]);
 
         $query->andFilterWhere(['like', 'bank', $this->bank])
@@ -175,6 +178,7 @@ class CashSearch extends Cash
             'user_id' => $this->user_id,
             'type' => $this->type,
             'status' => $this->status,
+            'cash_type' => $this->cash_type,
             'amount' => $this->amount,
             'updated_at' => $this->updated_at,
         ]);
