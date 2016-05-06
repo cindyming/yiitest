@@ -95,6 +95,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
             [
                 'attribute' => 'status',
+                'label' => '操作',
+                'hiddenFromExport' => true,
+                'content' => function($model) {
+                    return (in_array($model->status, array(2, 3))) ? '' :( Html::a('发放', '/cash/adminapprove?id='.$model->id, ['data-confirm'=>"你确定要发放[" . $model->user_id. "]"  . $model->amount . "的提现申请"]) . '   ' . Html::a('拒绝', '/cash/adminreject?id='.$model->id, ['data-confirm'=>"你确定要拒绝[" . $model->user_id. "]"  . $model->amount . "的提现申请"]) );
+                }
+            ],
+            [
+                'attribute' => 'status',
                 'filter'=> true,
                 'filterType'=>GridView::FILTER_SELECT2,
                 'filter' => $searchModel->getStatus(true),
@@ -102,14 +110,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         return $model->getStatus()[$model->status];
                     }
             ],
-            [
-                'attribute' => 'status',
-                'label' => '操作',
-                'hiddenFromExport' => true,
-                'content' => function($model) {
-                        return (in_array($model->status, array(2, 3))) ? '' :( Html::a('发放', '/cash/adminapprove?id='.$model->id, ['data-confirm'=>"你确定要发放[" . $model->user_id. "]"  . $model->amount . "的提现申请"]) . '   ' . Html::a('拒绝', '/cash/adminreject?id='.$model->id, ['data-confirm'=>"你确定要拒绝[" . $model->user_id. "]"  . $model->amount . "的提现申请"]) );
-                    }
-            ],
+
         ],
     ]); ?>
 
