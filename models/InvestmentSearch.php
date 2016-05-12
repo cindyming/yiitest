@@ -20,7 +20,7 @@ class InvestmentSearch extends Investment
         return [
             [['id', 'user_id', 'merited'], 'integer'],
             [['amount'], 'number'],
-            [['note', 'created_at', 'updated_at'], 'safe'],
+            [['note', 'created_at', 'updated_at', 'status'], 'safe'],
         ];
     }
 

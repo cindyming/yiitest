@@ -50,6 +50,15 @@ class Investment extends ActiveRecord
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'status',
+                ],
+                'value' => function ($event) {
+                    return 1;
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'added_by',
                 ],
                 'value' => function ($event) {
@@ -70,7 +79,7 @@ class Investment extends ActiveRecord
     {
         return [
             [['user_id', 'amount'], 'required'],
-            [['merited', 'note', 'added_by'], 'trim'],
+            [['merited', 'note', 'added_by', 'status'], 'trim'],
         ];
     }
 

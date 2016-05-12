@@ -29,7 +29,7 @@ class InvestmentController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'admincreate', 'admindelete', 'adminupdate',  'adminview'],
+                        'actions' => ['adminindex', 'cancel', 'admincreate', 'admindelete', 'adminupdate',  'adminview'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -149,11 +149,33 @@ class InvestmentController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
+    public function actionCancel($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        if($model->status) {
+            $model->status = 0;
+            $model->save();
+            $connection=Yii::$app->db;
+            try {
+                $transaction = $connection->beginTransaction();
 
-        return $this->redirect(['index']);
+                $amount = $model->amount;
+                $user = User::findById($model->user_id);
+                $user->reduceAchivement($amount);
+                $user->reduceMerit($model);
+                $transaction->commit();
+
+                Yii::$app->getSession()->set('message', '追加投资撤销成功');
+            } catch (Exception $e) {
+                $transaction->rollback();//回滚函数
+                Yii::$app->log($e->getMessage());
+                $model->status = 1;
+                $model->save();
+                Yii::$app->getSession()->set('danger', '追加投资撤销失败, 请稍后再试');
+            }
+        }
+
+        return $this->redirect(Yii::$app->request->referrer);
     }
 
     /**
