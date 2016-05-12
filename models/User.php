@@ -533,4 +533,86 @@ class User extends ActiveRecord implements IdentityInterface
 
         return false;
     }
+
+    public function listParents($user, &$parents)
+    {
+        /**
+         * 在这里不计算级别和总投资的原因是因为不合适
+         */
+        $parent = $user->getParennt()->one();
+        if ($parent && $parent->role_id != 1) {
+            $parents[] = $parent;
+
+            $this->listParentsAddInvestment($parent, $parents);
+        }
+    }
+
+    public function reduceAchivement($amount)
+    {
+        $this->investment = $this->investment - $amount;
+        $this->achievements = $this->achievements - $amount;
+
+        $parent = $this->getParennt()->one();
+        if ($parent && $parent->role_id != 1) {
+            $parent->achievements = $parent->achievements - $amount;
+            if (!$parent->save()) {
+                throw new Exception('Failed to save user ' . json_encode($parent->getErrors()));
+            }
+        }
+
+        if (!$this->save()) {
+            throw new Exception('Failed to save user ' . json_encode($this->getErrors()));
+        }
+
+    }
+
+    public function reduceMerit($investment)
+    {
+        $revenus = Revenue::find()->andFilterWhere(['like', 'note', '追加投资 - ' . $investment->id . ''])->all();
+        foreach ($revenus as $re) {
+            $merit_amount = $re->merit;
+            $user = User::findById($re->user_id);
+            if($merit_amount) {
+                $merit_amount = round($merit_amount, 2);
+                $merit_remain = round($merit_amount * 0.9);
+
+                $user->mall_remain -= ($merit_amount - $merit_remain);
+                $user->mall_total -= ($merit_amount - $merit_remain);
+                $user->merit_total -= $merit_amount;
+                $user->merit_remain -= $merit_remain;
+
+                if($user->merit_remain &&  $user->mall_remain) {
+                    $meritData = array(
+                        'user_id' => $re->user_id,
+                        'note' => '错误报单,撤销会员[' .$re->user_id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,绩效扣除:' . $re->id,
+                        'amount' => $merit_remain,
+                        'type' => 5,
+                        'total' => $user->merit_remain
+                    );
+
+                    $merit = new Cash();
+                    $merit->load($meritData, '');
+
+                    $mallData = array(
+                        'user_id' => $re->user_id,
+                        'note' => '错误报单,撤销会员[' .$re->user_id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,商城币扣除:' . $re->id,
+                        'amount' => ($merit_amount - $merit_remain),
+                        'type' => 7,
+                        'total' => $user->mall_remain
+                    );
+                    $mall = new Cash();
+                    $mall->load($mallData, '');
+
+                    if(!$user->save() || !$merit->save() || !$mall->save()) {
+                        throw new Exception('Fail to reduce revenue ' . json_encode($user->getErrors()). json_encode($merit->getErrors()). json_encode($mall->getErrors()));
+                        break;
+                    }
+                } else {
+                    throw new Exception('User Merit Or mall are not enough to reduce; Merit: ' . $user->merit_remain . '  Mall:' . $user->mall_remain);
+                    break;
+                }
+
+            }
+        }
+    }
 }
