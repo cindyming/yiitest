@@ -23,7 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => '序号'
             ],
             [
-                'attribute' => 'user_id',
+                'attribute' => 'id',
                 'filter' => false,
             ],
             'bonus_total',
