@@ -155,7 +155,7 @@ class InvestmentController extends Controller
         if($model->status) {
             $model->status = 0;
             $model->save();
-            if ($model->merit == 1) {
+            if ($model->merited == 1) {
                 $connection=Yii::$app->db;
                 try {
                     $transaction = $connection->beginTransaction();
