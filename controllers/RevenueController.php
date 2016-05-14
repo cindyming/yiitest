@@ -141,8 +141,7 @@ class RevenueController extends Controller
     {
 
         $dataProvider = new ActiveDataProvider([
-            'query' => User::find()
-                        ->where(['=', 'id', Yii::$app->user->identity->id])->groupBy('user_id'),
+            'query' => User::find()->where(['=', 'id', Yii::$app->user->identity->id]),
         ]);
 
 
