@@ -95,7 +95,7 @@ class Cash extends ActiveRecord
     {
         return [
             [['amount'], 'required'],
-            [['user_id', 'note', 'bank', 'cash_type', 'stack_number', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total'], 'trim'],
+            [['user_id', 'note', 'bank', 'status', 'cash_type', 'stack_number', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total'], 'trim'],
             [['type'], 'integer']
         ];
     }
