@@ -544,7 +544,7 @@ class User extends ActiveRecord implements IdentityInterface
         if ($parent && $parent->role_id != 1) {
             $parents[] = $parent;
 
-            $this->listParentsAddInvestment($parent, $parents);
+            $this->listParents($parent, $parents);
         }
     }
 
