@@ -585,9 +585,10 @@ class User extends ActiveRecord implements IdentityInterface
                 if($user->merit_remain &&  $user->mall_remain) {
                     $meritData = array(
                         'user_id' => $re->user_id,
-                        'note' => '错误报单,撤销会员[' .$re->user_id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,绩效扣除:' . $re->id,
+                        'note' => '错误报单,撤销会员[' .$investment->user_id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,绩效扣除:' . $re->id,
                         'amount' => $merit_remain,
                         'type' => 5,
+                        'status' => 2,
                         'total' => $user->merit_remain
                     );
 
@@ -596,9 +597,10 @@ class User extends ActiveRecord implements IdentityInterface
 
                     $mallData = array(
                         'user_id' => $re->user_id,
-                        'note' => '错误报单,撤销会员[' .$re->user_id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,商城币扣除:' . $re->id,
+                        'note' => '错误报单,撤销会员[' .$investment->user_id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,商城币扣除:' . $re->id,
                         'amount' => ($merit_amount - $merit_remain),
                         'type' => 7,
+                        'status' => 2,
                         'total' => $user->mall_remain
                     );
                     $mall = new Cash();
