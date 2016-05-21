@@ -226,10 +226,43 @@ class CashController extends Controller
                 $model->total = $user->baodan_remain;
             }
             $model->note = '提现成功';
-            Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放成功');
-            $model->save();
-            $user->save();
-            $transaction->commit();
+
+            $pass = true;
+
+            if ($model->cash_type == 1) {
+                $service_url = Yii::$app->params['stack_url'] . 'v1/accounts';
+                $curl = curl_init($service_url);
+                curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                curl_setopt($curl, CURLOPT_USERPWD, "admin:admin123"); //Your credentials goes here
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_POST, true);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array('member_id' => $model->stack_number, 'amount' => $model->real_amount, 'refer_id' => $model->id)));
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+                $curl_response = curl_exec($curl);
+                $response = json_decode($curl_response);
+                curl_close($curl);
+
+                if (is_array($response) || !$response->id) {
+                    foreach ($response as $r) {
+                        if ($r->field == 'member_id') {
+                            Yii::$app->getSession()->set('message', $r->message);
+                        }
+                    }
+                    $pass = false;
+                    Yii::$app->systemlog->add('会员(' . $model->user_id . ')', '提现股票转移失败', false, json_encode($response));
+                } else {
+                    $model->note .= '; 转移股票账号成功, id' . $response->id;
+                }
+            }
+
+            if ($pass && $model->save() && $user->save()) {
+                Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放成功');
+                $transaction->commit();
+            } else {
+                Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放失败');
+                $transaction->rollback();
+            }
 
             $this->redirect(Yii::$app->request->referrer);
             return;

@@ -15,8 +15,8 @@ $this->title = '申请股票提现';
     <h1><?= Html::encode($this->title) ?></h1>
 
     <ul class="tabswitch">
-        <li>申请现金提现<?= HTML::a('申请现金提现', ['/cash/create'])?></li>
-        <li class="active">申请股票提现></li>
+        <li><?= HTML::a('申请现金提现', ['/cash/create'])?></li>
+        <li class="active">申请股票提现</li>
     </ul>
 
 <div class="cash-_form sm-form">
