@@ -243,10 +243,12 @@ class CashController extends Controller
                 $response = json_decode($curl_response);
                 curl_close($curl);
 
-                if (is_array($response) || !$response->id) {
-                    foreach ($response as $r) {
-                        if ($r->field == 'member_id') {
-                            Yii::$app->getSession()->set('message', $r->message);
+                if (is_array($response) || !$response) {
+                    if (is_array($response)) {
+                        foreach ($response as $r) {
+                            if ($r->field == 'member_id') {
+                                Yii::$app->getSession()->set('message', $r->message);
+                            }
                         }
                     }
                     $pass = false;
