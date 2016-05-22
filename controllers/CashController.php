@@ -244,7 +244,7 @@ class CashController extends Controller
                 $response = json_decode($curl_response);
                 curl_close($curl);
 
-                Log::add('会员(' . $model->user_id . ')', '提现股票转移', '返回', json_encode($response));
+                Yii::info('会员(' . $model->user_id . ')' . '提现股票转移' . '返回' .json_encode($response));
                 if (is_array($response) || !$response) {
                     if (is_array($response)) {
                         foreach ($response as $r) {
