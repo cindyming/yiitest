@@ -50,7 +50,7 @@ class Log  extends ActiveRecord
         $log->action = $action;
         $log->result = ($result) ? $result : '成功';
         $log->note = ($note) ? $note : '';
-        $log->save();var_dump($log->getErrors());die;
+        $result = $log->save();var_dump($result);die;
     }
 
 
