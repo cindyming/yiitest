@@ -43,7 +43,7 @@ class Log  extends ActiveRecord
         ];
     }
 
-    static function add($role, $action, $result= false, $note = '')
+    public static function add($role, $action, $result= false, $note = '')
     {
         $log = new Log();
         $log->role =  $role;
@@ -52,4 +52,6 @@ class Log  extends ActiveRecord
         $log->note = ($note) ? $note : '';
         $log->save();
     }
+
+
 }

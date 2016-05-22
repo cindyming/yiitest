@@ -243,8 +243,7 @@ class CashController extends Controller
                 $response = json_decode($curl_response);
                 curl_close($curl);
 
-
-                Yii::$app->systemlog->add('会员(' . $model->user_id . ')', '提现股票转移', false, json_encode($response));
+                Log::add('会员(' . $model->user_id . ')', '提现股票转移', false, json_encode($response));
                 if (is_array($response) || !$response) {
                     if (is_array($response)) {
                         foreach ($response as $r) {
@@ -254,7 +253,7 @@ class CashController extends Controller
                         }
                     }
                     $pass = false;
-                    Yii::$app->systemlog->add('会员(' . $model->user_id . ')', '提现股票转移失败', false, json_encode($response));
+                    Log::add('会员(' . $model->user_id . ')', '提现股票转移失败', false, json_encode($response));
                 } else {
                     $model->note .= '; 转移股票账号成功, id' . $response->id;
                 }
