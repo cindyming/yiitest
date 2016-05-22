@@ -242,7 +242,7 @@ class CashController extends Controller
                 $curl_response = curl_exec($curl);
                 $response = json_decode($curl_response);
                 curl_close($curl);
-
+var_dump($response);
                 if (is_array($response) || !$response) {
                     if (is_array($response)) {
                         foreach ($response as $r) {
