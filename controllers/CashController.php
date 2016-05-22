@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Log;
 use app\models\Revenue;
 use app\models\System;
 use Yii;
@@ -242,7 +243,7 @@ class CashController extends Controller
                 $curl_response = curl_exec($curl);
                 $response = json_decode($curl_response);
                 curl_close($curl);
-
+                
                 Log::add('会员(' . $model->user_id . ')', '提现股票转移', false, json_encode($response));
                 if (is_array($response) || !$response) {
                     if (is_array($response)) {
