@@ -213,9 +213,9 @@ class CashController extends Controller
     {
         $model = $this->findModel($id);
 
-        $connection=Yii::$app->db;
+
         try {
-            $transaction = $connection->beginTransaction();
+
 
             $model->status = 2;
             $user = User::findById($model->user_id);
@@ -259,7 +259,8 @@ class CashController extends Controller
                     $model->note .= '; 转移股票账号成功, id' . $response->id;
                 }
             }
-
+            $connection=Yii::$app->db;
+            $transaction = $connection->beginTransaction();
             if ($pass && $model->save() && $user->save()) {
                 Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放成功');
                 $transaction->commit();
