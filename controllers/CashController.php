@@ -224,11 +224,51 @@ class CashController extends Controller
             } elseif($model->type == 3) {
                 $model->total = $user->baodan_remain;
             }
-            $model->note = (($model->cash_type == 1) ? '股票' : '现金') .'提现成功';
-            Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放成功');
-            $model->save();
-            $user->save();
-            $transaction->commit();
+            $pass = true;
+
+            if ($model->cash_type == 1) {
+                $service_url = Yii::$app->params['stack_url'] . 'v1/accounts';
+                $curl = curl_init($service_url);
+                curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                curl_setopt($curl, CURLOPT_USERPWD, "admin:admin123"); //Your credentials goes here
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_POST, true);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array('member_id' => $model->stack_number, 'amount' => $model->real_amount, 'refer_id' => $model->id)));
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+                $curl_response = curl_exec($curl);
+                $response = json_decode($curl_response);
+                curl_close($curl);
+
+                Yii::info('会员(' . $model->user_id . ')' . '提现股票转移' . '返回' .json_encode($response));
+                if (is_array($response) || !$response) {
+                    if (is_array($response)) {
+                        foreach ($response as $r) {
+                            if ($r->field == 'member_id') {
+                                Yii::$app->getSession()->set('message', $r->message);
+                            }
+                        }
+                    }
+                    $pass = false;
+                    Log::add('会员(' . $model->user_id . ')', '提现股票转移失败', '失败', json_encode($response));
+                } else {
+                    $model->note .= '; 转移股票账号成功, id' . $response->id;
+                }
+            } else {
+                $model->note .= '会员提现发放成功';
+            }
+
+
+            $connection=Yii::$app->db;
+            $transaction = $connection->beginTransaction();
+            if ($pass && $model->save() && $user->save()) {
+                Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放成功');
+                $transaction->commit();
+            } else {
+                Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放失败');
+                $transaction->rollback();
+            }
+
             $this->redirect(Yii::$app->request->referrer);
             return;
         } catch (Exception $e) {
