@@ -52,7 +52,7 @@ class BonusController extends Controller
         $this->_startTime = date("Y-m-d",strtotime("-15 days")) . ' 00:00:00';
         $this->lessThan15Investment();
 
-        $userQuery = User::find()->where(['=','role_id', 3]);
+        $userQuery = User::find()->where(['=','role_id', 3])->andWhere('in', 'id', array(10000518,10001114,10001115,10001116,10001117,10001118, 10001119,10001120,10001121,10001122,10001123,10001124,10001125,10001126,10001127,10001128,10002164,10002165,10002919,10002934));
 
         $provider = new ActiveDataProvider([
             'query' => $userQuery,
@@ -88,7 +88,7 @@ class BonusController extends Controller
 
                 $total = $user->investment;
                 $bonusTotal = 0;
-                $lastDate = (int)(strtotime(date('Y-m-d', time())));
+                $lastDate = (int)(strtotime(date('Y-m-d', strtotime('2016-05-20 00:00:01'))));
                 if (isset($this->_lessInvestiments[$user->id])) {
                     foreach ($this->_lessInvestiments[$user->id] as $item){
                         if (date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate)))) {
@@ -109,7 +109,7 @@ class BonusController extends Controller
 
                 if ($bonusTotal > 0 ) {
                     $data['bonus'] = round($bonusTotal, 2);
-                    $data['note'] = '分红结算: ' .  date('Y-m-d', time());
+                    $data['note'] = '分红结算: ' .  date('Y-m-d', strtotime('2016-05-20 00:00:01'));
                     $data['type'] = 1;
                     $data['user_id'] = $user->id;
                     $data['total'] = $user->bonus_remain + $data['bonus'];
