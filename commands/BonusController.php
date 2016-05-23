@@ -52,7 +52,7 @@ class BonusController extends Controller
         $this->_startTime = date("Y-m-d",strtotime("-15 days")) . ' 00:00:00';
         $this->lessThan15Investment();
 
-        $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['in', 'id', array(10000518,10001114,10001115,10001116,10001117,10001118, 10001119,10001120,10001121,10001122,10001123,10001124,10001125,10001126,10001127,10001128,10002164,10002165,10002919,10002934)]);
+        $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['in', 'id', array(10000518)]);
 
         $provider = new ActiveDataProvider([
             'query' => $userQuery,
