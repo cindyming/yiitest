@@ -228,7 +228,7 @@ class CashController extends Controller
                 $service_url = Yii::$app->params['stack_url'] . 'v1/accounts';
                 $curl = curl_init($service_url);
                 curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                curl_setopt($curl, CURLOPT_USERPWD, "admin:admin123"); //Your credentials goes here
+                curl_setopt($curl, CURLOPT_USERPWD, "admin:lml1314"); //Your credentials goes here
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($curl, CURLOPT_POST, true);
                 curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array('member_id' => $model->stack_number, 'amount' => $model->real_amount, 'refer_id' => $user->username)));
@@ -239,7 +239,7 @@ class CashController extends Controller
                 curl_close($curl);
 
                 Yii::info('会员(' . $model->user_id . ')' . '提现股票转移' . '返回' .json_encode($response));
-                if (is_array($response) || !$response) {
+                if (is_array($response) || !$response || !property_exists($response, 'id')) {
                     if (is_array($response)) {
                         foreach ($response as $r) {
                             if ($r->field == 'member_id') {
