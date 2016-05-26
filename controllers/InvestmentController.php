@@ -174,6 +174,8 @@ class InvestmentController extends Controller
                     $model->save();
                     Yii::$app->getSession()->set('danger', '追加投资撤销失败, 请稍后再试');
                 }
+            } else {
+                Yii::$app->getSession()->set('message', '追加投资撤销成功');
             }
         }
 
