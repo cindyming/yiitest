@@ -250,7 +250,7 @@ class CashController extends Controller
                     $pass = false;
                     Log::add('会员(' . $model->user_id . ')', '提现股票转移失败', '失败', json_encode($response));
                 } else {
-                    $model->note = '提现成功; 转移股票账号成功, id' . $response->$model->stack_number;
+                    $model->note = '提现成功; 转移股票账号成功, id' . $model->stack_number;
                 }
             } else {
                 $model->note = '会员提现发放成功';
