@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Log;
 use app\models\Revenue;
 use app\models\System;
 use Yii;
@@ -211,10 +212,7 @@ class CashController extends Controller
     {
         $model = $this->findModel($id);
 
-        $connection=Yii::$app->db;
         try {
-            $transaction = $connection->beginTransaction();
-
             $model->status = 2;
             $user = User::findById($model->user_id);
             if ($model->type == 1) {
