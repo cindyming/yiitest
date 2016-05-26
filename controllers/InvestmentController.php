@@ -155,23 +155,25 @@ class InvestmentController extends Controller
         if($model->status) {
             $model->status = 0;
             $model->save();
-            $connection=Yii::$app->db;
-            try {
-                $transaction = $connection->beginTransaction();
+            if ($model->merited) {
+                $connection=Yii::$app->db;
+                try {
+                    $transaction = $connection->beginTransaction();
 
-                $amount = $model->amount;
-                $user = User::findById($model->user_id);
-                $user->reduceAchivement($amount);
-                $user->reduceMerit($model);
-                $transaction->commit();
+                    $amount = $model->amount;
+                    $user = User::findById($model->user_id);
+                    $user->reduceAchivement($amount);
+                    $user->reduceMerit($model);
+                    $transaction->commit();
 
-                Yii::$app->getSession()->set('message', '追加投资撤销成功');
-            } catch (Exception $e) {
-                $transaction->rollback();//回滚函数
-                Yii::$app->log($e->getMessage());
-                $model->status = 1;
-                $model->save();
-                Yii::$app->getSession()->set('danger', '追加投资撤销失败, 请稍后再试');
+                    Yii::$app->getSession()->set('message', '追加投资撤销成功');
+                } catch (Exception $e) {
+                    $transaction->rollback();//回滚函数
+                    Yii::$app->log($e->getMessage());
+                    $model->status = 1;
+                    $model->save();
+                    Yii::$app->getSession()->set('danger', '追加投资撤销失败, 请稍后再试');
+                }
             }
         }
 
