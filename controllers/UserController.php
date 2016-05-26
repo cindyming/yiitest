@@ -353,7 +353,7 @@ class UserController extends Controller
     public function actionAdmintree()
     {
 
-        $users=Yii::$app->db->createCommand('SELECT id,role_id,username,referer,investment,achievements FROM user where role_id in (2,3)')->query();
+        $users=Yii::$app->db->createCommand('SELECT id,role_id,username,referer,investment,achievements FROM user where role_id in (2,3) ORDER BY created_at')->query();
 
         $result = array();
 
