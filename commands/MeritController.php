@@ -71,6 +71,7 @@ class MeritController extends Controller
                 $investmentParents = array();
                 $this->listParentsAddInvestment($user, $investmentParents);
                 $this->dealWithInvestmentMembers($investmentParents, $newInvestment);
+
                 $transaction->commit();
             } catch (Exception $e) {
                 $transaction->rollback();//回滚函数
