@@ -231,7 +231,7 @@ class CashController extends Controller
                 curl_setopt($curl, CURLOPT_USERPWD, "admin:admin123"); //Your credentials goes here
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($curl, CURLOPT_POST, true);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array('member_id' => $model->stack_number, 'amount' => $model->real_amount, 'refer_id' => $model->id)));
+                curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array('member_id' => $model->stack_number, 'amount' => $model->real_amount, 'refer_id' => $model->user_id)));
                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
                 $curl_response = curl_exec($curl);
