@@ -593,7 +593,7 @@ class User extends ActiveRecord implements IdentityInterface
                 $user->merit_total -= $merit_amount;
                 $user->merit_remain -= $merit_remain;
 
-                if($user->merit_remain &&  $user->mall_remain) {
+                if(($user->merit_remain >= 0) &&  ($user->mall_remain >= 0)) {
                     $meritData = array(
                         'user_id' => $re->user_id,
                         'note' => '错误报单,撤销会员[' .$investment->user_id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,绩效扣除:' . $re->id,
@@ -622,7 +622,7 @@ class User extends ActiveRecord implements IdentityInterface
                         break;
                     }
                 } else {
-                    throw new Exception('User Merit Or mall are not enough to reduce; Merit: ' . $user->merit_remain . '  Mall:' . $user->mall_remain);
+                    throw new Exception('User Merit Or mall are not enough to reduce; Merit: ' .$user->id . ':' . $user->merit_remain . '  Mall:' . $user->mall_remain);
                     break;
                 }
 
