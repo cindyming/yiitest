@@ -263,7 +263,10 @@ class CashController extends Controller
                 Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放成功');
                 $transaction->commit();
             } else {
-                Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放失败');
+                if ($model->cash_type != 1) {
+                    Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放失败');
+                }
+
                 $transaction->rollback();
             }
 
