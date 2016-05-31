@@ -40,6 +40,10 @@ class MeritController extends Controller
             var_dump ('start calculate addintional investment for user: ' . $user->id);
             $newInvestment = $addtionalInvest->amount;
 
+            $investmentParents = array();
+            $this->listParentsAddInvestment($user, $investmentParents);
+            $this->dealWithInvestmentMembers($investmentParents, $newInvestment);
+
             $connection=Yii::$app->db;
             try {
                 $transaction = $connection->beginTransaction();
@@ -67,9 +71,6 @@ class MeritController extends Controller
                 $note = '钻石总监绩效 - '. $note;
                 $this->dealWithDiamondMembers($diamondMembers, $newInvestment, $note);
 
-                $investmentParents = array();
-                $this->listParentsAddInvestment($user, $investmentParents);
-                $this->dealWithInvestmentMembers($investmentParents, $newInvestment);
 
                 $transaction->commit();
             } catch (Exception $e) {
@@ -88,6 +89,11 @@ class MeritController extends Controller
             $diamondMembers = $this->loadDiamondMembers();
             var_dump ('start calculate for user: ' . $user->id);
             $amount =  $user->investment;
+
+
+            $investmentParents = array();
+            $this->listParentsAddInvestment($user, $investmentParents);
+            $this->dealWithInvestmentMembers($investmentParents, $amount);
 
             $connection=Yii::$app->db;
             try {
@@ -108,9 +114,6 @@ class MeritController extends Controller
                 $note = '钻石总监绩效 - 新会员 - ' . $user->id;
                 $this->dealWithDiamondMembers($diamondMembers, $amount, $note);
 
-                $investmentParents = array();
-                $this->listParentsAddInvestment($user, $investmentParents);
-                $this->dealWithInvestmentMembers($investmentParents, $amount);
 
                 $transaction->commit();
             } catch (Exception $e) {
