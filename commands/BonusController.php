@@ -32,20 +32,30 @@ class BonusController extends Controller
         $this->_lessInvestiments = $inverts;
     }
 
-    public function addBonus($inverstiment, $days)
+    public function addBonus($inverstiment, $days, $date)
     {
         $rate = 1;
+
         if ($days < 15) {
             $rate = $days / 15;
         }
 
-        if ($inverstiment < 100000) {
-            $amount =  $inverstiment * 0.01;
-        } else if ($inverstiment < 200000) {
-            $amount =  $inverstiment * 0.015;
+        if ($date > '2016-5-31') {
+            if ($inverstiment >= 200000) {
+                $amount =  $inverstiment * 0.015;
+            } else {
+                $amount =  $inverstiment * 0.01;
+            }
         } else {
-            $amount =  $inverstiment * 0.02;
+            if ($inverstiment < 100000) {
+                $amount =  $inverstiment * 0.01;
+            } else if ($inverstiment < 200000) {
+                $amount =  $inverstiment * 0.015;
+            } else {
+                $amount =  $inverstiment * 0.02;
+            }
         }
+
         $amount = $amount * $rate;
         return $amount;
     }
@@ -94,7 +104,7 @@ class BonusController extends Controller
                         if (date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate)))) {
                             $days = ($lastDate - strtotime(date('Y-m-d', strtotime($item['created_at'])))) / 86400;
                             var_dump($days);
-                            $bonusTotal += $this->addBonus($total, $days);
+                            $bonusTotal += $this->addBonus($total, $days, date('Y-m-d', strtotime($item['created_at'])));
                             var_dump($bonusTotal);
                             $total -= $item['amount'];
                             $lastDate = strtotime(date('Y-m-d', strtotime($item['created_at'])));
@@ -104,10 +114,10 @@ class BonusController extends Controller
                 if (date('Y-m-d', strtotime($this->_startTime)) > date('Y-m-d', strtotime($user->approved_at))) {
                     $days = ($lastDate - strtotime(date('Y-m-d', strtotime($this->_startTime)))) / 86400;
                 } else {
-                    $days = ($lastDate - strtotime(date('Y-m-d', strtotime($user->approved_at)))) / 86400;
+                    $days = 15;
                 }
 
-                $bonusTotal += $this->addBonus($total, $days);
+                $bonusTotal += $this->addBonus($total, $days, date('Y-m-d', strtotime($user->approved_at)));
 
                 if ($bonusTotal > 0) {
                     $data['bonus'] = round($bonusTotal, 2);
