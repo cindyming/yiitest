@@ -111,6 +111,18 @@ class BonusController extends Controller
                         }
                     }
                 }
+
+                if ($user->approved_at < '2016-06-05 00:00:00') {
+                    $newInvestiments = Investment::findAll("user_id=:user_id AND created_at>:created_at ORDER BY created_at ASC", array(':user_id' => $user->id, ':created_at' => '2016-06-05 00:00:00'));
+
+                    foreach ($newInvestiments as $in) {
+                        $days = ($lastDate - strtotime(date('Y-m-d', strtotime($in->created_at)))) / 86400;
+                        $bonusTotal += $this->addBonus($total, $days, date('Y-m-d', strtotime($item['created_at'])));
+                        var_dump($bonusTotal);
+                        $total -= $item->amount;
+                    }
+                }
+
                 if (date('Y-m-d', strtotime($this->_startTime)) > date('Y-m-d', strtotime($user->approved_at))) {
                     $days = ($lastDate - strtotime(date('Y-m-d', strtotime($this->_startTime)))) / 86400;
                 } else {
