@@ -66,7 +66,7 @@ class BonusController extends Controller
         $this->_startTime = '2016-05-21 00:00:00';
         $this->lessThan15Investment();
 
-        $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0])->andWhere(['=', 'id', 10000716]);
+        $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0]);
 
         $provider = new ActiveDataProvider([
             'query' => $userQuery,
