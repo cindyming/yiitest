@@ -95,6 +95,7 @@ class BonusController extends Controller
                     $user->save();
                     continue;
                 }
+                var_dump('分红开始:' . $user->id);
 
                 $total = $user->investment;
                 $bonusTotal = 0;
@@ -119,7 +120,7 @@ class BonusController extends Controller
                 $lastDate = (int)(strtotime(date('2016-06-05')));
                 if (isset($this->_lessInvestiments[$user->id])) {
                     $items = $this->_lessInvestiments[$user->id];
-                    $items = array_reverse($items);
+                 //   $items = array_reverse($items);
                     foreach ($items as $key => $item) {
                         var_dump('追加投资:' . json_encode($item));
                         if (date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate)))) {
