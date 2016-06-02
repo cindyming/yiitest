@@ -66,7 +66,7 @@ class BonusController extends Controller
         $this->_startTime = '2016-05-21 00:00:00';
         $this->lessThan15Investment();
 
-        $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0]);
+        $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0])->andWhere(['=', 'id', 10000716]);
 
         $provider = new ActiveDataProvider([
             'query' => $userQuery,
@@ -125,25 +125,27 @@ class BonusController extends Controller
                         var_dump('追加投资:' . json_encode($item));
                         if (date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate)))) {
                             $days = ($lastDate - strtotime(date('Y-m-d', strtotime($item['created_at'])))) / 86400;
+                            var_dump('金额:' . $total);
                             var_dump('天数:' . $days);
-                            $bonusTotal += $this->addBonus($user->investment, $total, $days, date('Y-m-d', strtotime($item['created_at'])));
+                            $bonusTotal += $this->addBonus($user->investment, $item['amount'], $days, date('Y-m-d', strtotime($item['created_at'])));
                             var_dump('分红额:' . $bonusTotal);
                             $total -= $item['amount'];
-                            $lastDate = strtotime(date('Y-m-d', strtotime($item['created_at'])));
+                           // $lastDate = strtotime(date('Y-m-d', strtotime($item['created_at'])));
                         }
                         var_dump('停止追加投资');
                     }
                 }
 
 
-                if (date('Y-m-d', strtotime($this->_startTime)) > date('Y-m-d', strtotime($user->approved_at))) {
+                if (date('Y-m-d', strtotime($this->_startTime)) < date('Y-m-d', strtotime($user->approved_at))) {
                     $days = ($lastDate - strtotime(date('Y-m-d', strtotime($this->_startTime)))) / 86400;
                 } else {
                     $days = 15;
                 }
-
                 $bonusTotal += $this->addBonus($user->investment, $total, $days, date('Y-m-d', strtotime($user->approved_at)));
-
+                var_dump('金额:' . $total);
+                var_dump('天数:' . $days);
+                var_dump('分红额:' . $bonusTotal);
                 if ($bonusTotal > 0) {
                     $data['bonus'] = round($bonusTotal, 2);
                     $data['note'] = '分红结算: ' . date('Y-m-d', time());
