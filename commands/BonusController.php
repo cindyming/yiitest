@@ -14,10 +14,11 @@ class BonusController extends Controller
     private $_diff = 200000;
     private $_startTime;
     private $_lessInvestiments;
+    private $_diffTime = '2016-06-01';
 
     public function lessThan15Investment()
     {
-        $invertMents = Investment::find()->where(['>', 'created_at', $this->_startTime])->orderBy(['created_at' => SORT_DESC])->all();
+        $invertMents = Investment::find()->where(['>', 'created_at', $this->_startTime])->andWhere(['=', 'status', 1])->andWhere(['=', 'merited', 1])->orderBy(['created_at' => SORT_DESC])->all();
         $inverts = array();
         foreach ($invertMents as $iv) {
             $user_id = $iv->user_id;
@@ -40,7 +41,7 @@ class BonusController extends Controller
             $rate = $days / 15;
         }
 
-        if ($date > '2016-5-31') {
+        if ($date >= $this->_diffTime) {
             if ($inverstiment >= 200000) {
                 $amount =  $inverstiment * 0.015;
             } else {
@@ -62,7 +63,7 @@ class BonusController extends Controller
 
     public function actionIndex()
     {
-        $this->_startTime = date("Y-m-d",strtotime("-15 days")) . ' 00:00:00';
+        $this->_startTime = '2016-05-21 00:00:00';
         $this->lessThan15Investment();
 
         $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0]);
@@ -98,10 +99,31 @@ class BonusController extends Controller
 
                 $total = $user->investment;
                 $bonusTotal = 0;
-                $lastDate = (int)(strtotime(date('Y-m-d', time())));
+
+                if ($user->approved_at < $this->_diffTime . ' 00:00:00') {
+                    $newInvestiments = Investment::findAll("user_id=:user_id AND created_at>:created_at AND status=1 AND merited=1 ORDER BY created_at ASC", array(':user_id' => $user->id, ':created_at' => $this->_diffTime . ' 00:00:00'));
+
+                    foreach ($newInvestiments as $in) {
+                        $this->_lessInvestiments[$in->user_id][$in->id];
+
+                        $data = array('id' => $in->id, 'amount' => $in->amount, 'created_at' => $in->created_at, 'merited' => $in->merited);
+
+                        if (isset($this->_lessInvestiments[$in->user_id])) {
+
+                            $this->_lessInvestiments[$in->user_id][$in->id] = $data;
+                        } else {
+                            $this->_lessInvestiments[$in->user_id] = array( $in->id => $data);
+                        }
+                    }
+                }
+
+                $lastDate = (int)(strtotime(date('2016-06-05')));
                 if (isset($this->_lessInvestiments[$user->id])) {
-                    foreach ($this->_lessInvestiments[$user->id] as $item) {
+                    $items = $this->_lessInvestiments[$user->id];
+                    $items = array_reverse($items);
+                    foreach ($items as $key => $item) {
                         if (date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate)))) {
+                            var_dump($key);
                             $days = ($lastDate - strtotime(date('Y-m-d', strtotime($item['created_at'])))) / 86400;
                             var_dump($days);
                             $bonusTotal += $this->addBonus($total, $days, date('Y-m-d', strtotime($item['created_at'])));
@@ -112,16 +134,6 @@ class BonusController extends Controller
                     }
                 }
 
-                if ($user->approved_at < '2016-06-05 00:00:00') {
-                    $newInvestiments = Investment::findAll("user_id=:user_id AND created_at>:created_at ORDER BY created_at ASC", array(':user_id' => $user->id, ':created_at' => '2016-06-05 00:00:00'));
-
-                    foreach ($newInvestiments as $in) {
-                        $days = ($lastDate - strtotime(date('Y-m-d', strtotime($in->created_at)))) / 86400;
-                        $bonusTotal += $this->addBonus($total, $days, date('Y-m-d', strtotime($item['created_at'])));
-                        var_dump($bonusTotal);
-                        $total -= $item->amount;
-                    }
-                }
 
                 if (date('Y-m-d', strtotime($this->_startTime)) > date('Y-m-d', strtotime($user->approved_at))) {
                     $days = ($lastDate - strtotime(date('Y-m-d', strtotime($this->_startTime)))) / 86400;
