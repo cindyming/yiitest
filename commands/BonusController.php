@@ -138,7 +138,7 @@ class BonusController extends Controller
 
 
                 if (date('Y-m-d', strtotime($this->_startTime)) < date('Y-m-d', strtotime($user->approved_at))) {
-                    $days = ($lastDate - strtotime(date('Y-m-d', strtotime($this->_startTime)))) / 86400;
+                    $days = ($lastDate - strtotime(date('Y-m-d', strtotime($user->approved_at)))) / 86400;
                 } else {
                     $days = 15;
                 }
