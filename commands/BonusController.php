@@ -78,7 +78,6 @@ class BonusController extends Controller
         $j = 0;var_dump($provider->getTotalCount());
 
         for($i=1; $i<=$provider->getPagination()->getPageCount();$i++) {
-            var_dump($i);
             if($i != 1) {
                 $provider = new ActiveDataProvider([
                     'query' => $userQuery,
@@ -122,15 +121,16 @@ class BonusController extends Controller
                     $items = $this->_lessInvestiments[$user->id];
                     $items = array_reverse($items);
                     foreach ($items as $key => $item) {
+                        var_dump('追加投资:' . json_encode($item));
                         if (date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate)))) {
-                            var_dump($key);
                             $days = ($lastDate - strtotime(date('Y-m-d', strtotime($item['created_at'])))) / 86400;
-                            var_dump($days);
+                            var_dump('天数:' . $days);
                             $bonusTotal += $this->addBonus($total, $days, date('Y-m-d', strtotime($item['created_at'])));
-                            var_dump($bonusTotal);
+                            var_dump('分红额:' . $bonusTotal);
                             $total -= $item['amount'];
                             $lastDate = strtotime(date('Y-m-d', strtotime($item['created_at'])));
                         }
+                        var_dump('停止追加投资');
                     }
                 }
 
@@ -160,6 +160,8 @@ class BonusController extends Controller
                     }
 
                     $user->save();
+                } else {
+                    var_dump('分红' . $bonusTotal);
                 }
             }
 
