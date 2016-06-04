@@ -66,7 +66,7 @@ class BonusController extends Controller
         $this->_startTime = '2016-05-21 00:00:00';
         $this->lessThan15Investment();
 
-        $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0]);
+        $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0])->andWhere(['=', 'id', 100019287]);
 
         $provider = new ActiveDataProvider([
             'query' => $userQuery,
@@ -101,7 +101,7 @@ class BonusController extends Controller
                 $bonusTotal = 0;
 
                 if ($user->approved_at < $this->_diffTime . ' 00:00:00') {
-                    $newInvestiments = Investment::findAll("user_id=:user_id AND created_at>:created_at AND status=1 AND merited=1 ORDER BY created_at ASC", array(':user_id' => $user->id, ':created_at' => $this->_diffTime . ' 00:00:00'));
+                    $newInvestiments = Investment::findAll("user_id=:user_id AND created_at>:created_at AND status=1 AND merited=1 AND created_at>:approved_at ORDER BY created_at ASC", array(':user_id' => $user->id, ':approved_at' => date('Y-m-d', strtotime($user->approved_at)) . ' 23:59:59', ':created_at' => $this->_diffTime . ' 00:00:00'));
 
                     foreach ($newInvestiments as $in) {
                         $this->_lessInvestiments[$in->user_id][$in->id];
@@ -123,7 +123,7 @@ class BonusController extends Controller
                  //   $items = array_reverse($items);
                     foreach ($items as $key => $item) {
                         var_dump('追加投资:' . json_encode($item));
-                        if (date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate)))) {
+                        if ((date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate))))  && (date('Y-m-d', strtotime($item['created_at']))  != date('Y-m-d', strtotime($user->approved_at)))) {
                             $days = ($lastDate - strtotime(date('Y-m-d', strtotime($item['created_at'])))) / 86400;
                             var_dump('金额:' . $item['amount']);
                             var_dump('天数:' . $days);
