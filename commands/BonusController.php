@@ -63,7 +63,7 @@ class BonusController extends Controller
 
     public function actionIndex()
     {
-        $this->_startTime = '2016-05-21 00:00:00';
+        $this->_startTime = date("Y-m-d",strtotime("-15 days")) . ' 00:00:00';
         $this->lessThan15Investment();
 
         $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0]);
@@ -117,7 +117,7 @@ class BonusController extends Controller
                     }
                 }
 
-                $lastDate = (int)(strtotime(date('2016-06-05')));
+                $lastDate = (int)(strtotime(date('Y-m-d', time())));
                 if (isset($this->_lessInvestiments[$user->id])) {
                     $items = $this->_lessInvestiments[$user->id];
                  //   $items = array_reverse($items);
