@@ -127,7 +127,7 @@ class BonusController extends Controller
                             $days = ($lastDate - strtotime(date('Y-m-d', strtotime($item['created_at'])))) / 86400;
                             var_dump('金额:' . $item['amount']);
                             var_dump('天数:' . $days);
-                            $bonusTotal += $this->addBonus($user->investment, $item['amount'], $days, date('Y-m-d', strtotime($item['created_at'])));
+                            $bonusTotal += $this->addBonus($total, $item['amount'], $days, date('Y-m-d', strtotime($item['created_at'])));
                             var_dump('分红额:' . $bonusTotal);
                             $total -= $item['amount'];
                            // $lastDate = strtotime(date('Y-m-d', strtotime($item['created_at'])));
@@ -142,7 +142,7 @@ class BonusController extends Controller
                 } else {
                     $days = 15;
                 }
-                $bonusTotal += $this->addBonus($user->investment, $total, $days, date('Y-m-d', strtotime($user->approved_at)));
+                $bonusTotal += $this->addBonus($total, $total, $days, date('Y-m-d', strtotime($user->approved_at)));
                 var_dump('金额:' . $total);
                 var_dump('天数:' . $days);
                 var_dump('分红额:' . $bonusTotal);
