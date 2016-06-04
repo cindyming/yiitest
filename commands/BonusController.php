@@ -50,7 +50,7 @@ class BonusController extends Controller
         } else {
             if ($total < 100000) {
                 $amount =  $inverstiment * 0.01;
-            } else if ($inverstiment < 200000) {
+            } else if ($total < 200000) {
                 $amount =  $inverstiment * 0.015;
             } else {
                 $amount =  $inverstiment * 0.02;
@@ -125,7 +125,7 @@ class BonusController extends Controller
                         var_dump('追加投资:' . json_encode($item));
                         if (date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate)))) {
                             $days = ($lastDate - strtotime(date('Y-m-d', strtotime($item['created_at'])))) / 86400;
-                            var_dump('金额:' . $total);
+                            var_dump('金额:' . $item['amount']);
                             var_dump('天数:' . $days);
                             $bonusTotal += $this->addBonus($user->investment, $item['amount'], $days, date('Y-m-d', strtotime($item['created_at'])));
                             var_dump('分红额:' . $bonusTotal);
