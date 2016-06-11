@@ -30,7 +30,7 @@ class MeritController extends Controller
     public function calculateAddtionalInvestment()
     {
 
-        $additionalInvestList = Investment::find()->where(['=','merited', 0])->orderBy([ 'id' => SORT_ASC, ])->all();
+        $additionalInvestList = Investment::find()->where(['=','merited', 0])->andWherewhere(['=','status', 0])->orderBy([ 'id' => SORT_ASC, ])->all();
 
         foreach ($additionalInvestList as $addtionalInvest)
         {
