@@ -2,9 +2,11 @@
 
 namespace app\controllers;
 
+use common\models\JLock;
 use Yii;
 use app\models\Investment;
 use app\models\InvestmentSearch;
+use yii\base\Exception;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -176,7 +178,7 @@ class InvestmentController extends Controller
                     $model->status = 1;
                     $model->save();
 
-                    Yii::$app->systemlog->add('Admin', '撤销投资', '失败', $e->getMessage());
+                    Yii::$app->systemlog->add('Admin', '撤销投资', '失败', $id . ':' . $e->getMessage());
                     Yii::$app->getSession()->set('message', '追加投资撤销失败, 请稍后再试. ' .  $e->getMessage());
                 }
             } else {
