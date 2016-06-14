@@ -151,15 +151,18 @@ class InvestmentController extends Controller
      */
     public function actionCancel($id)
     {
+        $key = 'INVESTIMENT' . $id;
+        $sellLock = new \app\models\JLock($key);
+        $sellLock->start();
         $model = $this->findModel($id);
         if($model->status) {
             $model->status = 0;
-            $model->save();
-            if ($model->merited) {
+            if ($model->merited == 1) {
                 $connection=Yii::$app->db;
                 try {
                     $transaction = $connection->beginTransaction();
 
+                    $model->save();
                     $amount = $model->amount;
                     $user = User::findById($model->user_id);
                     $user->reduceAchivement($amount);
@@ -169,16 +172,20 @@ class InvestmentController extends Controller
                     Yii::$app->getSession()->set('message', '追加投资撤销成功');
                 } catch (Exception $e) {
                     $transaction->rollback();//回滚函数
-                    Yii::$app->log($e->getMessage());
+
                     $model->status = 1;
                     $model->save();
-                    Yii::$app->getSession()->set('danger', '追加投资撤销失败, 请稍后再试');
+
+                    Yii::$app->systemlog->add('Admin', '撤销投资', '失败', $e->getMessage());
+                    Yii::$app->getSession()->set('message', '追加投资撤销失败, 请稍后再试. ' .  $e->getMessage());
                 }
             } else {
                 Yii::$app->getSession()->set('message', '追加投资撤销成功');
             }
+
         }
 
+        $sellLock->end();
         return $this->redirect(Yii::$app->request->referrer);
     }
 
