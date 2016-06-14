@@ -47,7 +47,7 @@ $isAdmin = Yii::$app->user->identity->isAdmin();
         <?php endif ?>
 
         <?php if (Yii::$app->getSession()->get('danger')): ?>
-            <div class="fail Message" >
+            <div class="fail " >
                 <?= Yii::$app->getSession()->get('danger');
                 Yii::$app->getSession()->set('danger',null);
                 ?>
