@@ -623,12 +623,14 @@ class User extends ActiveRecord implements IdentityInterface
                     $message = '会员: ' . $re->user_id . '  的绩效不够本次扣除, ';
 
                     if ($merit < 0) {
-                        $message .= '绩效总额是: ' . $user->merit_remain . '  需要扣除:' . $merit_remain;
+                        $message .= '绩效余额是: ' . $user->merit_remain . '  需要扣除:' . $merit_remain;
                     }
 
                     if ($mall < 0) {
                         $message .= '商城币余额是: ' . $user->mall_remain . '  需要扣除:' . $merit_amount - $merit_remain;
                     }
+
+                    $message .= ' 请检查会员是否已提现。';
                     throw new Exception($message);
                     break;
                 }
