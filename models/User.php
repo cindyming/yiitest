@@ -617,14 +617,12 @@ class User extends ActiveRecord implements IdentityInterface
                     $mall = new Cash();
                     $mall->load($mallData, '');
 
-                    if(!$user->save() || !$merit->save() || !$mall->save()) { 
-                        throw new Exception('会员扣除失败 ' . json_encode($user->getErrors()). json_encode($merit->getErrors()). json_encode($mall->getErrors())); 
-                        break; 
-                    } 
+                    if(!$user->save() || !$merit->save() || !$mall->save()) {
+                        throw new Exception('会员扣除失败 ' . json_encode($user->getErrors()). json_encode($merit->getErrors()). json_encode($mall->getErrors()));
+                        break;
+                    }
                 } else {
-                    throw new Exception('会员: ' . $re->user_id . '
-                     的绩效不够本次扣除, 绩效总额是: ' . $user->merit_remain . '  需要扣除:' .
-                        $merit_remain);
+                    throw new Exception('会员: ' . $re->user_id . '  的绩效不够本次扣除, 绩效总额是: ' . $user->merit_remain . '  需要扣除:' . $merit_remain);
                     break;
                 }
             }
