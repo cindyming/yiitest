@@ -636,7 +636,7 @@ class User extends ActiveRecord implements IdentityInterface
                         $message .= '商城币余额是: ' . $user->mall_remain . '  需要扣除:' . $merit_amount - $merit_remain;
                     }
 
-                    $message .= '请检查会员是否已提现。';
+                    $message .= ', 请检查会员是否已提现。';
 
 
                     throw new Exception($message);
