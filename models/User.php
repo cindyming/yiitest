@@ -612,11 +612,11 @@ class User extends ActiveRecord implements IdentityInterface
                     $mall->load($mallData, '');
 
                     if(!$user->save() || !$merit->save() || !$mall->save()) {
-                        throw new Exception('Fail to reduce revenue ' . json_encode($user->getErrors()). json_encode($merit->getErrors()). json_encode($mall->getErrors()));
+                        throw new Exception('会员扣除失败 ' . json_encode($user->getErrors()). json_encode($merit->getErrors()). json_encode($mall->getErrors()));
                         break;
                     }
                 } else {
-                    throw new Exception('User Merit Or mall are not enough to reduce; Merit: ' . $user->merit_remain . '  Mall:' . $user->mall_remain);
+                    throw new Exception('会员: ' . $re->user_id . '  的绩效不够本次扣除, 绩效总额是: ' . $user->merit_remain . '  需要扣除:' . $merit_remain);
                     break;
                 }
 
