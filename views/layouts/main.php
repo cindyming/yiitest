@@ -45,6 +45,14 @@ $isAdmin = Yii::$app->user->identity->isAdmin();
                 ?>
             </div>
         <?php endif ?>
+
+        <?php if (Yii::$app->getSession()->get('danger')): ?>
+            <div class="fail Message" >
+                <?= Yii::$app->getSession()->get('danger');
+                Yii::$app->getSession()->set('danger',null);
+                ?>
+            </div>
+        <?php endif ?>
         <!-- Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) -->
