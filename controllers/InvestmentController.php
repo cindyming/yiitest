@@ -179,7 +179,7 @@ class InvestmentController extends Controller
                     $model->save();
 
                     Yii::$app->systemlog->add('Admin', '撤销投资', '失败', $e->getMessage());
-                    Yii::$app->getSession()->set('message', '追加投资撤销失败, 请稍后再试. ' .  $e->getMessage());
+                    Yii::$app->getSession()->set('danger', '追加投资撤销失败, 请稍后再试. ' .  $e->getMessage());
                 }
             } else {
                 Yii::$app->getSession()->set('message', '追加投资撤销成功');
