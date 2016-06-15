@@ -587,7 +587,6 @@ class User extends ActiveRecord implements IdentityInterface
                 $user->merit_total -= $merit_amount;
                 $user->merit_remain -= $merit_remain;
 
-                if(($user->merit_remain >= 0) &&  ($user->mall_remain >= 0)) {
                     $meritData = array(
                         'user_id' => $re->user_id,
                         'note' => '错误报单,撤销会员[' .$investment->user_id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,绩效扣除:' . $re->id,
@@ -615,26 +614,6 @@ class User extends ActiveRecord implements IdentityInterface
                         throw new Exception('会员扣除失败 ' . json_encode($user->getErrors()). json_encode($merit->getErrors()). json_encode($mall->getErrors()));
                         break;
                     }
-                } else {
-                    $merit = $user->merit_remain;
-                    $mall = $user->mall_remain;
-
-                    $user = User::findById($re->user_id);
-                    $message = '会员: ' . $re->user_id . '  的绩效不够本次扣除, ';
-
-                    if ($merit < 0) {
-                        $message .= '绩效余额是: ' . $user->merit_remain . '  需要扣除:' . $merit_remain;
-                    }
-
-                    if ($mall < 0) {
-                        $message .= '商城币余额是: ' . $user->mall_remain . '  需要扣除:' . $merit_amount - $merit_remain;
-                    }
-
-                    $message .= ', 请检查会员是否已提现。';
-                    throw new Exception($message);
-                    break;
-                }
-
             }
         }
     }
