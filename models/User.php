@@ -623,4 +623,82 @@ class User extends ActiveRecord implements IdentityInterface
             }
         }
     }
+
+    public function reduceBonus($investment)
+    {
+        $bouns = 0;
+
+        $revenus = Revenue::find()
+            ->where(['=', 'user_id', $this->id])
+            ->andFilterWhere(['like', 'note', '分红结算'])
+            ->andWhere(['>', 'created_at', $investment->created_at])
+            ->orderBy(array('created_at' => SORT_ASC))
+            ->All();
+
+        $bonusIds = array();
+
+        foreach ($revenus as $key => $re) {
+            $investments = $this->investment;
+            $time =  $re->created_at;
+
+            $investmentss = Investment::find()->where(['=', 'user_id', $this->id])->andWhere(['>', 'created_at', $time])->all();
+
+            foreach ($investmentss as $inv) {
+                $investments -= $inv->amount;
+            }
+
+            $rate = 1;
+            $days = 15;
+
+            if (!$key) {
+                $days = (strtotime(date('Y-m-d', strtotime($re->created_at))) - strtotime(date('Y-m-d', strtotime($investment->created_at)))) / 86400;
+            }
+
+
+            if ($days < 15) {
+                $rate = $days / 15;
+            }
+
+            if (date('Y-m-d', strtotime($investment->created_at)) >=  '2016-06-05') {
+                if ($investments >= 200000) {
+                    $amount =  $inv->amount * 0.015;
+                } else {
+                    $amount =  $inv->amount * 0.01;
+                }
+            } else {
+                if ($investments < 100000) {
+                    $amount =  $inv->amount * 0.01;
+                } else if ($investments < 200000) {
+                    $amount =  $inv->amount * 0.015;
+                } else {
+                    $amount =  $inv->amount * 0.02;
+                }
+            }
+
+            $amount = $amount * $rate;
+
+            $bouns += $amount;
+            $bonusIds[] = $re->id;
+        }
+
+        if ($bouns) {
+            $user = User::findById($this->id);
+            $user->bonus_total -= $bouns;
+            $user->bonus_remain -= $bouns;
+            $meritData = array(
+                'user_id' => $this->id,
+                'note' => '错误报单,撤销会员[' .$this->id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,分红扣除:' . implode(',', $bonusIds),
+                'amount' => $bouns,
+                'type' => 4,
+                'status' => 2,
+                'total' => $this->bonus_remain
+            );
+
+            $revenus = new Cash();
+            $revenus->load($meritData, '');
+            if (!$revenus->save()) {
+                throw new Exception('分红扣除失败 ' . json_encode($revenus->getErrors()));
+            }
+        }
+    }
 }
