@@ -617,4 +617,60 @@ class User extends ActiveRecord implements IdentityInterface
             }
         }
     }
+
+    public function reduceBonus($investment)
+    {
+        $bouns = 0;
+
+        $revenus = Revenue::find()->where(['=', 'user_id', $this->id])
+            ->andFilterWhere(['like', 'note', '分红结算'])
+            ->andWhere(['>', 'created_at', $investment->created_at])
+            ->orderBy(array('created_at' => SORT_ASC))->All();
+
+        $bonusIds = array();
+
+        foreach ($revenus as $key => $re) {
+            $investments = $this->investment;
+            $time =  $re->created_at;
+
+            $investmentss = Investment::find()->where(['=', 'user_id', $this->id])->andWhere(['>', 'created_at', $time])->all();
+
+            foreach ($investmentss as $inv) {
+                $investments -= $inv->amount;
+            }
+
+
+            $days = 15;
+            if (!$key) {
+                $days = (strtotime(date('Y-m-d', strtotime($re->created_at)) - strtotime(date('Y-m-d', $investment->created_at)))) / 86400;
+            }
+            $rate = 1;
+            if ($days < 15) {
+                $rate = $days / 15;
+            }
+
+            if ($investments >= 200000) {
+                $amount =  $investment->amount * 0.015 * $rate;
+            } else {
+                $amount =  $investment->amount * 0.01 * $rate;
+            }
+
+            $bouns += $amount;
+            $bonusIds[] = $re->id;
+        }
+
+        if ($bouns) {
+            $user = User::findById($re->user_id);
+            $user->bonus_total -= $bouns;
+            $user->bouns_remain -= $bouns;
+            $meritData = array(
+                'user_id' => $this->user_id,
+                'note' => '错误报单,撤销会员[' .$this->user_id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,分红扣除:' . implode(',', $bonusIds),
+                'amount' => $bouns,
+                'type' => 4,
+                'status' => 2,
+                'total' => $this->bouns_remain
+            );
+        }
+    }
 }
