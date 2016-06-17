@@ -622,10 +622,12 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $bouns = 0;
 
-        $revenus = Revenue::find()->where(['=', 'user_id', $this->id])
+        $revenus = Revenue::find()
+            ->where(['=', 'user_id', $this->id])
             ->andFilterWhere(['like', 'note', '分红结算'])
             ->andWhere(['>', 'created_at', $investment->created_at])
-            ->orderBy(array('created_at' => SORT_ASC))->All();
+            ->orderBy(array('created_at' => SORT_ASC))
+            ->All();
 
         $bonusIds = array();
 
@@ -639,12 +641,13 @@ class User extends ActiveRecord implements IdentityInterface
                 $investments -= $inv->amount;
             }
 
-
-            $days = 15;
-            if (!$key) {
-                $days = (strtotime(date('Y-m-d', strtotime($re->created_at)) - strtotime(date('Y-m-d', $investment->created_at)))) / 86400;
-            }
             $rate = 1;
+            $days = 15;
+
+            if (!$key) {
+                $days = (strtotime(date('Y-m-d', strtotime($re->created_at))) - strtotime(date('Y-m-d', strtotime($investment->created_at)))) / 86400;
+            }
+
             if ($days < 15) {
                 $rate = $days / 15;
             }
@@ -660,17 +663,23 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         if ($bouns) {
-            $user = User::findById($re->user_id);
+            $user = User::findById($this->id);
             $user->bonus_total -= $bouns;
-            $user->bouns_remain -= $bouns;
+            $user->bonus_remain -= $bouns;
             $meritData = array(
-                'user_id' => $this->user_id,
-                'note' => '错误报单,撤销会员[' .$this->user_id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,分红扣除:' . implode(',', $bonusIds),
+                'user_id' => $this->id,
+                'note' => '错误报单,撤销会员[' .$this->id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,分红扣除:' . implode(',', $bonusIds),
                 'amount' => $bouns,
                 'type' => 4,
                 'status' => 2,
-                'total' => $this->bouns_remain
+                'total' => $this->bonus_remain
             );
+
+            $revenus = new Cash();
+            $revenus->load($meritData, '');
+            if (!$revenus->save()) {
+                throw new Exception('分红扣除失败 ' . json_encode($revenus->getErrors()));
+            }
         }
     }
 }
