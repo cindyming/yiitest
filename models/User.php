@@ -581,10 +581,6 @@ class User extends ActiveRecord implements IdentityInterface
             }
         }
 
-        if (!$this->save()) {
-            throw new Exception('Failed to save user ' . json_encode($this->getErrors()));
-        }
-
     }
 
     public function reduceMerit($investment)
@@ -592,15 +588,14 @@ class User extends ActiveRecord implements IdentityInterface
         $revenus = Revenue::find()->andFilterWhere(['like', 'note', '追加投资 - ' . $investment->id . ''])->all();
         foreach ($revenus as $re) {
             $merit_amount = $re->merit;
-            $user = User::findById($re->user_id);
             if($merit_amount) {
                 $merit_amount = round($merit_amount, 2);
                 $merit_remain = round($merit_amount * 0.9);
 
-                $user->mall_remain -= ($merit_amount - $merit_remain);
-                $user->mall_total -= ($merit_amount - $merit_remain);
-                $user->merit_total -= $merit_amount;
-                $user->merit_remain -= $merit_remain;
+                $this->mall_remain -= ($merit_amount - $merit_remain);
+                $this->mall_total -= ($merit_amount - $merit_remain);
+                $this->merit_total -= $merit_amount;
+                $this->merit_remain -= $merit_remain;
 
                     $meritData = array(
                         'user_id' => $re->user_id,
@@ -608,7 +603,7 @@ class User extends ActiveRecord implements IdentityInterface
                         'amount' => $merit_remain,
                         'type' => 5,
                         'status' => 2,
-                        'total' => $user->merit_remain
+                        'total' => $this->merit_remain
                     );
 
                     $merit = new Cash();
@@ -620,13 +615,13 @@ class User extends ActiveRecord implements IdentityInterface
                         'amount' => ($merit_amount - $merit_remain),
                         'type' => 7,
                         'status' => 2,
-                        'total' => $user->mall_remain
+                        'total' => $this->mall_remain
                     );
                     $mall = new Cash();
                     $mall->load($mallData, '');
 
-                    if(!$user->save() || !$merit->save() || !$mall->save()) {
-                        throw new Exception('会员扣除失败 ' . json_encode($user->getErrors()). json_encode($merit->getErrors()). json_encode($mall->getErrors()));
+                    if(!$merit->save() || !$mall->save()) {
+                        throw new Exception('会员扣除失败 ' . json_encode($merit->getErrors()). json_encode($mall->getErrors()));
                         break;
                     }
             }
@@ -691,9 +686,8 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         if ($bouns) {
-            $user = User::findById($this->id);
-            $user->bonus_total -= $bouns;
-            $user->bonus_remain -= $bouns;
+            $this->bonus_total -= $bouns;
+            $this->bonus_remain -= $bouns;
             $meritData = array(
                 'user_id' => $this->id,
                 'note' => '错误报单,撤销会员[' .$this->id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,分红扣除:' . implode(',', $bonusIds),
@@ -705,7 +699,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             $revenus = new Cash();
             $revenus->load($meritData, '');
-            if (!$revenus->save() || !$user->save()) {
+            if (!$revenus->save()) {
                 throw new Exception('分红扣除失败 ' . json_encode($revenus->getErrors()));
             }
         }
