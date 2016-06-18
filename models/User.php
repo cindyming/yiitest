@@ -696,7 +696,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             $revenus = new Cash();
             $revenus->load($meritData, '');
-            if (!$revenus->save()) {
+            if (!$revenus->save() || !$user->save()) {
                 throw new Exception('分红扣除失败 ' . json_encode($revenus->getErrors()));
             }
         }
