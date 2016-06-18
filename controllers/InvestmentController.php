@@ -169,9 +169,14 @@ class InvestmentController extends Controller
                     $user = User::findById($model->user_id);
                     $user->reduceAchivement($amount);
                     $user->reduceMerit($model);
-                    $transaction->commit();
+                    $user->reduceBonus($model);
+                    if ($user->save()) {
+                        $transaction->commit();
 
-                    Yii::$app->getSession()->set('message', '追加投资撤销成功');
+                        Yii::$app->getSession()->set('message', '追加投资撤销成功');
+                    } else {
+                        throw new Exception('Failed to save user ' . json_encode($user->getErrors()));
+                    }
                 } catch (Exception $e) {
                     $transaction->rollback();//回滚函数
 

@@ -104,6 +104,15 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'locked',
+                ],
+                'value' => function ($event) {
+                    return 1;
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'show_tree',
                 ],
                 'value' => function ($event) {
@@ -565,11 +574,6 @@ class User extends ActiveRecord implements IdentityInterface
                 }
             }
         }
-
-        if (!$this->save()) {
-            throw new Exception('Failed to save user ' . json_encode($this->getErrors()));
-        }
-
     }
 
     public function reduceMerit($investment)
@@ -614,6 +618,70 @@ class User extends ActiveRecord implements IdentityInterface
                         throw new Exception('会员扣除失败 ' . json_encode($user->getErrors()). json_encode($merit->getErrors()). json_encode($mall->getErrors()));
                         break;
                     }
+            }
+        }
+    }
+
+    public function reduceBonus($investment)
+    {
+        $bouns = 0;
+
+        $revenus = Revenue::find()
+            ->where(['=', 'user_id', $this->id])
+            ->andFilterWhere(['like', 'note', '分红结算'])
+            ->andWhere(['>', 'created_at', $investment->created_at])
+            ->orderBy(array('created_at' => SORT_ASC))
+            ->All();
+
+        $bonusIds = array();
+
+        foreach ($revenus as $key => $re) {
+            $investments = $this->investment;
+            $time =  $re->created_at;
+
+            $investmentss = Investment::find()->where(['=', 'user_id', $this->id])->andWhere(['>', 'created_at', $time])->all();
+
+            foreach ($investmentss as $inv) {
+                $investments -= $inv->amount;
+            }
+
+            $rate = 1;
+            $days = 15;
+
+            if (!$key) {
+                $days = (strtotime(date('Y-m-d', strtotime($re->created_at))) - strtotime(date('Y-m-d', strtotime($investment->created_at)))) / 86400;
+            }
+
+            if ($days < 15) {
+                $rate = $days / 15;
+            }
+
+            if ($investments >= 200000) {
+                $amount =  $investment->amount * 0.015 * $rate;
+            } else {
+                $amount =  $investment->amount * 0.01 * $rate;
+            }
+
+            $bouns += $amount;
+            $bonusIds[] = $re->id;
+        }
+
+        if ($bouns) {
+            $this->bonus_total -= $bouns;
+            $this->bonus_remain -= $bouns;
+            $meritData = array(
+                'user_id' => $this->id,
+                'note' => '错误报单,撤销会员[' .$this->id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,分红扣除:' . implode(',', $bonusIds),
+                'amount' => $bouns,
+                'type' => 4,
+                'status' => 2,
+                'total' => $this->bonus_remain
+            );
+
+            $revenus = new Cash();
+            $revenus->load($meritData, '');
+            if (!$revenus->save()){
+                throw new Exception('分红扣除失败 ' . json_encode($revenus->getErrors()));
             }
         }
     }
