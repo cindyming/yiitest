@@ -574,11 +574,6 @@ class User extends ActiveRecord implements IdentityInterface
                 }
             }
         }
-
-        if (!$this->save()) {
-            throw new Exception('Failed to save user ' . json_encode($this->getErrors()));
-        }
-
     }
 
     public function reduceMerit($investment)
@@ -672,9 +667,8 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         if ($bouns) {
-            $user = User::findById($this->id);
-            $user->bonus_total -= $bouns;
-            $user->bonus_remain -= $bouns;
+            $this->bonus_total -= $bouns;
+            $this->bonus_remain -= $bouns;
             $meritData = array(
                 'user_id' => $this->id,
                 'note' => '错误报单,撤销会员[' .$this->id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,分红扣除:' . implode(',', $bonusIds),
@@ -686,7 +680,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             $revenus = new Cash();
             $revenus->load($meritData, '');
-            if (!$revenus->save() || !$user->save()){
+            if (!$revenus->save()){
                 throw new Exception('分红扣除失败 ' . json_encode($revenus->getErrors()));
             }
         }
