@@ -588,14 +588,15 @@ class User extends ActiveRecord implements IdentityInterface
         $revenus = Revenue::find()->andFilterWhere(['like', 'note', '追加投资 - ' . $investment->id . ''])->all();
         foreach ($revenus as $re) {
             $merit_amount = $re->merit;
+            $user = User::findById($re->user_id);
             if($merit_amount) {
                 $merit_amount = round($merit_amount, 2);
                 $merit_remain = round($merit_amount * 0.9);
 
-                $this->mall_remain -= ($merit_amount - $merit_remain);
-                $this->mall_total -= ($merit_amount - $merit_remain);
-                $this->merit_total -= $merit_amount;
-                $this->merit_remain -= $merit_remain;
+                $user->mall_remain -= ($merit_amount - $merit_remain);
+                $user->mall_total -= ($merit_amount - $merit_remain);
+                $user->merit_total -= $merit_amount;
+                $user->merit_remain -= $merit_remain;
 
                     $meritData = array(
                         'user_id' => $re->user_id,
@@ -620,8 +621,8 @@ class User extends ActiveRecord implements IdentityInterface
                     $mall = new Cash();
                     $mall->load($mallData, '');
 
-                    if(!$merit->save() || !$mall->save()) {
-                        throw new Exception('会员扣除失败 ' . json_encode($merit->getErrors()). json_encode($mall->getErrors()));
+                    if(!$user->save() || !$merit->save() || !$mall->save()) {
+                        throw new Exception('会员扣除失败 ' . json_encode($user->getErrors()).json_encode($merit->getErrors()). json_encode($mall->getErrors()));
                         break;
                     }
             }
