@@ -467,17 +467,17 @@ class UserController extends Controller
         }
 
         $user =  User::findOne($model->referer);
-        if (($model->referer !== '#' && !$user) || ($user && $user->locked)) {
+        if ($model->referer !== '#' && !$user) {
             $validate = false;
-            $model->addError('referer', '接点人的会员ID不正确或者该账户被锁定, 请确认之后重新输入');
+            $model->addError('referer', '接点人的会员ID不正确, 请确认之后重新输入');
         } elseif ($model->referer !== '#') {
             $this->successInfo['referer'] = '接点人验证成功，网络昵称:' . $user->username;
         }
 
         $user =  User::findOne($model->suggest_by);
-        if (($model->suggest_by !== '#' && (!$user || !$user->getId())) || ($user && $user->locked)) {
+        if ($model->suggest_by !== '#' && (!$user || !$user->getId())) {
             $validate = false;
-            $model->addError('suggest_by', '推荐人的会员ID不正确或者该账户被锁定, 请确认之后重新输入');
+            $model->addError('suggest_by', '推荐人的会员ID不正确, 请确认之后重新输入');
         } elseif ($model->suggest_by !== '#') {
             $this->successInfo['suggest_by'] = '推荐人验证成功，网络昵称:' . $user->username;
         }
