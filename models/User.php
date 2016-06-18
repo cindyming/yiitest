@@ -670,17 +670,17 @@ class User extends ActiveRecord implements IdentityInterface
 
             if (date('Y-m-d', strtotime($investment->created_at)) >=  '2016-06-05') {
                 if ($investments >= 200000) {
-                    $amount =  $inv->amount * 0.015;
+                    $amount =  $investment->amount * 0.015;
                 } else {
-                    $amount =  $inv->amount * 0.01;
+                    $amount =  $investment->amount * 0.01;
                 }
             } else {
                 if ($investments < 100000) {
-                    $amount =  $inv->amount * 0.01;
+                    $amount =  $investment->amount * 0.01;
                 } else if ($investments < 200000) {
-                    $amount =  $inv->amount * 0.015;
+                    $amount =  $investment->amount * 0.015;
                 } else {
-                    $amount =  $inv->amount * 0.02;
+                    $amount =  $investment->amount * 0.02;
                 }
             }
 
