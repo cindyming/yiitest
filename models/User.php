@@ -633,7 +633,7 @@ class User extends ActiveRecord implements IdentityInterface
             ->orderBy(array('created_at' => SORT_ASC))
             ->All();
 
-        $bonusIds = array();
+        $bonusIds = '';
 
         foreach ($revenus as $key => $re) {
             $investments = $this->investment;
@@ -663,7 +663,7 @@ class User extends ActiveRecord implements IdentityInterface
             }
 
             $bouns += $amount;
-            $bonusIds[] = $re->id;
+            $bonusIds .= $re->id . ':' . $amount . ';';
         }
 
         if ($bouns) {
@@ -671,7 +671,7 @@ class User extends ActiveRecord implements IdentityInterface
             $this->bonus_remain -= $bouns;
             $meritData = array(
                 'user_id' => $this->id,
-                'note' => '错误报单,撤销会员[' .$this->id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,分红扣除:' . implode(',', $bonusIds),
+                'note' => '错误报单,撤销会员[' .$this->id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,分红扣除:' . $bonusIds,
                 'amount' => $bouns,
                 'type' => 4,
                 'status' => 2,
