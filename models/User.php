@@ -604,7 +604,7 @@ class User extends ActiveRecord implements IdentityInterface
                         'amount' => $merit_remain,
                         'type' => 5,
                         'status' => 2,
-                        'total' => $this->merit_remain
+                        'total' => $user->merit_remain
                     );
 
                     $merit = new Cash();
@@ -616,7 +616,7 @@ class User extends ActiveRecord implements IdentityInterface
                         'amount' => ($merit_amount - $merit_remain),
                         'type' => 7,
                         'status' => 2,
-                        'total' => $this->mall_remain
+                        'total' => $user->mall_remain
                     );
                     $mall = new Cash();
                     $mall->load($mallData, '');
