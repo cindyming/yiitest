@@ -640,7 +640,7 @@ class User extends ActiveRecord implements IdentityInterface
             ->orderBy(array('created_at' => SORT_ASC))
             ->All();
 
-        $bonusIds = array();
+        $bonusIds = '';
 
         foreach ($revenus as $key => $re) {
             $investments = $this->investment;
@@ -654,7 +654,6 @@ class User extends ActiveRecord implements IdentityInterface
 
             $rate = 1;
             $days = 15;
-            $bonusIds = '';
 
 
             if (!$key) {
