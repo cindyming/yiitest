@@ -654,6 +654,8 @@ class User extends ActiveRecord implements IdentityInterface
 
             $rate = 1;
             $days = 15;
+            $bonusIds = '';
+
 
             if (!$key) {
                 $days = (strtotime(date('Y-m-d', strtotime($re->created_at))) - strtotime(date('Y-m-d', strtotime($investment->created_at)))) / 86400;
@@ -683,7 +685,7 @@ class User extends ActiveRecord implements IdentityInterface
             $amount = $amount * $rate;
 
             $bouns += $amount;
-            $bonusIds[] = $re->id;
+            $bonusIds .= $re->id . ':' . $amount . ';';
         }
 
         if ($bouns) {
@@ -691,7 +693,7 @@ class User extends ActiveRecord implements IdentityInterface
             $this->bonus_remain -= $bouns;
             $meritData = array(
                 'user_id' => $this->id,
-                'note' => '错误报单,撤销会员[' .$this->id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,分红扣除:' . implode(',', $bonusIds),
+                'note' => '错误报单,撤销会员[' .$this->id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,分红扣除:' . $bonusIds,
                 'amount' => $bouns,
                 'type' => 4,
                 'status' => 2,
