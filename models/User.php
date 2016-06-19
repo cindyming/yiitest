@@ -90,7 +90,7 @@ class User extends ActiveRecord implements IdentityInterface
                     ActiveRecord::EVENT_BEFORE_INSERT => 'locked',
                 ],
                 'value' => function ($event) {
-                    return 1;
+                    return 0;
                 },
             ],
             [
