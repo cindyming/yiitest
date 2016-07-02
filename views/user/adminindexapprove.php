@@ -98,7 +98,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'kartik\grid\ActionColumn',
                 'header' => '修改',
                 'hiddenFromExport' => true,
-                'template' => '{update} {resetpassword}',
+                'template' => '{update} {cancel} {resetpassword}',
                 'buttons' => [
                     'resetpassword' => function ($url, $model, $key) {
                             $options = [
@@ -108,10 +108,22 @@ $this->params['breadcrumbs'][] = $this->title;
                             ];
                             return Html::a('重置密码', $url, $options);
                         },
+                    'cancel' => function ($url, $model, $key) {
+                        $options = [
+                            'title' => Yii::t('yii', '撤销'),
+                            'aria-label' => Yii::t('yii', '撤销'),
+                            'data-confirm' => Yii::t('yii', '你确定要撤销会员[' . $model->id . ']'),
+                        ];
+                        return Html::a('撤销', $url, $options);
+                    },
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                         if ($action === 'update') {
                             $url ='/user/adminupdate?id='.$model->id;
+                            return $url;
+                        }
+                        if ($action === 'cancel') {
+                            $url ='/user/cancel?id='.$model->id;
                             return $url;
                         }
                         if ($action === 'resetpassword') {
