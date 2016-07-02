@@ -514,8 +514,15 @@ class UserController extends Controller
         $model = $this->findModel($id);
 
         if(($model->role_id == 3)  && ($model->merited == 1)) {
-            $child = User::find()->where(['=', 'referer', $model->id])->all();
-            if (!count($child)) {
+            $child = User::find()->where(['=', 'referer', $model->id])->count();
+
+            $invests = Investment::find()->where(['=', 'user_id', $model->id])->andWhere(['=', 'status', 1])->count();
+
+            if ($child) {
+                Yii::$app->getSession()->set('danger', '会员撤销失败,  该会员有下线, 请先撤销下线');
+            }  else if ($invests) {
+                Yii::$app->getSession()->set('danger', '会员撤销失败, 该会员有未撤销的追加投资,请先撤销追加投资');
+            } else {
                 $model->role_id = 4;
                 $connection=Yii::$app->db;
                 try {
@@ -537,8 +544,6 @@ class UserController extends Controller
                     Yii::$app->systemlog->add('Admin', '会员撤销', '失败', $id . ':' . $e->getMessage());
                     Yii::$app->getSession()->set('danger', '会员撤销失败, 请稍后再试. ' .  $e->getMessage());
                 }
-            } else {
-                Yii::$app->getSession()->set('message', '会员撤销失败,  该会员有下线, 请先撤销下线');
             }
 
 
