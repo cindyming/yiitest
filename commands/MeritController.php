@@ -30,7 +30,7 @@ class MeritController extends Controller
     public function calculateAddtionalInvestment()
     {
 
-        $additionalInvestList = Investment::find()->where(['=','merited', 0])->andWhere(['=','status', 1])->orderBy([ 'id' => SORT_ASC, ])->all();
+        $additionalInvestList = Investment::find()->where(['=','merited', 0])->andWhere(['=','status', 1])->orderBy([ 'id' => SORT_ASC])->all();
 
         foreach ($additionalInvestList as $addtionalInvest)
         {
@@ -80,7 +80,7 @@ class MeritController extends Controller
 
     public function calculateNewMember()
     {
-        $users = User::find()->where(['=','role_id', 3])->andWhere(['=','merited', 0])->orderBy([ 'id' => SORT_ASC, ])->all();
+        $users = User::find()->where(['=','role_id', 3])->andWhere(['=','merited', 0])->orderBy([ 'created_at' => SORT_ASC])->all();
 
         foreach ($users as $user) {
             $diamondMembers = $this->loadDiamondMembers();
