@@ -98,27 +98,39 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'kartik\grid\ActionColumn',
                 'header' => '修改',
                 'hiddenFromExport' => true,
-                'template' => '{update} {resetpassword}',
+                'template' => '{update} {cancel} {resetpassword}',
                 'buttons' => [
                     'resetpassword' => function ($url, $model, $key) {
-                            $options = [
-                                'title' => Yii::t('yii', '重置密码'),
-                                'aria-label' => Yii::t('yii', '重置密码'),
-                                'data-confirm' => Yii::t('yii', '你确定要为会员[' . $model->id . ']重置密码?密码将被设置为123456'),
-                            ];
-                            return Html::a('重置密码', $url, $options);
-                        },
+                        $options = [
+                            'title' => Yii::t('yii', '重置密码'),
+                            'aria-label' => Yii::t('yii', '重置密码'),
+                            'data-confirm' => Yii::t('yii', '你确定要为会员[' . $model->id . ']重置密码?密码将被设置为123456'),
+                        ];
+                        return Html::a('重置密码', $url, $options);
+                    },
+                    'cancel' => function ($url, $model, $key) {
+                        $options = [
+                            'title' => Yii::t('yii', '撤销'),
+                            'aria-label' => Yii::t('yii', '撤销'),
+                            'data-confirm' => Yii::t('yii', '你确定要撤销会员[' . $model->id . ']'),
+                        ];
+                        return Html::a('撤销', $url, $options);
+                    },
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
-                        if ($action === 'update') {
-                            $url ='/user/adminupdate?id='.$model->id;
-                            return $url;
-                        }
-                        if ($action === 'resetpassword') {
-                            $url ='/user/adminresetpassword?id='.$model->id;
-                            return $url;
-                        }
+                    if ($action === 'update') {
+                        $url ='/user/adminupdate?id='.$model->id;
+                        return $url;
                     }
+                    if ($action === 'cancel') {
+                        $url ='/user/cancel?id='.$model->id;
+                        return $url;
+                    }
+                    if ($action === 'resetpassword') {
+                        $url ='/user/adminresetpassword?id='.$model->id;
+                        return $url;
+                    }
+                }
             ],
             [
                 'class' => 'kartik\grid\ActionColumn',

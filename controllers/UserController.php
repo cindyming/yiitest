@@ -2,9 +2,11 @@
 
 namespace app\controllers;
 
+use app\models\Investment;
 use Yii;
 use app\models\User;
 use app\models\Revenue;
+use yii\base\Exception;
 use yii\filters\AccessControl;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
@@ -34,7 +36,7 @@ class UserController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'huobi','validate', 'admincreate', 'suggestindex', 'adminreject','success','adminresetpassword','adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
+                        'actions' => ['adminindex', 'cancel', 'huobi','validate', 'admincreate', 'suggestindex', 'adminreject','success','adminresetpassword','adminapplyindex','adminchange','adminapproveforaddmember', 'admintree', 'admintreelazy', 'adminindexapprove', 'adminindexunapprove', 'adminupdate', 'adminview', 'adminapprove'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -537,6 +539,53 @@ class UserController extends Controller
         return $this->render('index', [
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionCancel($id)
+    {
+        $model = $this->findModel($id);
+
+        if(($model->role_id == 3)  && ($model->merited == 1)) {
+            $child = User::find()->where(['=', 'referer', $model->id])->count();
+
+            $invests = Investment::find()->where(['=', 'user_id', $model->id])->andWhere(['=', 'status', 1])->count();
+
+            if ($child) {
+                Yii::$app->getSession()->set('message', '会员撤销失败,  该会员有下线, 请先撤销下线');
+            }  else if ($invests) {
+                Yii::$app->getSession()->set('message', '会员撤销失败, 该会员有未撤销的追加投资,请先撤销追加投资');
+            } else {
+                $model->role_id = 4;
+                $connection=Yii::$app->db;
+                try {
+                    $transaction = $connection->beginTransaction();
+
+                    $amount = $model->investment;
+                    $model->reduceAchivement($amount);
+                    $model->reduceMeritForNewMember($amount);
+
+                    if ($model->save()) {
+                        $transaction->commit();
+                        Yii::$app->getSession()->set('message', '会员撤销成功');
+                    } else {
+                        throw new Exception('Failed to save user ' . json_encode($model->getErrors()));
+                    }
+
+                } catch (Exception $e) {
+                    $transaction->rollback();//回滚函数
+                    Yii::$app->systemlog->add('Admin', '会员撤销', '失败', $id . ':' . $e->getMessage());
+                    Yii::$app->getSession()->set('danger', '会员撤销失败, 请稍后再试. ' .  $e->getMessage());
+                }
+            }
+
+
+        } else {
+            $model->role_id = 4;
+            $model->save();
+            Yii::$app->getSession()->set('message', '新会员撤销成功');
+        }
+
+        return $this->redirect(Yii::$app->request->referrer);
     }
 
     /**
