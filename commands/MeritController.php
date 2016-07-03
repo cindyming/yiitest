@@ -234,9 +234,7 @@ class MeritController extends Controller
          */
         $parent = $user->getParennt()->one();
         if ($parent && $parent->role_id != 1) {
-            if  (!$parent->locked) {
                 $parents[] = $parent;
-            }
 
             $this->listParentsAddInvestment($parent, $parents);
         }
