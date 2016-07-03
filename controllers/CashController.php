@@ -394,19 +394,19 @@ class CashController extends Controller
                 $model->status = 2;
 
                 if(in_array($model->type, array(4,5,6,7))) {
-                    if ($model->type == 4) {
-                        $compareAmount = $user->bonus_remain;
-                    } elseif($model->type == 5) {
-                        $compareAmount = $user->merit_remain;
-                    } elseif($model->type == 6) {
-                        $compareAmount = $user->baodan_remain;
-                    } elseif($model->type == 7) {
-                        $compareAmount = $user->mall_remain;
-                    }
-                    if ($model->amount > $compareAmount) {
-                        $validateAmount = false;
-                        $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . $user->bonus_remain . ', 绩效余额: ' . $user->merit_remain .  ', 服务费余额: ' . (float)$user->baodan_remain  .  ', 商城币余额: ' . (float)$user->mall_remain  . '.');
-                    }
+//                    if ($model->type == 4) {
+//                        $compareAmount = $user->bonus_remain;
+//                    } elseif($model->type == 5) {
+//                        $compareAmount = $user->merit_remain;
+//                    } elseif($model->type == 6) {
+//                        $compareAmount = $user->baodan_remain;
+//                    } elseif($model->type == 7) {
+//                        $compareAmount = $user->mall_remain;
+//                    }
+//                    if ($model->amount > $compareAmount) {
+//                        $validateAmount = false;
+//                        $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . $user->bonus_remain . ', 绩效余额: ' . $user->merit_remain .  ', 服务费余额: ' . (float)$user->baodan_remain  .  ', 商城币余额: ' . (float)$user->mall_remain  . '.');
+//                    }
                 } else {
                     $validateAmount = false;
                     $model->addError('type', '请选择账户类型.');
