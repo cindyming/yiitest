@@ -575,7 +575,7 @@ class User extends ActiveRecord implements IdentityInterface
         foreach ($parents as $parent) {
             if ($parent && $parent->role_id != 1) {
                 $parent->achievements = $parent->achievements - $amount;
-                if (!$parent->save()) {
+                if (!$parent->save(true, array('achievements'))) {
                     throw new Exception('Failed to save user ' . json_encode($parent->getErrors()));
                 }
             }
@@ -621,7 +621,7 @@ class User extends ActiveRecord implements IdentityInterface
                     $mall = new Cash();
                     $mall->load($mallData, '');
 
-                    if(!$user->save() || !$merit->save() || !$mall->save()) {
+                    if(!$user->save(true, array('mall_remain','mall_total', 'merit_total','merit_remain')) || !$merit->save() || !$mall->save()) {
                         throw new Exception('会员扣除失败 ' . json_encode($user->getErrors()).json_encode($merit->getErrors()). json_encode($mall->getErrors()));
                         break;
                     }
