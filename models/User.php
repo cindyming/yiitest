@@ -747,7 +747,7 @@ class User extends ActiveRecord implements IdentityInterface
                 'amount' => $baodan_amount,
                 'type' => 6,
                 'status' => 2,
-                'total' => $user->mall_remain
+                'total' => $user->baodan_remain
             );
             $mall = new Cash();
             $mall->load($mallData, '');
