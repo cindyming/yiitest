@@ -733,10 +733,11 @@ class User extends ActiveRecord implements IdentityInterface
             }
         }
 
-        $revenu = Revenue::find()->andFilterWhere(['like', 'note',  $this->id . '的报单奖励'])->one();
 
-        $baodan_amount = $revenu->baodan;
-        if($baodan_amount) {
+        $revenu = Revenue::find()->andFilterWhere(['like', 'note',  $this->id . '的报单奖励'])->one();
+        if($revenu && $revenu->baodan) {
+
+            $baodan_amount = $revenu->baodan;
             $user = User::findById($revenu->user_id);
             $user->baodan_total -= $baodan_amount;
             $user->baodan_remain -= $baodan_amount;
