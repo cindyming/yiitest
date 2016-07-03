@@ -83,7 +83,7 @@ class MeritController extends Controller
 
     public function calculateNewMember()
     {
-        $users = User::find()->where(['=','role_id', 3])->andWhere(['=','merited', 0])->orderBy([ 'id' => SORT_ASC, ])->all();
+        $users = User::find()->where(['=','role_id', 3])->andWhere(['=','merited', 0])->andWhere(['=','locked', 0])->orderBy([ 'id' => SORT_ASC, ])->all();
 
         foreach ($users as $user) {
             $diamondMembers = $this->loadDiamondMembers();
@@ -217,15 +217,19 @@ class MeritController extends Controller
         }
 
         if ($parent && $parent->role_id != 1) {
-             $level = $parent->level;
 
-             if ($level >= $lastLevel) {
-                if (!isset($parents[$level])) {
-                     $parents[$level] = array();
-                 }
-                 $parents[$level][] = $parent;
-                 $lastLevel = $level;
-             }
+            if  (!$parent->locked) {
+                $level = $parent->level;
+
+                if ($level >= $lastLevel) {
+                    if (!isset($parents[$level])) {
+                        $parents[$level] = array();
+                    }
+                    $parents[$level][] = $parent;
+                    $lastLevel = $level;
+                }
+            }
+
             $this->listParentsAddMerit($parent, $parents, $lastLevel);
         }
     }
@@ -237,7 +241,10 @@ class MeritController extends Controller
          */
         $parent = $user->getParennt()->one();
         if ($parent && $parent->role_id != 1) {
-            $parents[] = $parent;
+
+            if  (!$parent->locked) {
+                $parents[] = $parent;
+            }
 
             $this->listParentsAddInvestment($parent, $parents);
         }

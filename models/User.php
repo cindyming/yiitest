@@ -685,4 +685,76 @@ class User extends ActiveRecord implements IdentityInterface
             }
         }
     }
+
+
+    public function reduceMeritForNewMember($amount)
+    {
+        $revenus = Revenue::find()->andFilterWhere(['like', 'note', '新会员绩效 -  ' . $this->id])->all();
+
+        foreach ($revenus as $re) {
+            $merit_amount = $re->merit;
+            $user = User::findById($re->user_id);
+            if($merit_amount) {
+                $merit_amount = round($merit_amount, 2);
+                $merit_remain = round($merit_amount * 0.9);
+
+                $user->mall_remain -= ($merit_amount - $merit_remain);
+                $user->mall_total -= ($merit_amount - $merit_remain);
+                $user->merit_total -= $merit_amount;
+                $user->merit_remain -= $merit_remain;
+
+                $meritData = array(
+                    'user_id' => $re->user_id,
+                    'note' => '错误报单,撤销会员[' .$this->id . '],投资'.$amount.',绩效扣除: ' . $re->id,
+                    'amount' => $merit_remain,
+                    'type' => 5,
+                    'status' => 2,
+                    'total' => $user->merit_remain
+                );
+
+                $merit = new Cash();
+                $merit->load($meritData, '');
+
+                $mallData = array(
+                    'user_id' => $re->user_id,
+                    'note' => '错误报单,撤销会员[' .$this->id . '],投资'.$amount.'商城币扣除:' . $re->id,
+                    'amount' => ($merit_amount - $merit_remain),
+                    'type' => 7,
+                    'status' => 2,
+                    'total' => $user->mall_remain
+                );
+                $mall = new Cash();
+                $mall->load($mallData, '');
+
+                if(!$user->save() || !$merit->save() || !$mall->save()) {
+                    throw new Exception('会员扣除失败 ' . json_encode($user->getErrors()).json_encode($merit->getErrors()). json_encode($mall->getErrors()));
+                    break;
+                }
+            }
+        }
+
+        $revenu = Revenue::find()->andFilterWhere(['like', 'note',  $this->id . '的报单奖励'])->one();
+
+        $baodan_amount = $revenu->baodan;
+        if($baodan_amount) {
+            $user = User::findById($revenu->user_id);
+            $user->baodan_total -= $baodan_amount;
+            $user->baodan_remain -= $baodan_amount;
+
+            $mallData = array(
+                'user_id' => $revenu->user_id,
+                'note' => '错误报单,撤销会员[' .$this->id . '],投资'.$amount.'保单费扣除:' . $revenu->id,
+                'amount' => $baodan_amount,
+                'type' => 6,
+                'status' => 2,
+                'total' => $user->mall_remain
+            );
+            $mall = new Cash();
+            $mall->load($mallData, '');
+
+            if (!$mall->save()  || !$user->save(true, array('baodan_total', 'baodan_remain'))) {
+                throw new Exception('会员扣除失败 ' . json_encode($user->getErrors()).json_encode($mall->getErrors()));
+            }
+        }
+    }
 }
