@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Investment;
 use Yii;
 use app\models\User;
 use yii\base\Exception;
