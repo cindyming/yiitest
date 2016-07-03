@@ -212,14 +212,16 @@ class MeritController extends Controller
         }
 
         if ($parent && $parent->role_id != 1) {
-            $level = $parent->level;
+            if  (!$parent->locked) {
+                $level = $parent->level;
 
-            if ($level >= $lastLevel) {
-                if (!isset($parents[$level])) {
-                    $parents[$level] = array();
+                if ($level >= $lastLevel) {
+                    if (!isset($parents[$level])) {
+                        $parents[$level] = array();
+                    }
+                    $parents[$level][] = $parent;
+                    $lastLevel = $level;
                 }
-                $parents[$level][] = $parent;
-                $lastLevel = $level;
             }
             $this->listParentsAddMerit($parent, $parents, $lastLevel);
         }
@@ -232,7 +234,9 @@ class MeritController extends Controller
          */
         $parent = $user->getParennt()->one();
         if ($parent && $parent->role_id != 1) {
-            $parents[] = $parent;
+            if  (!$parent->locked) {
+                $parents[] = $parent;
+            }
 
             $this->listParentsAddInvestment($parent, $parents);
         }

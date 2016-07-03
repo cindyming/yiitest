@@ -464,7 +464,7 @@ class UserController extends Controller
         }
 
         $user =  User::findOne($model->referer);
-        if ($model->referer !== '#' && !$user) {
+        if ($model->referer !== '#' && (!$user  || $user->locked)) {
             $validate = false;
             $model->addError('referer', '接点人的会员ID不正确, 请确认之后重新输入');
         } elseif ($model->referer !== '#') {
@@ -472,7 +472,7 @@ class UserController extends Controller
         }
 
         $user =  User::findOne($model->suggest_by);
-        if (($model->suggest_by !== '#' && !$user)) {
+        if (($model->suggest_by !== '#' && (!$user  || $user->locked))) {
             $validate = false;
             $model->addError('suggest_by', '推荐人的会员ID不正确, 请确认之后重新输入');
         }  elseif ($model->suggest_by !== '#') {
