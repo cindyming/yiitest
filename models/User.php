@@ -548,6 +548,13 @@ class User extends ActiveRecord implements IdentityInterface
         return false;
     }
 
+    public function openSuggestion()
+    {
+        if (System::loadConfig('open_suggest_list')) {
+            return true;
+        }
+        return false;
+    }
 
 
     public function listParents($user, &$parents)
