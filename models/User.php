@@ -68,6 +68,15 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'show_tree',
+                ],
+                'value' => function ($event) {
+                    return 1;
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'added_by',
                 ],
                 'value' => function ($event) {
@@ -533,7 +542,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function haveTree()
     {
-        if (System::loadConfig('open_member_tree') && Yii::$app->user->identity->show_tree) {
+        if (System::loadConfig('open_member_tree')) {
             return true;
         }
 
@@ -541,6 +550,14 @@ class User extends ActiveRecord implements IdentityInterface
             return true;
         }
 
+        return false;
+    }
+
+    public function openSuggestion()
+    {
+        if (System::loadConfig('open_suggest_list')) {
+            return true;
+        }
         return false;
     }
 
