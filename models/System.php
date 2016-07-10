@@ -17,6 +17,7 @@ class System extends ActiveRecord
     public $cash_factorage;
     public $stop_banus_times;
     public $open_baodan_tree;
+    public $open_suggest_list;
 
     /**
      * @inheritdoc
@@ -42,6 +43,7 @@ class System extends ActiveRecord
         return [
             'open_member_tree' => '会员网络图功能',
             'enable_memmber_login' => '会员登录功能',
+            'open_suggest_list' => '会员推荐列表功能',
             'stop_banus_times' => '分红封顶倍数',
             'lowest_cash_amount' => '最低提现额',
             'cash_factorage' => '绩效提现手续费',

@@ -53,7 +53,6 @@ use yii\widgets\ActiveForm;
         <?php if(!$model->isNewRecord): ?>
              <?= $form->field($model, 'level')->dropDownList(Yii::$app->user->identity->getLevelOptions()) ?>
         <?php endif ?>
-        <?= $form->field($model, 'show_tree')->dropDownList([0 => '不开放', 1 => '开放']) ?>
         <?= $form->field($model, 'add_member')->dropDownList([0 => '不开放', 2 => '开放']) ?>
     <?php endif ?>
 
