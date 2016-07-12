@@ -313,7 +313,7 @@ class UserController extends Controller
     }
     public function actionTree()
     {
-        $id = Yii::$app->getRequest()->get('id');
+        $id = Yii::$app->user->identity->id;
 
         $user = $this->findModel($id);
 
@@ -323,7 +323,7 @@ class UserController extends Controller
 
         $ids = array();
 
-        $id = Yii::$app->getRequest()->get('id');
+        $id = Yii::$app->user->identity->id;
 
         foreach($users as $user) {
             if ($user['id'] == Yii::$app->user->identity->id) {
