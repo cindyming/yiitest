@@ -361,13 +361,15 @@ class UserController extends Controller
     public function actionAdmintree()
     {
 
-        $users=Yii::$app->db->createCommand('SELECT id,role_id,username,referer,investment,achievements,locked FROM user where role_id in (2,3) ORDER BY created_at')->query();
+        $id = Yii::$app->getRequest()->get('id');
+
+        $user = $this->findModel($id);
+
+        $users=Yii::$app->db->createCommand("SELECT id,role_id,username,referer,investment,achievements,locked FROM user where role_id in (2,3) AND created_at>='" . $user->created_at . "'")->query();
 
         $result = array();
 
         $ids = array();
-
-        $id = Yii::$app->getRequest()->get('id');
 
         foreach ($users as $user) {
             $referer = (($user['referer'] == '#') || ($user['referer'] == 0)) ? '#' : $user['referer'];
