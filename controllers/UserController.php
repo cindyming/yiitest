@@ -313,7 +313,11 @@ class UserController extends Controller
     }
     public function actionTree()
     {
-        $users=Yii::$app->db->createCommand('SELECT id,role_id,username,referer,investment,achievements,locked FROM user where role_id in (2,3) AND id>=' . Yii::$app->user->identity->id)->query();
+        $id = Yii::$app->getRequest()->get('id');
+
+        $user = $this->findModel($id);
+
+        $users=Yii::$app->db->createCommand("SELECT id,role_id,username,referer,investment,achievements,locked FROM user where role_id in (2,3) AND created_at>='" . $user->created_at . "'")->query();
 
         $result = array();
 
@@ -363,9 +367,7 @@ class UserController extends Controller
 
         $id = Yii::$app->getRequest()->get('id');
 
-        $user = $this->findModel($id);
-
-        $users=Yii::$app->db->createCommand("SELECT id,role_id,username,referer,investment,achievements,locked FROM user where role_id in (2,3) AND created_at>='" . $user->created_at . "'")->query();
+        $users=Yii::$app->db->createCommand("SELECT id,role_id,username,referer,investment,achievements,locked FROM user where role_id in (2,3) order by created_at ASC")->query();
 
         $result = array();
 
