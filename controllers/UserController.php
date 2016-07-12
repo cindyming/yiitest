@@ -317,7 +317,7 @@ class UserController extends Controller
 
         $user = $this->findModel($id);
 
-        $users=Yii::$app->db->createCommand("SELECT id,role_id,username,referer,investment,achievements,locked FROM user where role_id in (2,3) AND created_at>='" . $user->created_at . "'")->query();
+        $users=Yii::$app->db->createCommand("SELECT id,role_id,username,referer,investment,achievements,locked FROM user where role_id in (2,3) AND created_at>='" . $user->created_at . "'  ORDER by created_at ASC")->query();
 
         $result = array();
 
@@ -354,7 +354,6 @@ class UserController extends Controller
                         "text" => $user['id'] . "(昵称: " . $user['username']  . ", 投资额 : " . ($user['investment'] / 10000) . "万, 总业绩 : "  . ($user['achievements']/10000) . "万)" . (($user['role_id'] == 2) ? ' - 待审核' : ($user['locked'] ? ' - 已锁定' : ''))
                     );
                 }
-                $ids[] = $user['id'];
             }
         }
 
