@@ -69,7 +69,7 @@ class GlobaltotalController extends Controller
 
         $connection=Yii::$app->db;
 
-        $date = '2016-06-01 00:00:00';
+        $date = '2016-08-01 00:00:00';
 
         $invertTotal = $connection->createCommand("SELECT sum(investment) as 'total' FROM user WHERE role_id=3 AND created_at >'{$date}'")->queryOne();
 
