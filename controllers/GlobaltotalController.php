@@ -71,9 +71,9 @@ class GlobaltotalController extends Controller
 
         $date = '2016-08-01 00:00:00';
 
-        $invertTotal = $connection->createCommand("SELECT sum(investment) as 'total' FROM user WHERE role_id=3 AND created_at >'{$date}'")->queryOne();
+        $invertTotal = $connection->createCommand("SELECT sum(investment) as 'total' FROM user WHERE role_id=3 AND approved_at >'{$date}'")->queryOne();
 
-        $zhuijianvertTotal = $connection->createCommand("SELECT sum(amount) as 'total' FROM investment LEFT JOIN user on user.id=investment.user_id WHERE  investment.created_at >'{$date}' AND user.created_at<'{$date}'")->queryOne();
+        $zhuijianvertTotal = $connection->createCommand("SELECT sum(amount) as 'total' FROM investment LEFT JOIN user on user.id=investment.user_id WHERE  investment.created_at >'{$date}' AND user.approved_at<'{$date}'")->queryOne();
 
         $kouchMeritTotal = $connection->createCommand("SELECT sum(amount) as 'total'  FROM cach WHERE type=5 and created_at > '{$date}' and note like '%错误报单%'")->queryOne();
 
@@ -81,7 +81,7 @@ class GlobaltotalController extends Controller
 
         $bonus  = $connection->createCommand("SELECT sum(merit) as 'merit_total', sum(baodan) as 'baodan_total'  FROM revenue WHERE created_at > '{$date}'")->queryOne();
 
-        $bonuss  = $connection->createCommand("SELECT  sum(bonus) as 'bonus_total' FROM revenue LEFT JOIN user on user.id=revenue.user_id WHERE revenue.created_at > '{$date}'  AND user.created_at>'{$date}' ")->queryOne();
+        $bonuss  = $connection->createCommand("SELECT  sum(bonus) as 'bonus_total' FROM revenue LEFT JOIN user on user.id=revenue.user_id WHERE revenue.created_at > '{$date}'  AND user.approved_at>'{$date}' ")->queryOne();
 
         $data = array(
             'GlobalTotal' => array(
