@@ -185,6 +185,8 @@ class User extends ActiveRecord implements IdentityInterface
             [['referer', 'added_by', 'achievements', 'suggest_by', 'locked', 'show_tree'], 'trim'],
             [['role_id', 'merited', 'level', 'add_member', 'stop_bonus'], 'number'],
             [['bonus_total', 'merit_total'], 'double'],
+            [['bonus_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '分工余额不足'],
+            [['merit_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '绩效余额不足'],
             [['email'], 'email'],
             [['qq'], 'number']
         ];
@@ -632,7 +634,7 @@ class User extends ActiveRecord implements IdentityInterface
                     $mall->load($mallData, '');
 
                     if(!$user->save(true, array('mall_remain','mall_total', 'merit_total','merit_remain')) || !$merit->save() || !$mall->save()) {
-                        throw new Exception('会员扣除失败 ' . json_encode($user->getErrors()). json_encode($merit->getErrors()). json_encode($mall->getErrors()));
+                        throw new Exception('会员扣除失败 ' . User::arrayToString($user->getErrors()). User::arrayToString($merit->getErrors()). User::arrayToString($mall->getErrors()));
                         break;
                     }
             }
@@ -744,7 +746,7 @@ class User extends ActiveRecord implements IdentityInterface
                 $mall->load($mallData, '');
 
                 if(!$user->save() || !$merit->save() || !$mall->save()) {
-                    throw new Exception('会员扣除失败 ' . json_encode($user->getErrors()).json_encode($merit->getErrors()). json_encode($mall->getErrors()));
+                    throw new Exception('会员扣除失败 ' . User::arrayToString($user->getErrors()).User::arrayToString($merit->getErrors()). User::arrayToString($mall->getErrors()));
                     break;
                 }
             }
@@ -771,8 +773,23 @@ class User extends ActiveRecord implements IdentityInterface
             $mall->load($mallData, '');
 
             if (!$mall->save()  || !$user->save(true, array('baodan_total', 'baodan_remain'))) {
-                throw new Exception('会员扣除失败 ' . json_encode($user->getErrors()).json_encode($mall->getErrors()));
+                throw new Exception('会员扣除失败 ' . User::arrayToString($user->getErrors()).User::arrayToString($mall->getErrors()));
             }
         }
+    }
+
+    public static function arrayToString($errors) {
+        $result = '';
+
+        foreach ($errors as $r) {
+            if (is_array($r)) {
+                $result .= implode(', ', $r);
+            } else if (is_string($r)) {
+                $result .=  $r;
+            }
+
+        }
+
+        return $result;
     }
 }
