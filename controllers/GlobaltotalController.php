@@ -75,9 +75,11 @@ class GlobaltotalController extends Controller
 
         $zhuijianvertTotal = $connection->createCommand("SELECT sum(amount) as 'total' FROM investment LEFT JOIN user on user.id=investment.user_id WHERE  investment.created_at >'{$date}' AND user.approved_at<'{$date}'")->queryOne();
 
-        $kouchMeritTotal = $connection->createCommand("SELECT sum(amount) as 'total'  FROM cach WHERE type=5 and created_at > '{$date}' and note like '%错误报单%'")->queryOne();
+        $kouchMeritTotal = $connection->createCommand("SELECT sum(amount) as 'total'  FROM cach WHERE type=5 and created_at > '{$date}' and (note like '%错误报单%'  or note like '%管理员扣除%')")->queryOne();
 
-        $kouchBoadanTotal = $connection->createCommand("SELECT sum(amount) as 'total'  FROM cach WHERE type=6 and created_at > '{$date}' and note like '%错误报单%'")->queryOne();
+        $kouchBoadanTotal = $connection->createCommand("SELECT sum(amount) as 'total'  FROM cach WHERE type=6 and created_at > '{$date}' and note like '%错误报单%' or note like '%管理员扣除%'")->queryOne();
+
+        $kouchBonusTotal = $connection->createCommand("SELECT sum(amount) as 'total'  FROM cach WHERE type=4 and created_at > '{$date}' and note like '%错误报单%' or note like '%管理员扣除%'")->queryOne();
 
         $bonus  = $connection->createCommand("SELECT sum(merit) as 'merit_total', sum(baodan) as 'baodan_total'  FROM revenue WHERE created_at > '{$date}'")->queryOne();
 
@@ -87,15 +89,13 @@ class GlobaltotalController extends Controller
             'GlobalTotal' => array(
                 'total_in' => $invertTotal['total'] + (float)$zhuijianvertTotal['total'],
                 'mall' =>  ((float)$bonus['merit_total']  - (float)$kouchMeritTotal['total'])/9 ,
-                'bonus' => (float)$bonuss['bonus_total'],
+                'bonus' => (float)$bonuss['bonus_total'] - (float)$kouchBonusTotal['total'],
                 'baodan' => (float)$bonus['baodan_total'] - (float)$kouchBoadanTotal['total'],
                 'merit' => (float)$bonus['merit_total']  - (float)$kouchMeritTotal['total']
             )
         );
 
-        $data['GlobalTotal']['total_out'] = ((float)$bonus['merit_total']  - (float)$kouchMeritTotal['total'])/9
-            + (float)$bonuss['bonus_total'] + (float)$bonus['baodan_total'] - (float)$kouchBoadanTotal['total']
-            + ((float)$bonus['merit_total']  - (float)$kouchMeritTotal['total']);
+        $data['GlobalTotal']['total_out'] =  $data['GlobalTotal']['mall'] +  $data['GlobalTotal']['bonus'] +  $data['GlobalTotal']['baodan']  +  $data['GlobalTotal']['merit'] ;
 
 
         if ($model->load($data) && $model->save()) {
