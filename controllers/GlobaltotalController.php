@@ -69,20 +69,33 @@ class GlobaltotalController extends Controller
 
         $connection=Yii::$app->db;
 
-        $invertTotal = $connection->createCommand('SELECT sum(investment) as "total", sum(merit_total) as "merit_total", sum(bonus_total) as "bonus_total",  sum(baodan_total) as "baodan_total" FROM user WHERE role_id=3')->queryOne();
+        $date = '2016-06-01 00:00:00';
 
-        $kouchTotal = $connection->createCommand('SELECT sum(amount) as "kouchu_total"  FROM cach WHERE type in (4,5,6,7)')->queryOne();
+        $invertTotal = $connection->createCommand("SELECT sum(investment) as 'total' FROM user WHERE role_id=3 AND created_at >'{$date}'")->queryOne();
+
+        $zhuijianvertTotal = $connection->createCommand("SELECT sum(amount) as 'total' FROM investment LEFT JOIN user on user.id=investment.user_id WHERE  investment.created_at >'{$date}' AND user.created_at<'{$date}'")->queryOne();
+
+        $kouchMeritTotal = $connection->createCommand("SELECT sum(amount) as 'total'  FROM cach WHERE type=5 and created_at > '{$date}' and note like '%错误报单%'")->queryOne();
+
+        $kouchBoadanTotal = $connection->createCommand("SELECT sum(amount) as 'total'  FROM cach WHERE type=6 and created_at > '{$date}' and note like '%错误报单%'")->queryOne();
+
+        $bonus  = $connection->createCommand("SELECT sum(merit) as 'merit_total', sum(baodan) as 'baodan_total'  FROM revenue WHERE created_at > '{$date}'")->queryOne();
+
+        $bonuss  = $connection->createCommand("SELECT  sum(bonus) as 'bonus_total' FROM revenue LEFT JOIN user on user.id=revenue.user_id WHERE revenue.created_at > '{$date}'  AND user.created_at>'{$date}' ")->queryOne();
 
         $data = array(
             'GlobalTotal' => array(
-                'total_in' => $invertTotal['total'] + (float)$kouchTotal['kouchu_total'],
-                'mall' => (float)$invertTotal['merit_total'] * 0.1,
-                'bonus' => (float)$invertTotal['bonus_total'],
-                'baodan' => (float)$invertTotal['baodan_total'],
-                'merit' => (float)$invertTotal['merit_total'] * 0.9,
-                'total_out' => $invertTotal['merit_total'] + $invertTotal['bonus_total'] + $invertTotal['baodan_total']
-            )
+                'total_in' => $invertTotal['total'] + (float)$zhuijianvertTotal['total'],
+                'mall' =>  ((float)$bonus['merit_total']  - (float)$kouchMeritTotal['total'])/9 ,
+                'bonus' => (float)$bonuss['bonus_total'],
+                'baodan' => (float)$bonus['baodan_total'] - (float)$kouchBoadanTotal['total'],
+                'merit' => (float)$bonus['merit_total']  - (float)$kouchMeritTotal['total']
+          )
         );
+
+        $data['GlobalTotal']['total_out'] = ((float)$bonus['merit_total']  - (float)$kouchMeritTotal['total'])/9
+            + (float)$bonuss['bonus_total'] + (float)$bonus['baodan_total'] - (float)$kouchBoadanTotal['total']
+            + ((float)$bonus['merit_total']  - (float)$kouchMeritTotal['total']);
 
         if ($model->load($data) && $model->save()) {
             Yii::$app->systemlog->add('管理员', '拨比统计结算');

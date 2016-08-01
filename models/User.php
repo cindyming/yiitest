@@ -180,8 +180,8 @@ class User extends ActiveRecord implements IdentityInterface
             [['approved_at'], 'string'],
             [['referer', 'added_by', 'achievements', 'suggest_by', 'locked'], 'trim'],
             [['role_id', 'merited', 'level', 'add_member', 'stop_bonus'], 'number'],
-            [['bonus_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '分红余额不足'],
-            [['merit_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '绩效余额不足'],
+            [['bonus_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '分红余额不足', 'on' => 'cancel'],
+            [['merit_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '绩效余额不足', 'on' => 'cancel'],
             [['bonus_total', 'merit_total'], 'double'],
             [['email'], 'email'],
             [['qq'], 'number']
@@ -629,6 +629,7 @@ class User extends ActiveRecord implements IdentityInterface
                     );
                     $mall = new Cash();
                     $mall->load($mallData, '');
+                    $user->setScenario('cancel');
 
                     if(!$user->save(true, array('mall_remain','mall_total', 'merit_total','merit_remain')) || !$merit->save() || !$mall->save()) {
                         throw new Exception('会员扣除失败 ' . User::arrayToString($user->getErrors()).User::arrayToString($merit->getErrors()). User::arrayToString($mall->getErrors()));
@@ -677,7 +678,7 @@ class User extends ActiveRecord implements IdentityInterface
                 );
                 $mall = new Cash();
                 $mall->load($mallData, '');
-
+                $user->setScenario('cancel');
                 if(!$user->save(true, array('mall_remain', 'mall_total','merit_total', 'merit_remain')) || !$merit->save() || !$mall->save()) {
                     throw new Exception('会员扣除失败 ' . User::arrayToString($user->getErrors()).User::arrayToString($merit->getErrors()). User::arrayToString($mall->getErrors()));
                     break;
@@ -703,6 +704,7 @@ class User extends ActiveRecord implements IdentityInterface
             );
             $mall = new Cash();
             $mall->load($mallData, '');
+            $user->setScenario('cancel');
 
             if (!$mall->save()  || !$user->save(true, array('baodan_total', 'baodan_remain'))) {
                 throw new Exception('会员扣除失败 ' . User::arrayToString($user->getErrors()).User::arrayToString($mall->getErrors()));
