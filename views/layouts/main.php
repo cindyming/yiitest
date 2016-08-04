@@ -22,6 +22,15 @@ $isAdmin = Yii::$app->user->identity->isAdmin();
     <?= Html::csrfMetaTags() ?>
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?d0e667248ba7598457b8344087245ca4";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
 </head>
 <body class="<?php echo $isAdmin ? 'u_admin' : 'u_member'; ?>">
 <?php $this->beginBody() ?>
