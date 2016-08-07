@@ -97,7 +97,7 @@ class LoginForm extends Model
             $this->_user = null;
             $this->addError('password', $locked ? '会员被锁定,请联系管理员.' : '系统关闭了会员登录功能，请联系管理员');
         }
-        
+
         return $this->_user;
     }
 }
