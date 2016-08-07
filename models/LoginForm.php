@@ -86,6 +86,12 @@ class LoginForm extends Model
         if ($this->_user === null) {
             $this->_user = User::findById($this->username);
         }
+
+        if ($this->_user->role_id == 4) {
+            $this->_user = null;
+            $this->addError('username',  '会员不存在, 请确认后再登陆');
+        }
+
         if (($this->_user && ($this->_user->role_id != 1) && !System::loadConfig('enable_memmber_login')) || ($this->_user && $this->_user->locked)) {
             $locked = (($this->_user && $this->_user->locked)) ? true : false;
             $this->_user = null;
