@@ -66,7 +66,7 @@ class BonusController extends Controller
         $this->_startTime = date("Y-m-d",strtotime("-15 days")) . ' 00:00:00';
         $this->lessThan15Investment();
 
-        $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['=', 'stop_bonus', 0])->andwhere(['=','locked', 0]);
+        $userQuery = User::find()->where(['=','role_id', 3])->andwhere(['=','locked', 0]);
 
         $provider = new ActiveDataProvider([
             'query' => $userQuery,
@@ -90,6 +90,9 @@ class BonusController extends Controller
             $users = $provider->getModels();
 
             foreach ($users as $user) {
+                if ($user->stop_bonus) {
+                    continue;
+                }
                 if (($user->bonus_total + $user->merit_total) > ($user->investment * 2)) {
                     $user->stop_bonus = 1;
                     $user->save();
