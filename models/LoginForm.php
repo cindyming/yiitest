@@ -87,7 +87,7 @@ class LoginForm extends Model
             $this->_user = User::findById($this->username);
         }
 
-        if ($this->_user->role_id == 4) {
+        if ($this->_user && $this->_user->role_id == 4) {
             $this->_user = null;
             $this->addError('password',  '会员不存在, 请确认后再登陆');
         }
