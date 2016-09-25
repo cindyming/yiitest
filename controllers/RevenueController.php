@@ -253,7 +253,7 @@ class RevenueController extends Controller
                     } elseif($model->type == 5) {
                         $user->duichong_remain = $user->duichong_remain + $model->amount;
                         $user->duichong_total = $user->duichong_total + $model->amount;
-                        $model->mall = $model->amount;
+                        $model->duichong = $model->amount;
                         $model->total = $user->duichong_remain;
                     }  else {
                         $model->addError('type', '请选择账户类型.');

@@ -69,7 +69,7 @@ class RevenueSearch extends Revenue
         ]);
 
         if (is_array($this->type)) {
-            $query->andFilterWhere(['in', 'bonus', $this->type]);
+            $query->andFilterWhere(['in', 'type', $this->type]);
         } else {
             $query->andFilterWhere(['type' => $this->type]);
         }
