@@ -28,10 +28,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'cash_type',
                 'label'=>'提现方式',
                 'filterType'=>GridView::FILTER_SELECT2,
-                'filter' => array('' => '不限',1 => '股票提现', 2 => '现金提现'),
+                'filter' => \app\models\Cash::getCachType(),
                 'value' => function($model) {
-                    return ($model->cash_type ==  1) ? '股票提现' : '现金提现';
+                    return \app\models\Cash::getCachType($model->cash_type);
                 }
+            ],
+            [
+                'attribute' => 'baodan_id',
             ],
             [
                 'attribute' => 'stack_number',

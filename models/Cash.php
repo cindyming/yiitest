@@ -95,8 +95,9 @@ class Cash extends ActiveRecord
     {
         return [
             [['amount'], 'required'],
-            [['user_id', 'note', 'bank', 'status', 'cash_type', 'stack_number', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total'], 'trim'],
-            [['type'], 'integer']
+            [['user_id', 'note', 'bank', 'status', 'cash_type', 'baodan_id', 'stack_number', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total'], 'trim'],
+            [['type'], 'integer'],
+            [['baodan_id'], 'validateBaodan']
         ];
     }
 
@@ -116,6 +117,7 @@ class Cash extends ActiveRecord
             'bankaddress' => '开户支行',
             'stack_number' => '股票会员编号',
             'amount' => '提现金额',
+            'baodan_id' => '报单员编号',
             'total' => '出账后余额',
             'note' => '摘要',
             'password2' => '二级密码',
@@ -146,4 +148,29 @@ class Cash extends ActiveRecord
     }
 
 
+    public function validateBaodan($attribute, $params) {
+
+        if ($this->baodan_id && $this->isNewRecord) {
+            $this->baodan_id = trim($this->baodan_id);
+            $user = User::findById(trim($this->baodan_id));
+
+            if ($user && $user->add_member) {
+                $this->baodan_id = $user->id;
+            } else {
+                $this->addError('baodan_id', '报单员不存在,请确认后输入');
+            }
+        }
+
+    }
+
+    public static function getCachType($type = null) {
+        $data = array(
+            '' => '不限',
+            1 => '股票提现',
+            2 => '现金提现',
+            3 => '转账报单员',
+        );
+
+        return $type ? (isset($data[$type]) ? $data[$type] : '未知类型') : $data;
+    }
 }

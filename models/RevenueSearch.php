@@ -19,7 +19,7 @@ class RevenueSearch extends Revenue
     {
         return [
             [['id', 'user_id', 'approved', 'bonus', 'merit', 'baodan'], 'integer'],
-            [['note', 'created_at', 'updated_at','type', 'account_type'], 'safe'],
+            [['note', 'created_at', 'updated_at','type', 'account_type', 'duichong'], 'safe'],
         ];
     }
 
@@ -136,7 +136,7 @@ class RevenueSearch extends Revenue
 
     public function searchForHuobi($params)
     {
-        $query = Revenue::find()->where(['=', 'type', 2])->orderBy(['id' => SORT_DESC]);
+        $query = Revenue::find()->where(['in', 'type', array(2, 3)])->orderBy(['id' => SORT_DESC]);
 
         // add conditions that should always apply here
 

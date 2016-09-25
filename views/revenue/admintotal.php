@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'baodan_total',
             'mall_total',
+            'duichong_total',
             [
                 'class' => 'yii\grid\Column',
                 'header' => '实发总额',

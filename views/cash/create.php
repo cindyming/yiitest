@@ -16,6 +16,7 @@ $this->title = '申请现金提现';
     <ul class="tabswitch">
         <li class="active">申请现金提现</li>
         <li><?= HTML::a('申请股票提现', ['/cash/create', 'type' => 'transfer'])?></li>
+        <li><?= HTML::a('转账给报单员', ['/cash/create', 'type' => 'baodan'])?></li>
     </ul>
     <?= $this->render('_form', [
         'model' => $model,
