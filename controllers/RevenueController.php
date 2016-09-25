@@ -184,7 +184,7 @@ class RevenueController extends Controller
         $data = Yii::$app->request->queryParams;
 
         $data['RevenueSearch']['user_id'] = Yii::$app->user->identity->id;
-        $data['RevenueSearch']['type'] = 2;
+        $data['RevenueSearch']['type'] = array(2, 3);
 
         $dataProvider = $searchModel->search($data);
 

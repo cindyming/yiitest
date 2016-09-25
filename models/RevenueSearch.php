@@ -63,11 +63,17 @@ class RevenueSearch extends Revenue
             'user_id' => $this->user_id,
             'approved' => $this->approved,
             'bonus' => $this->bonus,
-            'type' => $this->type,
             'merit' => $this->merit,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
+
+        if (is_array($this->type)) {
+            $query->andFilterWhere(['in', 'bonus', $this->type]);
+        } else {
+            $query->andFilterWhere(['type' => $this->type]);
+        }
+
         if ($this->account_type) {
             if ($this->account_type == 1) {
                 $query->andFilterWhere(['>', 'bonus', 0]);
