@@ -102,6 +102,7 @@ class CashSearch extends Cash
             'user_id' => Yii::$app->user->identity->id,
             'amount' => $this->amount,
             'status' => 2,
+            'type' => $this->type,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'cash_type' => $this->cash_type
