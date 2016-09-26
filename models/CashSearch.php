@@ -19,7 +19,7 @@ class CashSearch extends Cash
     {
         return [
             [['id', 'user_id', 'type', 'status', 'amount'], 'integer'],
-            [['bank', 'cardname', 'cardnumber', 'bankaddress', 'created_at', 'updated_at', 'cash_type'], 'safe'],
+            [['bank', 'cardname', 'cardnumber', 'bankaddress', 'baodan_id', 'created_at', 'updated_at', 'cash_type'], 'safe'],
         ];
     }
 

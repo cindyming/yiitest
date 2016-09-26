@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Cash */
 
-$this->title = '申请股票提现';
+$this->title = '转账给报单员';
 ?>
 
 <div class="cash-create">
@@ -16,15 +16,15 @@ $this->title = '申请股票提现';
 
     <ul class="tabswitch">
         <li><?= HTML::a('申请现金提现', ['/cash/create'])?></li>
-        <li class="active">申请股票提现</li>
-        <li><?= HTML::a('转账给报单员', ['/cash/create', 'type' => 'baodan'])?></li>
+        <li><?= HTML::a('申请股票提现', ['/cash/create', 'type' => 'transfer'])?></li>
+        <li class="active">转账给报单员</li>
     </ul>
 
 <div class="cash-_form sm-form">
 
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($model, 'type')->label('')->hiddenInput() ?>
-    <?= $form->field($model, 'stack_number', ['options' => ['class' => 'form-group required']])->textInput(array( 'required'=> true)); ?>
+    <?= $form->field($model, 'baodan_id', ['options' => ['class' => 'form-group required']])->textInput(array( 'required'=> true)); ?>
     <?= $form->field($model, 'amount') ?>
     <?= $form->field($model, 'password2')->passwordInput() ?>
     <div class="form-group">

@@ -184,7 +184,7 @@ class RevenueController extends Controller
         $data = Yii::$app->request->queryParams;
 
         $data['RevenueSearch']['user_id'] = Yii::$app->user->identity->id;
-        $data['RevenueSearch']['type'] = 2;
+        $data['RevenueSearch']['type'] = array(2, 3);
 
         $dataProvider = $searchModel->search($data);
 
@@ -250,7 +250,12 @@ class RevenueController extends Controller
                         $user->mall_total = $user->mall_total + $model->amount;
                         $model->mall = $model->amount;
                         $model->total = $user->mall_remain;
-                    } else {
+                    } elseif($model->type == 5) {
+                        $user->duichong_remain = $user->duichong_remain + $model->amount;
+                        $user->duichong_total = $user->duichong_total + $model->amount;
+                        $model->duichong = $model->amount;
+                        $model->total = $user->duichong_remain;
+                    }  else {
                         $model->addError('type', '请选择账户类型.');
                         throw new Exception('账户类型错误');
                     }

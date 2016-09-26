@@ -19,7 +19,7 @@ class RevenueSearch extends Revenue
     {
         return [
             [['id', 'user_id', 'approved', 'bonus', 'merit', 'baodan'], 'integer'],
-            [['note', 'created_at', 'updated_at','type', 'account_type'], 'safe'],
+            [['note', 'created_at', 'updated_at','type', 'account_type', 'duichong'], 'safe'],
         ];
     }
 
@@ -63,11 +63,17 @@ class RevenueSearch extends Revenue
             'user_id' => $this->user_id,
             'approved' => $this->approved,
             'bonus' => $this->bonus,
-            'type' => $this->type,
             'merit' => $this->merit,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);
+
+        if (is_array($this->type)) {
+            $query->andFilterWhere(['in', 'type', $this->type]);
+        } else {
+            $query->andFilterWhere(['type' => $this->type]);
+        }
+
         if ($this->account_type) {
             if ($this->account_type == 1) {
                 $query->andFilterWhere(['>', 'bonus', 0]);
@@ -136,7 +142,7 @@ class RevenueSearch extends Revenue
 
     public function searchForHuobi($params)
     {
-        $query = Revenue::find()->where(['=', 'type', 2])->orderBy(['id' => SORT_DESC]);
+        $query = Revenue::find()->where(['in', 'type', array(2, 3)])->orderBy(['id' => SORT_DESC]);
 
         // add conditions that should always apply here
 
