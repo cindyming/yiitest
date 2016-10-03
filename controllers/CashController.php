@@ -159,6 +159,16 @@ class CashController extends Controller
             }
 
 
+            if ($model->baodan_id) {
+                $user = User::findById(trim($model->baodan_id));
+
+                if ($user && $user->add_member) {
+                    $model->baodan_id = $user->id;
+                } else {
+                    $model->addError('baodan_id', '报单员不存在,请确认后输入');
+                }
+            }
+
             if ($model->amount < System::loadConfig('lowest_cash_amount')) {
                 $validateAmount = false;
                 $model->addError('amount', '最低提现额为: ' . System::loadConfig('lowest_cash_amount') . '.');
@@ -169,6 +179,11 @@ class CashController extends Controller
                     if ($type == 'transfer') {
                         $model->cash_type = 1;
                     }
+
+                    if ($type == 'baodan') {
+                        $model->cash_type = 3;
+                    }
+
                     $connection = Yii::$app->db;
                     try {
                         $transaction = $connection->beginTransaction();
@@ -199,6 +214,10 @@ class CashController extends Controller
 
         if ($type == 'transfer') {
             return $this->render('transfer', [
+                'model' => $model,
+            ]);
+        } else if ($type == 'baodan') {
+            return $this->render('baodan', [
                 'model' => $model,
             ]);
         } else {
@@ -259,15 +278,39 @@ class CashController extends Controller
 
             $connection=Yii::$app->db;
             $transaction = $connection->beginTransaction();
-            if ($pass && $model->save() && $user->save()) {
-                Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放成功');
-                $transaction->commit();
-            } else {
-                if ($model->cash_type != 1) {
-                    Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放失败');
+            if ($model->cash_type == 3) {
+                $baodanUser = User::findById($model->baodan_id);
+                if ($baodanUser) {
+                    $baodanUser->duichong_total += $model->real_amount;
+                    $baodanUser->duichong_remain += $model->real_amount;
+                    $inRecord = array(
+                        'user_id' => $model->baodan_id,
+                        'type' => 3,
+                        'note' => '会员('.$model->user_id . ')对冲转账',
+                        'duichong' => $model->real_amount,
+                        'total' => $baodanUser->duichong_remain,
+                    );
+                    $model->note .= '; 对冲帐户帐号, ' . $baodanUser->id;
+                    $revenue = new Revenue();
+                    $revenue->load($inRecord, '');
+                    if ($model->save() && $user->save() && $baodanUser->save() && $revenue->save()) {
+                        Yii::$app->getSession()->set('message', '转账发放成功');
+                        $transaction->commit();
+                    } else {
+                        $transaction->rollback();
+                        Yii::$app->getSession()->set('message', '报单员(' . $model->baodan_id . ')转账发放失败');
+                    }
+                } else {
+                    Yii::$app->getSession()->set('message', '报单员(' . $model->baodan_id . ')不存在,转账发放失败');
                 }
-
-                $transaction->rollback();
+            } else {
+                if ($pass && $model->save() && $user->save()) {
+                    Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放成功');
+                    $transaction->commit();
+                } else {
+                    Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放失败');
+                    $transaction->rollback();
+                }
             }
 
             $this->redirect(Yii::$app->request->referrer);
@@ -393,7 +436,7 @@ class CashController extends Controller
                 $model->amount = (float)$model->amount;
                 $model->status = 2;
 
-                if(in_array($model->type, array(4,5,6,7))) {
+                if(in_array($model->type, array(4,5,6,7, 8))) {
                     if ($model->type == 4) {
                         $compareAmount = $user->bonus_remain;
                     } elseif($model->type == 5) {
@@ -402,6 +445,8 @@ class CashController extends Controller
                         $compareAmount = $user->baodan_remain;
                     } elseif($model->type == 7) {
                         $compareAmount = $user->mall_remain;
+                    } elseif($model->type == 8) {
+                        $compareAmount = $user->duichong_remain;
                     }
                     if ($model->amount > $compareAmount) {
                         $validateAmount = false;
@@ -431,10 +476,13 @@ class CashController extends Controller
 					} elseif($model->type == 6) {
 						$user->baodan_remain = $user->baodan_remain - $model->amount;
 						$model->total = $user->baodan_remain;
-					} elseif($model->type == 7) {
-						$user->mall_remain = $user->mall_remain - $model->amount;
-						$model->total = $user->mall_remain;
-					}
+					}  elseif($model->type == 8) {
+                        $user->duichong_remain = $user->duichong_remain - $model->amount;
+                        $model->total = $user->duichong_remain;
+                    } elseif($model->type == 7) {
+                        $user->mall_remain = $user->mall_remain - $model->amount;
+                        $model->total = $user->mall_remain;
+                    }
                     $connection = Yii::$app->db;
                     try {
                         $transaction = $connection->beginTransaction();

@@ -40,6 +40,9 @@ $welcome .= ', 欢迎回来.';
             <li>
                 商城币余额: <?php echo round(Yii::$app->user->identity->mall_remain, 2)?>
             </li>
+            <li>
+                对冲帐户余额: <?php echo round(Yii::$app->user->identity->duichong_remain, 2)?>
+            </li>
         </ul>
     </div>
 <?php

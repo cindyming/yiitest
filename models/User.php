@@ -182,7 +182,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['role_id', 'merited', 'level', 'add_member', 'stop_bonus'], 'number'],
             [['bonus_remain', 'baodan_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '分红余额不足', 'on' => 'cancel'],
             [['merit_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '绩效余额不足', 'on' => 'cancel'],
-            [['bonus_total', 'merit_total'], 'double'],
+            [['bonus_total', 'merit_total', 'duichong_total', 'duichong_remain'], 'double'],
             [['email'], 'email'],
             [['qq'], 'number']
         ];
@@ -228,8 +228,11 @@ class User extends ActiveRecord implements IdentityInterface
             'locked' => '是否锁定',
             'approved_at' => '审核日期',
             'created_at' => '注册时间',
+            'baodan_id' => '报单员编号',
             'password_old' => '原一级密码',
-            'password2_old' => '原二级密码'
+            'password2_old' => '原二级密码',
+            'duichong_total' => '对冲帐户总额',
+            'duichong_remain' => '对冲帐户余额'
         ];
     }
 

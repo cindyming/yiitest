@@ -45,7 +45,7 @@ class Revenue extends ActiveRecord
     {
         return [
             [['user_id'], 'required'],
-            [['bonus', 'merit', 'note', 'total', 'baodan', 'type', 'amount', 'mall'], 'trim'],
+            [['bonus', 'merit', 'note', 'total', 'duichong', 'baodan', 'type', 'amount', 'mall'], 'trim'],
         ];
     }
 

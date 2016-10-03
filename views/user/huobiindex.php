@@ -38,6 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'merit_remain',
             'baodan_remain',
             'mall_remain',
+            'duichong_remain',
             [
                 'class' => 'kartik\grid\ActionColumn',
                 'header' => '操作',

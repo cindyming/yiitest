@@ -19,7 +19,7 @@ class CashSearch extends Cash
     {
         return [
             [['id', 'user_id', 'type', 'status', 'amount'], 'integer'],
-            [['bank', 'cardname', 'cardnumber', 'bankaddress', 'created_at', 'updated_at', 'cash_type'], 'safe'],
+            [['bank', 'cardname', 'cardnumber', 'bankaddress', 'baodan_id', 'created_at', 'updated_at', 'cash_type'], 'safe'],
         ];
     }
 
@@ -102,6 +102,7 @@ class CashSearch extends Cash
             'user_id' => Yii::$app->user->identity->id,
             'amount' => $this->amount,
             'status' => 2,
+            'type' => $this->type,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ]);

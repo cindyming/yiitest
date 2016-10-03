@@ -37,17 +37,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'account_type',
                 'header' => '账户类型',
                 'value' => function($model) {
-                        return $model->bonus ? '分红' : (($model->merit) ? '绩效' : ($model->baodan ? '服务费' : '商城币'));
-                    },
+                    return $model->bonus ? '分红' : (($model->merit) ? '绩效' : ($model->baodan ? '服务费' : ($model->duichong ? '对冲帐户' :  '商城币')));
+                },
                 'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=> ['' => '不限',  1=> '分红', 2 => '绩效', 3 => '服务费', 4=> '商城币'],
+                'filter'=> ['' => '不限',  1=> '分红', 2 => '绩效', 3 => '服务费', 4=> '商城币', 5=>'对冲帐户'],
             ],
             [
                 'class' => 'yii\grid\Column',
                 'header' => '入账金额',
                 'content' => function($model) {
-                        return $model->bonus ? $model->bonus : ($model->baodan ? $model->baodan : ($model->merit ? $model->merit : $model->mall));
-                    }
+                    return $model->bonus ? $model->bonus : ($model->baodan ? $model->baodan : ($model->merit ? $model->merit : ($model->duichong ? $model->duichong : $model->mall)));
+                }
             ],
             [
                 'attribute' => 'total',
