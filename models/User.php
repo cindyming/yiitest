@@ -642,6 +642,35 @@ class User extends ActiveRecord implements IdentityInterface
         }
     }
 
+    public function reduceBaodan($investment)
+    {
+        $revenu = Revenue::find()->andFilterWhere(['like', 'note', '追加投资' . $investment->id . '的报单奖励'])->one();
+        if ($revenu && $revenu->id && $revenu->baodan) {
+            $amount = $revenu->baodan;
+            $user = User::findById($revenu->user_id);
+            if ($user) {
+                $user->baodan_remain -= $amount;
+                $user->baodan_total -= $amount;
+                $meritData = array(
+                    'user_id' => $revenu->user_id,
+                    'note' => '错误报单,撤销会员[' .$investment->user_id . ']的追加投资'.$investment->amount.' - ' . $investment->id .'单,报单费扣除:' . $revenu->id,
+                    'amount' => $amount,
+                    'type' => 6,
+                    'status' => 2,
+                    'total' => $user->baodan_remain
+                );
+
+                $merit = new Cash();
+                $merit->load($meritData, '');
+                if(!$user->save(true, array('baodan_remain','baodan_total')) || !$merit->save() ) {
+                    throw new Exception('会员扣除失败 ' . User::arrayToString($user->getErrors()). User::arrayToString($merit->getErrors()));
+                }
+            }
+
+        }
+
+    }
+
 
     public function reduceMeritForNewMember($amount)
     {
