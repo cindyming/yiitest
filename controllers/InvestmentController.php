@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Revenue;
 use common\models\JLock;
 use Yii;
 use app\models\Investment;
@@ -108,12 +109,34 @@ class InvestmentController extends Controller
         if ($model->load(Yii::$app->request->post()))
         {
             $user =  User::findOne($model->user_id);
+
             $validateAmount = ($model->amount >= 1);
             if (!$validateAmount){
                 $model->addError('amount', '投资额必须大于1W,并且为万的倍数,例如:10000,100000.请重新输入');
             }
             if (($user && $user->getId()) && ($user->role_id == 3)) {
+
                 if ($validateAmount && $model->save()) {
+
+                    $addedBy = User::findOne($user->added_by);
+
+                    if ($addedBy && $addedBy->getId() && ($addedBy->role_id == 3)) {
+                        $meritAmount = round($model->amount * 0.01, 2);
+                        $data = array(
+                            'user_id' => $addedBy->id,
+                            'note' => '会员：' .$model->user_id . '追加投资' . $model->id . '的报单奖励',
+                            'type' => 1,
+                            'baodan' => $meritAmount,
+                            'total' => $meritAmount +  $addedBy->baodan_remain
+                        );
+                        $merit = new Revenue();
+                        $merit->load($data, '');
+                        $merit->save();
+                        $addedBy->baodan_remain += $meritAmount;
+                        $addedBy->baodan_total += $meritAmount;
+                        $addedBy->save();
+                    }
+
                     Yii::$app->getSession()->set('message', '追加投资添加成功');
                     return $this->redirect(['adminindex']);
                 }
@@ -159,36 +182,36 @@ class InvestmentController extends Controller
         $model = $this->findModel($id);
         if($model->status) {
             $model->status = 0;
-            if ($model->merited == 1) {
-                $connection=Yii::$app->db;
-                try {
-                    $transaction = $connection->beginTransaction();
+            $connection=Yii::$app->db;
+            try {
+                $transaction = $connection->beginTransaction();
 
-                    $model->save();
-                    $amount = $model->amount;
-                    $user = User::findById($model->user_id);
+                $model->save();
+                $amount = $model->amount;
+                $user = User::findById($model->user_id);
+                if ($model->merited == 1) {
                     $user->reduceAchivement($amount);
                     $user->reduceMerit($model);
                     $user->reduceBonus($model);
-                    if ($user->save()) {
-                        $transaction->commit();
-
-                        Yii::$app->getSession()->set('message', '追加投资撤销成功');
-                    } else {
-                        throw new Exception('Failed to save user ' . json_encode($user->getErrors()));
-                    }
-                } catch (Exception $e) {
-                    $transaction->rollback();//回滚函数
-
-                    $model->status = 1;
-                    $model->save();
-
-                    Yii::$app->systemlog->add('Admin', '撤销投资', '失败', $e->getMessage());
-                    Yii::$app->getSession()->set('danger', '追加投资撤销失败, 请稍后再试. ' .  $e->getMessage());
                 }
-            } else {
-                Yii::$app->getSession()->set('message', '追加投资撤销成功');
+                $user->reduceBaodan($model);
+                if ($user->save()) {
+                    $transaction->commit();
+
+                    Yii::$app->getSession()->set('message', '追加投资撤销成功');
+                } else {
+                    throw new Exception('Failed to save user ' . json_encode($user->getErrors()));
+                }
+            } catch (Exception $e) {
+                $transaction->rollback();//回滚函数
+
+                $model->status = 1;
+                $model->save();
+
+                Yii::$app->systemlog->add('Admin', '撤销投资', '失败', $e->getMessage());
+                Yii::$app->getSession()->set('danger', '追加投资撤销失败, 请稍后再试. ' .  $e->getMessage());
             }
+
 
         }
 
