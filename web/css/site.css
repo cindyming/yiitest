@@ -208,7 +208,7 @@ nav.navbar .container{padding:0}
 .dropdown-menu > li > a{padding:8px 20px}
 .dropdown-menu > .active > a{background:transparent;color:#333}
 /* header */
-.top-header{background:url('bg1.jpg') no-repeat scroll center bottom #2E363F;color:#fff;padding:1% 0 0;background-size:cover}
+.top-header{ background:#31465E;color:#fff;padding:1% 0 0}
 .top-header h2{float:left;margin:0;font-size:28px;line-height:36px}
 .top-header h3{margin:0}
 .top-header .m-info{color:#E2E2E2;margin:10px 0;text-align: right;font-size:12px;}
