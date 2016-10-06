@@ -51,7 +51,12 @@ class Cash extends ActiveRecord
                 ],
                 'value' => function ($event) {
                     if ($this->type == 2) {
-                        return  $this->amount * (1 - floatval(System::loadConfig('cash_factorage')  / 100));
+                        if ($this->cash_type  == 3) {
+                            return  $this->amount * (1 - floatval(3 / 100));
+                        } else {
+                            return  $this->amount * (1 - floatval(System::loadConfig('cash_factorage')  / 100));
+                        }
+
                     } else {
                         return $this->amount;
                     }
