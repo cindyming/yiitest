@@ -27,7 +27,7 @@ $welcome .= ', 欢迎回来.';
             </li>
             <li>
                 总业绩: <?php echo Yii::$app->user->identity->achievements?>
-            </li>
+            </li></ul><ul>
             <li>
                 分红余额: <?php echo Yii::$app->user->identity->bonus_remain?>
             </li>
