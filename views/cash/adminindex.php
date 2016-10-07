@@ -85,12 +85,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format' => 'decimal',
             ],
             [
-                'attribute' => 'amount',
+                'attribute' => 'real_amount',
                 'label'=>'实发金额',
-                'format' => 'decimal',
-                'value' => function($model) {
-                        return ($model->type == 2) ? ($model->amount * 0.95) : $model->amount ;
-                    }
+                'format' => 'decimal'
             ],
             ['attribute' => 'created_at',
                 'filter' => true,
