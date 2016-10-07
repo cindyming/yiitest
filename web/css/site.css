@@ -237,7 +237,7 @@ div.required label.des:after{content:none;}
 .table-bordered > thead > tr > th{background:#efefef}
 .summary{text-align:right;margin: 0 0 5px}
 
-body.u_admin .top-header{background:url('bg.jpg') repeat scroll 20% 42% #2E363F}
+body.u_admin .top-header{background: #0D1D74;}
 .sm-form{width:50%}
 
 .select2-container--krajee .select2-selection--single{height:26px;line-height:13px}
