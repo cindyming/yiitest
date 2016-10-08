@@ -62,7 +62,7 @@ $isAdmin = Yii::$app->user->identity->isAdmin();
                 ?>
             </div>
         <?php endif ?>
-        <?php if (!System::loadConfig('maintenance')) :?>
+        <?php if (!\app\models\System::loadConfig('maintenance')) :?>
         <div class="alert alert-danger">系统维护中，请不要操作任何数据，您的操作记录不会被保存</div>
         <?php endif ?>
         <!-- Breadcrumbs::widget([
