@@ -118,24 +118,24 @@ class InvestmentController extends Controller
 
                 if ($validateAmount && $model->save()) {
 
-//                    $addedBy = User::findOne($user->added_by);
-//
-//                    if ($addedBy && $addedBy->getId() && ($addedBy->role_id == 3)) {
-//                        $meritAmount = round($model->amount * 0.01, 2);
-//                        $data = array(
-//                            'user_id' => $addedBy->id,
-//                            'note' => '会员：' .$model->user_id . '追加投资' . $model->id . '的报单奖励',
-//                            'type' => 1,
-//                            'baodan' => $meritAmount,
-//                            'total' => $meritAmount +  $addedBy->baodan_remain
-//                        );
-//                        $merit = new Revenue();
-//                        $merit->load($data, '');
-//                        $merit->save();
-//                        $addedBy->baodan_remain += $meritAmount;
-//                        $addedBy->baodan_total += $meritAmount;
-//                        $addedBy->save();
-//                    }
+                    $addedBy = User::findOne($model->added_by);
+
+                    if ($addedBy && $addedBy->getId() && ($addedBy->role_id == 3)) {
+                        $meritAmount = round($model->amount * 0.01, 2);
+                        $data = array(
+                            'user_id' => $addedBy->id,
+                            'note' => '会员：' .$model->user_id . '追加投资' . $model->id . '的报单奖励',
+                            'type' => 1,
+                            'baodan' => $meritAmount,
+                            'total' => $meritAmount +  $addedBy->baodan_remain
+                        );
+                        $merit = new Revenue();
+                        $merit->load($data, '');
+                        $merit->save();
+                        $addedBy->baodan_remain += $meritAmount;
+                        $addedBy->baodan_total += $meritAmount;
+                        $addedBy->save();
+                    }
 
                     Yii::$app->getSession()->set('message', '追加投资添加成功');
                     return $this->redirect(['adminindex']);

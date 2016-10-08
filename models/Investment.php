@@ -57,15 +57,6 @@ class Investment extends ActiveRecord
                 },
             ],
             [
-                'class' => AttributeBehavior::className(),
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => 'added_by',
-                ],
-                'value' => function ($event) {
-                        return Yii::$app->user->identity->id;
-                    },
-            ],
-            [
                 'class' => TimestampBehavior::className(),
                 'updatedAtAttribute' => 'updated_at',
                 'value' => new Expression('NOW()'),
@@ -78,8 +69,9 @@ class Investment extends ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'amount'], 'required'],
+            [['user_id', 'amount', 'added_by'], 'required'],
             [['merited', 'note', 'added_by', 'status'], 'trim'],
+            [['added_by'], 'validateAddedBy']
         ];
     }
 
@@ -93,9 +85,24 @@ class Investment extends ActiveRecord
             'user_id' => '会员编号',
             'amount' => '追加投资额',
             'note' => '备注',
+            'added_by' => '报单人编号',
             'created_at' => '追加时间',
             'updated_at' => '更新时间',
         ];
     }
 
+    public function validateAddedBy($attribute, $params) {
+
+        if ($this->added_by && $this->isNewRecord) {
+            $this->added_by = trim($this->added_by);
+            $user = User::findById(trim($this->added_by));
+
+            if ($user && $user->add_member) {
+                $this->added_by = $user->id;
+            } else {
+                $this->addError('added_by', '报单员不存在,请确认后输入');
+            }
+        }
+
+    }
 }
