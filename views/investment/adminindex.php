@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' =>'user_id',
                 'filter' => true
             ],
+            'added_by',
             'amount',
             'created_at',
             [
