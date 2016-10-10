@@ -37,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => true
             ],
             'amount',
+            'added_by',
             'created_at',
             [
                 'class' => 'yii\grid\ActionColumn',
