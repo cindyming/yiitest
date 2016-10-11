@@ -69,7 +69,7 @@ class Investment extends ActiveRecord
     public function rules()
     {
         return [
-            [['user_id', 'amount', 'added_by'], 'required'],
+            [['user_id', 'amount'], 'required'],
             [['merited', 'note', 'added_by', 'status'], 'trim'],
             [['added_by'], 'validateAddedBy']
         ];
