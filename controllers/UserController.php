@@ -516,8 +516,10 @@ class UserController extends Controller
         if ($model->useBaodan && $model->isNewRecord) {
             $model->duichong_invest = floatval($model->duichong_invest);
             if ($model->duichong_invest <=  0) {
+                $validate = false;
                 $model->addError('duichong_invest', '对冲帐户金额必须大于0');
             } else if ($model->duichong_invest > Yii::$app->user->identity->duichong_remain) {
+                $validate = false;
                 $model->addError('duichong_invest', '对冲帐户余额不足: ' .  Yii::$app->user->identity->duichong_remain);
             }
         }
