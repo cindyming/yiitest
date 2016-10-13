@@ -64,6 +64,10 @@ use yii\widgets\ActiveForm;
          <?= $form->field($model, 'referer', [ 'template' => "{label}<label class='des'>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true,'readonly' => true, 'value' => ($model->referer == 0) ? '#' : $model->referer])->label() ?>
     <?php else: ?>
         <?= $form->field($model, 'investment',[ 'template' => "{label}\n{input}<label class='des' style='color:#ff0000'>万,例如你输入1就代表1万</label>\n{hint}\n{error}"])->textInput(['maxlength' => true]) ?>
+        <?php if (Yii::$app->user->identity->isBaodan() && Yii::$app->user->identity->duichong_remain) : ?>
+            <?= $form->field($model, 'useBaodan')->checkbox([1 => '使用对冲帐户余额'])?>
+            <?= $form->field($model, 'duichong_invest')->textInput() ?>
+        <?php endif ?>
         <?= $form->field($model, 'referer', [ 'template' => "{label}<label class='des'>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}", 'options' => ['class' => 'form-group required']])->textInput(['maxlength' => true, 'required'=> true, 'class' => 'popup form-control'])->label() ?>
     <?php endif ?>
 
@@ -89,3 +93,17 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+
+<?php $this->beginBlock('js') ?>
+
+    $('#user-usebaodan').click(function(){ console.log($(this).is(':checked'));
+        if ($(this).is(':checked')) {
+            $('.field-user-baodan_invest').show();
+        } else {
+            $('.field-user-baodan_invest').hide();
+        }
+
+    });
+
+<?php $this->endBlock() ?>
+<?php $this->registerJs($this->blocks['js'], \yii\web\View::POS_END); ?>

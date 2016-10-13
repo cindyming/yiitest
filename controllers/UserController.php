@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Cash;
 use app\models\Investment;
 use Yii;
 use app\models\User;
@@ -181,6 +182,10 @@ class UserController extends Controller
             $addedBy = User::findOne($model->added_by);
             if ($addedBy && $addedBy->getId() && ($addedBy->role_id == 3)) {
                 $meritAmount = round($model->investment * 0.01, 2);
+                if ($model->duichong_invest) {
+                    $meritAmount +=  round($model->duichong_invest * 0.01, 2);
+                }
+
                 $data = array(
                     'user_id' => $addedBy->id,
                     'note' => '会员：' .$model->id . '的报单奖励',
@@ -239,6 +244,23 @@ class UserController extends Controller
         $data = array('User' => array('role_id'=> 4));
 
         if ($model->load($data) && $model->save()) {
+            if ($model->duichong_invest) {
+                $user = User::findOne($model->added_by);
+                $user->duichong_remain  += $model->duichong_invest;
+                $revene = new Revenue();
+                $data = array(
+                    'user_id' =>$user->id,
+                    'duichong' => $model->duichong_invest,
+                    'total' => $user->duichong_remain,
+                    'type' => 2,
+                    'note' => '报单会员拒绝:' . $model->id
+                );
+                $revene->setAttributes($data);
+                $user->save();
+                $revene->save();
+            }
+
+
             Yii::$app->getSession()->set('message', '会员('. $id . ')拒绝成功');
         }
 
@@ -490,6 +512,16 @@ class UserController extends Controller
         } elseif ($model->suggest_by !== '#') {
             $this->successInfo['suggest_by'] = '推荐人验证成功，网络昵称:' . $user->username;
         }
+
+        if ($model->useBaodan && $model->isNewRecord) {
+            $model->duichong_invest = floatval($model->duichong_invest);
+            if ($model->duichong_invest <=  0) {
+                $model->addError('duichong_invest', '对冲帐户金额必须大于0');
+            } else if ($model->duichong_invest > Yii::$app->user->identity->duichong_remain) {
+                $model->addError('duichong_invest', '对冲帐户余额不足: ' .  Yii::$app->user->identity->duichong_remain);
+            }
+        }
+
         return $validate;
     }
 
@@ -507,6 +539,22 @@ class UserController extends Controller
             if ($model->load(Yii::$app->request->post())) {
                 $validate = $this->validateUserData($model);
                 if ($validate && $model->save()) {
+                    if ($model->duichong_invest) {
+                        Yii::$app->user->identity->duichong_remain -= $model->duichong_invest;
+                        $data = array(
+                            'user_id' => Yii::$app->user->identity->id,
+                            'amount' => $model->duichong_invest,
+                            'status' => 2,
+                            'type' => 8,
+                            'fee' => 0,
+                            'total' => Yii::$app->user->identity->duichong_remain,
+                            'note' => '报单:' . $model->id . ', 使用对冲帐户金额:' . $model->duichong_invest
+                        );
+                        $cash = new Cash();
+                        $cash->setAttributes($data);
+                        $cash->save();
+                        Yii::$app->user->identity->save();
+                    }
                     return $this->redirect(['success', 'id' => $model->id]);
                 }
             }
