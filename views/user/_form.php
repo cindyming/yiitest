@@ -68,7 +68,7 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'referer', [ 'template' => "{label}<label class='des'>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}", 'options' => ['class' => 'form-group required']])->textInput(['maxlength' => true, 'required'=> true, 'class' => 'popup form-control'])->label() ?>
         <?php if (Yii::$app->user->identity->isBaodan() && Yii::$app->user->identity->duichong_remain) : ?>
             <?= $form->field($model, 'useBaodan')->checkbox([1 => '使用对冲帐户余额'])?>
-            <?= $form->field($model, 'duichong_invest')->textInput(['style' => 'display:none']) ?>
+            <?= $form->field($model, 'duichong_invest')->textInput() ?>
         <?php endif ?>
     <?php endif ?>
 
