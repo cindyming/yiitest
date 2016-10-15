@@ -23,6 +23,7 @@ class User extends ActiveRecord implements IdentityInterface
     public $password2_old;
     public $captcha;
     public $old_username;
+    public $useBaodan;
 
     public $dynTableName = '{{%user}}';
 
@@ -184,11 +185,12 @@ class User extends ActiveRecord implements IdentityInterface
             [['approved_at'], 'string'],
             [['referer', 'added_by', 'achievements', 'suggest_by', 'locked', 'show_tree'], 'trim'],
             [['role_id', 'merited', 'level', 'add_member', 'stop_bonus'], 'number'],
-            [['bonus_total', 'merit_total'], 'double'],
+            [['bonus_total', 'merit_total', 'duichong_invest', 'baodan_total', 'duichong_total', 'duichong_remain'], 'double'],
             [['bonus_remain', 'baodan_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '分工余额不足', 'on' => 'cancel'],
             [['merit_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '绩效余额不足', 'on' => 'cancel'],
             [['email'], 'email'],
-            [['qq'], 'number']
+            [['qq', 'useBaodan'], 'number'],
+            [['duichong_invest'], 'checkBaodanInvest'],
         ];
     }
 
@@ -208,6 +210,8 @@ class User extends ActiveRecord implements IdentityInterface
             'password3' => '二级密码确认',
             'identity' => '证件号码',
             'phone' => '手机号码',
+            'duichong_invest'  => '对冲帐户抵扣金额',
+            'useBaodan' => '使用对冲帐户',
             'title' => '称谓',
             'referer' => '接点人',
             'suggest_by' => '推荐人',
@@ -395,6 +399,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function isAdmin()
     {
         return 1==$this->role_id;
+    }
+
+    public function isBaodan()
+    {
+        return ((3==$this->role_id)  && $this->add_member);
     }
 
     public function getStatus()
@@ -822,5 +831,18 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         return $result;
+    }
+
+    public function checkBaodanInvest($attribute, $params) {
+
+        if ($this->useBaodan && $this->isNewRecord) {
+            $this->duichong_invest = floatval($this->duichong_invest);
+            if ($this->duichong_invest <=  0) {
+                $this->addError('duichong_invest', '对冲帐户金额必须大于0');
+            } else if ($this->duichong_invest > Yii::$app->user->identity->duichong_remain) {
+                $this->addError('duichong_invest', '对冲帐户余额不足: ' .  Yii::$app->user->identity->duichong_remain);
+            }
+        }
+
     }
 }
