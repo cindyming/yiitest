@@ -59,19 +59,19 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'identity')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
-
+    <div class="clearfix"></div>
     <?php if(!$model->isNewRecord): ?>
     <div class="clearfix">
          <?= $form->field($model, 'referer', [ 'template' => "{label}<label class='des'>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true,'readonly' => true, 'value' => ($model->referer == 0) ? '#' : $model->referer])->label() ?>
     <?php else: ?>
         <?= $form->field($model, 'investment',[ 'template' => "{label}\n{input}<label class='des' style='color:#ff0000'>万,例如你输入1就代表1万</label>\n{hint}\n{error}"])->textInput(['maxlength' => true]) ?>
-<?php if (Yii::$app->user->identity->isBaodan() && Yii::$app->user->identity->duichong_remain) : ?>
-    <?= $form->field($model, 'useBaodan')->checkbox([1 => '使用对冲帐户余额'])?>
-    <?= $form->field($model, 'duichong_invest')->textInput(['style' => 'display:none']) ?>
-<?php endif ?>
-    <div class="clearfix">
+        <div class="clearfix"></div>
+        <?php if (Yii::$app->user->identity->isBaodan() && Yii::$app->user->identity->duichong_remain) : ?>
+            <?= $form->field($model, 'useBaodan')->checkbox([1 => '使用对冲帐户余额'])?>
+            <?= $form->field($model, 'duichong_invest')->textInput() ?>
+        <?php endif ?>
+	    <div class="clearfix"></div>
         <?= $form->field($model, 'referer', [ 'template' => "{label}<label class='des'>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}", 'options' => ['class' => 'form-group required']])->textInput(['maxlength' => true, 'required'=> true, 'class' => 'popup form-control'])->label() ?>
-
     <?php endif ?>
 
     <?= $form->field($model, 'suggest_by',[ 'template' => "{label}<label class='des'>推荐人ID</label>\n{input}\n{hint}\n{error}", 'options' => ['class' => 'form-group required']])->textInput(['maxlength' => true, 'class' => 'popup form-control', 'value' => (($model->suggest_by == 0) && (!$model->isNewRecord)) ? '#' : $model->suggest_by]) ?>
