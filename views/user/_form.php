@@ -61,7 +61,6 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
     <div class="clearfix"></div>
     <?php if(!$model->isNewRecord): ?>
-    <div class="clearfix">
          <?= $form->field($model, 'referer', [ 'template' => "{label}<label class='des'>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['maxlength' => true,'readonly' => true, 'value' => ($model->referer == 0) ? '#' : $model->referer])->label() ?>
     <?php else: ?>
         <?= $form->field($model, 'investment',[ 'template' => "{label}\n{input}<label class='des' style='color:#ff0000'>万,例如你输入1就代表1万</label>\n{hint}\n{error}"])->textInput(['maxlength' => true]) ?>
