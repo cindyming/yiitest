@@ -59,7 +59,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'identity')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
-
+    <div class="clearfix"></div>
     <?php if(!$model->isNewRecord): ?>
     <div class="clearfix">
          <?= $form->field($model, 'referer', [ 'template' => "{label}<label class='des'>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['class' => 'popup form-control','maxlength' => true,'readonly' => true, 'value' => ($model->referer == 0) ? '#' : $model->referer])->label() ?>

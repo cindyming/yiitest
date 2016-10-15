@@ -248,6 +248,9 @@ ul.tabswitch{padding:0;list-style:none;margin-bottom:25px}
 ul.tabswitch li{border-bottom:3px solid transparent;display:inline-block;padding:1% 2% .5%;}
 ul.tabswitch li.active{border-bottom:3px solid #E39227}
 
+.form-group.field-user-investment{width:36%}
+.form-group.field-user-usebaodan{width:10.7%;padding-top:32px}
+
 
 @media (max-width: 1208px){
 .container{}
