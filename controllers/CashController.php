@@ -195,14 +195,50 @@ class CashController extends Controller
                         } elseif($model->type == 3) {
                             $user->baodan_remain = $user->baodan_remain - $model->amount;
                         }
-                        $user->save();
-                        if ($model->save()) {
-                            $transaction->commit();
-                            Yii::$app->getSession()->set('message', '提现申请提交成功');
-                            return $this->redirect(['index']);
+
+                        if (($model->cash_type == 3) && !System::loadConfig('duichong_audit')) {
+                            $baodanUser = User::findById($model->baodan_id);
+                            if ($baodanUser) {
+                                $model->status = 2;
+                                $realAmount =  $model->amount;
+                                if ($model->type == 2) {
+                                    $realAmount = $model->amount * (1 - floatval(3 / 100));
+                                }
+                                $baodanUser->duichong_total += $realAmount;
+                                $baodanUser->duichong_remain += $realAmount;
+                                $inRecord = array(
+                                    'user_id' => $model->baodan_id,
+                                    'type' => 3,
+                                    'note' => '会员(' . Yii::$app->user->id . ')对冲转账',
+                                    'duichong' => $realAmount,
+                                    'total' => $baodanUser->duichong_remain,
+                                );
+                                $model->note .= '; 对冲帐户帐号, ' . $baodanUser->id;
+                                $revenue = new Revenue();
+                                $revenue->load($inRecord, '');
+                                if ($user->save() && $baodanUser->save() && $revenue->save() && $model->save()) {
+                                    $transaction->commit();
+                                    Yii::$app->getSession()->set('message', '提现申请提交成功');
+                                    return $this->redirect(['index']);
+                                } else {
+                                    Yii::$app->getSession()->set('message', '提现申请提交失败');
+                                    $transaction->rollback();
+                                }
+                            } else {
+                                Yii::$app->getSession()->set('message', '提现申请提交失败');
+                                $transaction->rollback();
+                            }
                         } else {
-                            $transaction->rollback();
+                            if ($model->save() && $user->save()) {
+                                $transaction->commit();
+                                Yii::$app->getSession()->set('message', '提现申请提交成功');
+                                return $this->redirect(['index']);
+                            } else {
+                                Yii::$app->getSession()->set('message', '提现申请提交失败');
+                                $transaction->rollback();
+                            }
                         }
+
                     }  catch (Exception $e) {
                         $transaction->rollback();//回滚函数
                     }

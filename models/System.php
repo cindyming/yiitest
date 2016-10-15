@@ -20,6 +20,7 @@ class System extends ActiveRecord
     public $last_id;
     public $open_suggest_list;
     public $maintenance;
+    public $duichong_audit;
 
     /**
      * @inheritdoc
@@ -50,7 +51,8 @@ class System extends ActiveRecord
             'lowest_cash_amount' => '最低提现额',
             'cash_factorage' => '绩效提现手续费',
             'open_baodan_tree' => '报单员网络图',
-            'maintenance' => '系统维护中'
+            'maintenance' => '系统维护中',
+            'duichong_audit' => '对冲转账审核'
             ];
     }
 
