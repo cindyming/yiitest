@@ -43,17 +43,17 @@ class BonusController extends Controller
 
         if ($date >= $this->_diffTime) {
             if ($total >= 200000) {
-                $amount =  $inverstiment * 0.015;
+                $amount =  $total * 0.015;
             } else {
-                $amount =  $inverstiment * 0.01;
+                $amount =  $total * 0.01;
             }
         } else {
             if ($total < 100000) {
-                $amount =  $inverstiment * 0.01;
+                $amount =  $total * 0.01;
             } else if ($total < 200000) {
-                $amount =  $inverstiment * 0.015;
+                $amount =  $total * 0.015;
             } else {
-                $amount =  $inverstiment * 0.02;
+                $amount =  $total * 0.02;
             }
         }
 
@@ -133,7 +133,7 @@ class BonusController extends Controller
                             $bonusTotal += $this->addBonus($total, $item['amount'], $days, date('Y-m-d', strtotime($item['created_at'])));
                             var_dump('分红额:' . $bonusTotal);
                             $total -= $item['amount'];
-                           // $lastDate = strtotime(date('Y-m-d', strtotime($item['created_at'])));
+                            $lastDate = strtotime(date('Y-m-d', strtotime($item['created_at'])));
                         }
                         var_dump('停止追加投资');
                     }
@@ -143,7 +143,7 @@ class BonusController extends Controller
                 if (date('Y-m-d', strtotime($this->_startTime)) < date('Y-m-d', strtotime($user->approved_at))) {
                     $days = ($lastDate - strtotime(date('Y-m-d', strtotime($user->approved_at)))) / 86400;
                 } else {
-                    $days = 15;
+                    $days = ($lastDate - strtotime($this->_startTime)) / 86400;
                 }
                 $bonusTotal += $this->addBonus($total, $total, $days, date('Y-m-d', strtotime($user->approved_at)));
                 var_dump('金额:' . $total);
