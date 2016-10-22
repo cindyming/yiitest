@@ -59,7 +59,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'identity')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'phone')->textInput(['maxlength' => true]) ?>
-
+    <div class="clearfix"></div>
     <?php if(!$model->isNewRecord): ?>
     <div class="clearfix">
          <?= $form->field($model, 'referer', [ 'template' => "{label}<label class='des'>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['class' => 'popup form-control','maxlength' => true,'readonly' => true, 'value' => ($model->referer == 0) ? '#' : $model->referer])->label() ?>
@@ -76,7 +76,7 @@ use yii\widgets\ActiveForm;
     <?php endif ?>
 
     <?= $form->field($model, 'suggest_by',[ 'template' => "{label}<label class='des'>推荐人ID</label>\n{input}\n{hint}\n{error}", 'options' => ['class' => 'form-group required']])->textInput(['class' => 'popup form-control','maxlength' => true, 'value' => ($model->id && ($model->suggest_by == 0)) ? '#' : $model->suggest_by]) ?>
-</div>
+
     <?= $form->field($model, 'bank')->dropDownList(['ICBC' => '工商银行', 'ABC' => '农业银行']) ?>
 
     <?= $form->field($model, 'cardname')->textInput(['maxlength' => true]) ?>
