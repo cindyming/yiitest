@@ -189,11 +189,20 @@ class InvestmentController extends Controller
                             $addedBy->baodan_remain += $meritAmount;
                             $addedBy->baodan_total += $meritAmount;
                             $addedBy->save();
+                            $transaction->commit();
+                            Yii::$app->getSession()->set('message', '追加投资添加成功');
+                            return $this->redirect(['adminindex']);
+                        } else {
+                            $transaction->rollback();
+                            Yii::$app->getSession()->set('danger', '追加投资添加失败');
                         }
+
+                    } else {
+                        $transaction->rollback();
+                        Yii::$app->getSession()->set('danger', '追加投资添加失败');
                     }
-                    $transaction->commit();
-                    Yii::$app->getSession()->set('message', '追加投资添加成功');
-                    return $this->redirect(['adminindex']);
+
+
                 } catch (Exception $e) {
                         $transaction->rollback();//回滚函数
                 }
