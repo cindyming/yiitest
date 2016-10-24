@@ -133,25 +133,32 @@ class InvestmentController extends Controller
         if ($model->load(Yii::$app->request->post()))
         {
             $user =  User::findOne($model->user_id);
+            $addedBy = User::findOne($model->added_by);
 
             $validateAmount = ($model->amount >= 1);
             if (!$validateAmount){
                 $model->addError('amount', '投资额必须大于1W,并且为万的倍数,例如:10000,100000.请重新输入');
             }
+
+            if ($model->useBaodan && $model->duichong_invest && ($model->duichong_invest > $addedBy->duichong_remain)) {
+                $validateAmount = false;
+                $model->addError('duichong_invest', '对冲帐户余额不足:' . $addedBy->duichong_remain);
+
+            }
+
             if (($user && $user->getId()) && ($user->role_id == 3)) {
 
                 $connection=Yii::$app->db;
                 try {
+
                     $transaction = $connection->beginTransaction();
                     if ($validateAmount && $model->save()) {
-
-                        $addedBy = User::findOne($model->added_by);
 
                         if ($addedBy && $addedBy->getId() && ($addedBy->role_id == 3)) {
 
                             $meritAmount = round($model->amount * 0.01, 2);
 
-                            if ($model->duichong_invest) {
+                            if ($model->duichong_invest && $model->useBaodan) {
                                 $meritAmount += round($model->duichong_invest * 0.01, 2);
 
                                 $addedBy->duichong_remain -= $model->duichong_invest;
