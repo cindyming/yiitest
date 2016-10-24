@@ -12,6 +12,7 @@ class Investment extends ActiveRecord
 {
     public $bonus_total;
     public $merit_total;
+    public $useBaodan;
     public $type;
 
     public $dynTableName = '{{%investment}}';
@@ -70,7 +71,7 @@ class Investment extends ActiveRecord
     {
         return [
             [['user_id', 'amount', 'added_by'], 'required'],
-            [['merited', 'note', 'added_by', 'status'], 'trim'],
+            [['merited', 'note', 'added_by', 'status', 'duichong_invest'], 'trim'],
             [['added_by'], 'validateAddedBy']
         ];
     }
@@ -85,6 +86,8 @@ class Investment extends ActiveRecord
             'user_id' => '会员编号',
             'amount' => '追加投资额',
             'note' => '备注',
+            'duichong_invest'  => '对冲帐户抵扣金额',
+            'useBaodan' => '使用对冲帐户',
             'added_by' => '报单人编号',
             'created_at' => '追加时间',
             'updated_at' => '更新时间',

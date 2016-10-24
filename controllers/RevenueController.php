@@ -274,6 +274,7 @@ class RevenueController extends Controller
             } else {
                 $model->addError('user_id', '会员编号不存在, 请确认后重新操作');
             }
+
             Yii::$app->systemlog->add('管理员', '添加货币 - 收入', '失败','会员: '  .$model->user_id  .serialize($model->getErrors()));
         }
 
