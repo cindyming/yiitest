@@ -35,37 +35,46 @@ use yii\widgets\ActiveForm;
 <script>
     $('.field-investment-duichong_invest').hide();
     $('#investment-usebaodan').click(function(){
-    if ($('#investment-usebaodan').is(':checked')) {
-        if ($('#investment-added_by').val()) {
-            $.ajax({
-                url: "/investment/showduichong?id=" + $('#investment-added_by').val(),
-                async: false,
-                dataType: 'json',
-                success: function (result) {
-                    if (result.code == 1) {
-                        $('#duichongRemain').html('对冲帐户余额:' + result.message);
-                        $('.field-investment-duichong_invest').show();
-                    } else {
-                        $('.field-investment-duichong_invest').hide();
-                        $('#message').html(result.message);
-                        $('#investment-usebaodan').attr('checked', false);
+        $('#message').html('');
+        $('#duichongRemain').html('');
+        if ($('#investment-usebaodan').is(':checked')) {
+            if ($('#investment-added_by').val()) {
+                $.ajax({
+                    url: "/investment/showduichong?id=" + $('#investment-added_by').val(),
+                    async: false,
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.code == 1) {
+                            $('#duichongRemain').html('对冲帐户余额:' + result.message);
+                            $('.field-investment-duichong_invest').show();
+                        } else {
+                            $('.field-investment-duichong_invest').hide();
+                            $('#message').html(result.message);
+                            $('#investment-usebaodan').attr('checked', false);
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                $('.field-investment-duichong_invest').hide();
+                $('#investment-usebaodan').attr('checked', false);
+                alert('请先输入报单员号码');
+            }
         } else {
             $('.field-investment-duichong_invest').hide();
-            $('#investment-usebaodan').attr('checked', false);
-            alert('请先输入报单员号码');
         }
-    } else {
-        $('.field-investment-duichong_invest').hide();
-    }
     });
+
+    $('#investment-added_by').blur(function(){
+        $('#investment-usebaodan').attr('checked', false);
+    })
+
 </script>
 
 <?php $this->beginBlock('js') ?>
     $('.field-investment-duichong_invest').hide();
     $('#investment-usebaodan').click(function(){
+    $('#message').html('');
+    $('#duichongRemain').html('');
     if ($('#investment-usebaodan').is(':checked')) {
     if ($('#investment-added_by').val()) {
     $.ajax({
@@ -92,5 +101,36 @@ use yii\widgets\ActiveForm;
     $('.field-investment-duichong_invest').hide();
     }
     });
+
+    $('#investment-added_by').blur(function(){
+    $('#message').html('');
+    $('#duichongRemain').html('');
+    if ($('#investment-usebaodan').is(':checked')) {
+    if ($('#investment-added_by').val()) {
+    $.ajax({
+    url: "/investment/showduichong?id=" + $('#investment-added_by').val(),
+    async: false,
+    dataType: 'json',
+    success: function (result) {
+    if (result.code == 1) {
+    $('#duichongRemain').html('对冲帐户余额:' + result.message);
+    $('.field-investment-duichong_invest').show();
+    } else {
+    $('.field-investment-duichong_invest').hide();
+    $('#message').html(result.message);
+    $('#investment-usebaodan').attr('checked', false);
+    }
+    }
+    });
+    } else {
+    $('.field-investment-duichong_invest').hide();
+    $('#investment-usebaodan').attr('checked', false);
+    alert('请先输入报单员号码');
+    }
+    } else {
+    $('.field-investment-duichong_invest').hide();
+    }
+    })
+
 <?php $this->endBlock() ?>
 <?php $this->registerJs($this->blocks['js'], \yii\web\View::POS_END); ?>
