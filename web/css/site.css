@@ -254,7 +254,7 @@ ul.tabswitch li.active{border-bottom:3px solid #27A9E3}
 
 .form-group.field-user-investment{width:36%}
 .form-group.field-user-usebaodan{width:10.7%;padding-top:32px}
-
+.field-investment-usebaodan #message{color:red;margin-left:10px}
 
 @media (max-width: 1208px){
 .container{}
