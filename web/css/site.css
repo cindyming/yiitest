@@ -255,7 +255,7 @@ ul.tabswitch li.active{border-bottom:3px solid #E39227}
 @media (max-width: 1208px){
 .container{}
 }
-
+.field-investment-usebaodan #message{color:red;margin-left:10px}
 li.jstree-node a.gray-icon{ color: #bbb; }
 #maintaining{font-size:18px;padding:5px 0;color:red;background:#FFC7C7;text-align: center;margin-bottom:20px }
 .panel-primary > .panel-heading{float:left;padding: 10px 0;color: #333;background:transparent;border-color:transparent;}
