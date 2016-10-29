@@ -500,7 +500,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function calculateLevel()
     {
-        $achievements = $this->achievements ? $this->achievements : $this->investment;var_dump($achievements);
+        $achievements = $this->achievements ? $this->achievements : $this->investment;
         if (500000 > $achievements && $achievements< 500000) {
             $level = 1;
         } elseif ( $achievements < 1000000 ) {
@@ -510,7 +510,7 @@ class User extends ActiveRecord implements IdentityInterface
         } elseif ( $achievements < 9000000) {
             $level = 4;
         } else {
-            $minAchivements = $this->diamondLevel();var_dump('user:' . $this->id . ':minAchive:' .$minAchivements );
+            $minAchivements = $this->diamondLevel();
             if ($minAchivements < 3000000) {
                 $level = 4;
             } elseif ($minAchivements < 6000000) {
@@ -676,7 +676,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         $revenu = Cash::find()->andFilterWhere(['like', 'note', '追加投资' . $investment->id . ', 使用对冲帐户金额'])->one();
         if ($revenu && $revenu->id && $revenu->amount) {
-            $baodan_amount = $revenu->baodan;
+            $baodan_amount = $revenu->amount;
             $user = User::findById($revenu->user_id);
             $user->duichong_remain += $baodan_amount;
 
@@ -684,7 +684,7 @@ class User extends ActiveRecord implements IdentityInterface
                 'user_id' => $revenu->user_id,
                 'note' => '错误报单,撤销会员[' .$this->id . '],投资'.$revenu->amount.', 对冲金额返回:' . $revenu->id,
                 'duichong' => $baodan_amount,
-                'type' => 1,
+                'type' => 2,
                 'total' => $user->duichong_remain
             );
             $mall = new Revenue();
@@ -770,10 +770,13 @@ class User extends ActiveRecord implements IdentityInterface
             }
         }
 
+    }
 
+    public function reduceDuicong()
+    {
         $revenu = Cash::find()->andFilterWhere(['like', 'note', '报单:' . $this->id . ', 使用对冲帐户金额'])->one();
         if ($revenu && $revenu->id && $revenu->amount) {
-            $baodan_amount = $revenu->baodan;
+            $baodan_amount = $revenu->amount;
             $user = User::findById($revenu->user_id);
             $user->duichong_remain += $baodan_amount;
 
@@ -781,7 +784,7 @@ class User extends ActiveRecord implements IdentityInterface
                 'user_id' => $revenu->user_id,
                 'note' => '撤销会员[' .$this->id . '], 对冲金额返回:' . $revenu->id,
                 'duichong' => $baodan_amount,
-                'type' => 1,
+                'type' => 2,
                 'total' => $user->duichong_remain
             );
             $mall = new Revenue();
