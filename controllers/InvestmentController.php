@@ -175,7 +175,7 @@ class InvestmentController extends Controller
                                     'type' => 8,
                                     'fee' => 0,
                                     'total' => $addedBy->duichong_remain,
-                                    'note' => '追加投资:' . $model->id . ', 使用对冲帐户金额:' . $model->duichong_invest
+                                    'note' => '追加投资' . $model->id . ', 使用对冲帐户金额:' . $model->duichong_invest
                                 );
                                 $cash = new Cash();
                                 $cash->setAttributes($data);
@@ -185,7 +185,7 @@ class InvestmentController extends Controller
 
                                 $data = array(
                                     'user_id' => $addedBy->id,
-                                    'note' => '会员：' . $model->user_id . '追加投资' . date('Y-m-d H:i:s') . '的报单奖励',
+                                    'note' => '会员：' . $model->user_id . '追加投资' . $model->id . '的报单奖励',
                                     'type' => 1,
                                     'baodan' => $meritAmount,
                                     'total' => $meritAmount + $addedBy->baodan_remain
