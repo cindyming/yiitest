@@ -71,7 +71,7 @@ class Investment extends ActiveRecord
     {
         return [
             [['user_id', 'amount'], 'required'],
-            [['merited', 'note', 'added_by', 'status', 'duichong_invest'], 'trim'],
+            [['merited', 'note', 'added_by', 'status', 'duichong_invest', 'useBaodan'], 'trim'],
             [['added_by'], 'validateAddedBy']
         ];
     }
