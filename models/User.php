@@ -679,6 +679,29 @@ class User extends ActiveRecord implements IdentityInterface
 
         }
 
+        $revenu = Cash::find()->andFilterWhere(['like', 'note', '追加投资' . $investment->id . ', 使用对冲帐户金额'])->one();
+        if ($revenu && $revenu->id && $revenu->amount) {
+            $baodan_amount = $revenu->amount;
+            $user = User::findById($revenu->user_id);
+            $user->duichong_remain += $baodan_amount;
+
+            $mallData = array(
+                'user_id' => $revenu->user_id,
+                'note' => '错误报单,撤销会员[' .$this->id . '],投资'.$revenu->amount.', 对冲金额返回:' . $revenu->id,
+                'duichong' => $baodan_amount,
+                'type' => 2,
+                'total' => $user->duichong_remain
+            );
+            $mall = new Revenue();
+            $mall->load($mallData, '');
+            $user->setScenario('cancel');
+
+            if (!$mall->save()  || !$user->save(true, array('duichong_remain'))) {
+                throw new Exception('会员扣除失败 ' . User::arrayToString($user->getErrors()).User::arrayToString($mall->getErrors()));
+            }
+
+        }
+
     }
 
     public function reduceBonus($investment)
@@ -815,6 +838,33 @@ class User extends ActiveRecord implements IdentityInterface
             if (!$mall->save()  || !$user->save(true, array('baodan_total', 'baodan_remain'))) {
                 throw new Exception('会员扣除失败 ' . User::arrayToString($user->getErrors()).User::arrayToString($mall->getErrors()));
             }
+        }
+    }
+
+
+    public function reduceDuicong()
+    {
+        $revenu = Cash::find()->andFilterWhere(['like', 'note', '报单:' . $this->id . ', 使用对冲帐户金额'])->one();
+        if ($revenu && $revenu->id && $revenu->amount) {
+            $baodan_amount = $revenu->amount;
+            $user = User::findById($revenu->user_id);
+            $user->duichong_remain += $baodan_amount;
+
+            $mallData = array(
+                'user_id' => $revenu->user_id,
+                'note' => '撤销会员[' .$this->id . '], 对冲金额返回:' . $revenu->id,
+                'duichong' => $baodan_amount,
+                'type' => 2,
+                'total' => $user->duichong_remain
+            );
+            $mall = new Revenue();
+            $mall->load($mallData, '');
+            $user->setScenario('cancel');
+
+            if (!$mall->save()  || !$user->save(true, array('duichong_remain'))) {
+                throw new Exception('会员扣除失败 ' . User::arrayToString($user->getErrors()).User::arrayToString($mall->getErrors()));
+            }
+
         }
     }
 

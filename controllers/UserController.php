@@ -620,6 +620,7 @@ class UserController extends Controller
                     $amount = $model->investment;
                     $model->reduceAchivement($amount);
                     $model->reduceMeritForNewMember($amount);
+                    $model->reduceDuicong();
 
                     if ($model->save()) {
                         $transaction->commit();
@@ -637,6 +638,7 @@ class UserController extends Controller
 
 
         } else {
+            $model->reduceDuicong();
             $model->role_id = 4;
             $model->save();
             Yii::$app->getSession()->set('message', '新会员撤销成功');
