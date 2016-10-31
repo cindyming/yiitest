@@ -90,6 +90,7 @@
       $submit = $self.find('[type=submit]');
     }
     $submit.button('loading');
+    $submit.hide();
   }
   function resetLoading() {
     var $self = $(this),
@@ -103,6 +104,7 @@
       $submit = $self.find('[type=submit]');
     }
     $submit.button('reset');
+    $submit.show();
   }
 
   yii.lock = {
