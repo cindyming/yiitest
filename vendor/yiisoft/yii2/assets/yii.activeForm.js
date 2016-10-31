@@ -383,7 +383,7 @@
             var $form = $(this),
                 data = $form.data('yiiActiveForm');
 
-            if (data.validated) {
+            if (data.validated) {console.log(10003673);
                 // Second submit's call (from validate/updateInputs)
                 data.submitting = false;
                 var event = $.Event(events.beforeSubmit);
