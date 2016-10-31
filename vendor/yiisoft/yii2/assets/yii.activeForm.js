@@ -362,19 +362,23 @@
                             } else {
                                 updateInputs($form, messages, submitting);
                             }
+                            $('body').find('[type=submit]').show();
                         },
                         error: function () {
                             data.submitting = false;
                             submitFinalize($form);
+                            $('body').find('[type=submit]').show();
                         }
                     });
                 } else if (data.submitting) {
                     // delay callback so that the form can be submitted without problem
                     setTimeout(function () {
                         updateInputs($form, messages, submitting);
+                        $('body').find('[type=submit]').show();
                     }, 200);
                 } else {
                     updateInputs($form, messages, submitting);
+                    $('body').find('[type=submit]').show();
                 }
             });
         },
@@ -383,7 +387,7 @@
             var $form = $(this),
                 data = $form.data('yiiActiveForm');
 
-            if (data.validated) {console.log(10003673);
+            if (data.validated) {
                 // Second submit's call (from validate/updateInputs)
                 data.submitting = false;
                 var event = $.Event(events.beforeSubmit);
