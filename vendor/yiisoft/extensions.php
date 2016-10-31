@@ -12,6 +12,16 @@ return array (
       '@yii/swiftmailer' => $vendorDir . '/yiisoft/yii2-swiftmailer',
     ),
   ),
+
+    'light/widgets' =>
+        array (
+            'name' => 'light/widgets',
+            'version' => '0.9.0.0',
+            'alias' =>
+                array (
+                    '@light/widgets' => $vendorDir . '/light/widgets',
+                ),
+        ),
   'yiisoft/yii2-bootstrap' => 
   array (
     'name' => 'yiisoft/yii2-bootstrap',
