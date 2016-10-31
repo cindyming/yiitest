@@ -129,6 +129,16 @@ return array (
       '@creocoder/nestedsets' => $vendorDir . '/creocoder/yii2-nested-sets/src',
     ),
   ),
+
+    'light/widgets' =>
+        array (
+            'name' => 'light/widgets',
+            'version' => '0.9.0.0',
+            'alias' =>
+                array (
+                    '@light/widgets' => $vendorDir . '/light/widgets',
+                ),
+        ),
   'kartik-v/yii2-widget-activeform' => 
   array (
     'name' => 'kartik-v/yii2-widget-activeform',
