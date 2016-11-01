@@ -76,6 +76,14 @@ $isAdmin = Yii::$app->user->identity->isAdmin();
 
 
 <?php $this->endBody() ?>
+
+<?php $this->beginBlock('js') ?>
+$('body').find('[type=submit]').click(function(){
+    $(this).hide();
+});
+
+<?php $this->endBlock() ?>
+<?php $this->registerJs($this->blocks['js'], \yii\web\View::POS_END); ?>
 </body>
 </html>
 <?php $this->endPage() ?>
