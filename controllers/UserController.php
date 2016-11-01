@@ -518,6 +518,8 @@ class UserController extends Controller
                 $validate = false;
                 $model->addError('duichong_invest', '对冲帐户余额不足: ' .  Yii::$app->user->identity->duichong_remain);
             }
+        } else {
+            $model->duichong_invest = 0;
         }
         return $validate;
     }
@@ -536,7 +538,7 @@ class UserController extends Controller
             if ($model->load(Yii::$app->request->post())) {
                 $validate = $this->validateUserData($model);
                 if ($validate && $model->save()) {
-                    if ($model->duichong_invest) {
+                    if ($model->useBaodan && $model->duichong_invest) {
                         Yii::$app->user->identity->duichong_remain -= $model->duichong_invest;
                         $data = array(
                             'user_id' => Yii::$app->user->identity->id,
