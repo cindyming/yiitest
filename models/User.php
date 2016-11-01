@@ -87,6 +87,15 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'duichong_invest',
+                ],
+                'value' => function ($event) {
+                    return ($this->useBaodan) ?  $this->duichong_invest : 0;
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'auth_key',
                 ],
                 'value' => function ($event) {
