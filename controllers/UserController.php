@@ -536,7 +536,7 @@ class UserController extends Controller
             if ($model->load(Yii::$app->request->post())) {
                 $validate = $this->validateUserData($model);
                 if ($validate && $model->save()) {
-                    if ($model->duichong_invest) {
+                    if ($model->useBaodan && $model->duichong_invest) {
                         Yii::$app->user->identity->duichong_remain -= $model->duichong_invest;
                         $data = array(
                             'user_id' => Yii::$app->user->identity->id,
