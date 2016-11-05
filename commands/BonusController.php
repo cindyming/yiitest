@@ -38,7 +38,6 @@ class BonusController extends Controller
         $rate = 1;
 
         if ($days < 15) {
-            $days = (int)$days;
             $rate = $days / 15;
         }
 
@@ -64,7 +63,6 @@ class BonusController extends Controller
 
     public function actionIndex()
     {
-        $i = 0;
         $this->_startTime = date("Y-m-d",strtotime("-15 days")) . ' 00:00:00';
         $this->lessThan15Investment();
 
@@ -152,36 +150,27 @@ class BonusController extends Controller
                 var_dump('天数:' . $days);
                 var_dump('分红额:' . $bonusTotal);
                 if ($bonusTotal > 0) {
+                    $data['bonus'] = round($bonusTotal, 2);
+                    $data['note'] = '分红结算: ' . date('Y-m-d', time());
+                    $data['type'] = 1;
+                    $data['user_id'] = $user->id;
+                    $data['total'] = $user->bonus_remain + $data['bonus'];
+                    $user->bonus_total = $user->bonus_total + $data['bonus'];
+                    $user->bonus_remain = $user->bonus_remain + $data['bonus'];
+                    $bonus = new Revenue();
+                    $bonus->load($data, '');
+                    $bonus->save();
 
-                    $old = Revenue::findOne(array('user_id' => $user->id, 'note' => '分红结算: ' . date('Y-m-d', time())));
-
-                    if ($old && $old->id  && ($bonusTotal>$old->bonus)) {
-                        $i++;
-                        $bonusTotal = $bonusTotal - $old->bonus;
-                        $data['bonus'] = round($bonusTotal, 2);
-                        $data['note'] = '分红结算: ' . date('Y-m-d', time());
-                        $data['type'] = 1;
-                        $data['user_id'] = $user->id;
-                        $data['total'] = $user->bonus_remain + $data['bonus'];
-                        $user->bonus_total = $user->bonus_total + $data['bonus'];
-                        $user->bonus_remain = $user->bonus_remain + $data['bonus'];
-                        $bonus = new Revenue();
-                        $bonus->load($data, '');
-                        $bonus->save();
-
-                        if (($user->bonus_total + $user->merit_total) > ($user->investment * 2)) {
-                            $user->stop_bonus = 1;
-                        }
-
-                        $user->save();
+                    if (($user->bonus_total + $user->merit_total) > ($user->investment * 2)) {
+                        $user->stop_bonus = 1;
                     }
 
+                    $user->save();
                 } else {
                     var_dump('分红' . $bonusTotal);
                 }
             }
 
         }
-        echo "TOTAL UPDATE: " . $i;
     }
 }
