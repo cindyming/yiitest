@@ -131,6 +131,10 @@ class CashController extends Controller
      */
     public function actionCreate()
     {
+        if (!System::loadConfig('open_cash')) {
+            Yii::$app->getSession()->set('message', '提现功能已关闭,请联系管理员.');
+            return $this->redirect(['index']);
+        }
         $type = Yii::$app->request->getQueryParam('type');
         $model = new Cash();
 

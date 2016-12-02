@@ -32,14 +32,14 @@ class BonusController extends Controller
     public function addBonus($inverstiment, $days)
     {
         $rate = 1;
-        if ($days < 15) {
-            $rate = $days / 15;
+        if ($days < 30) {
+            $rate = $days / 30;
         }
 
         if ($inverstiment >= $this->_diff) {
-            $amount =  $inverstiment * 0.015 * $rate;
+            $amount =  $inverstiment * 0.03 * $rate;
         } else {
-            $amount =  $inverstiment * 0.01 * $rate;
+            $amount =  $inverstiment * 0.02 * $rate;
         }
         return $amount;
     }
@@ -47,7 +47,7 @@ class BonusController extends Controller
     public function actionIndex()
     {
         echo date('Y-m-d H:i:s', time()) . PHP_EOL;
-        $this->_startTime = date("Y-m-d",strtotime("-15 days")) . ' 00:00:00';
+        $this->_startTime = date("Y-m-d",strtotime("-30 days")) . ' 00:00:00';
 
         $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['!=','locked', 1]);
 
