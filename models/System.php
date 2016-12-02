@@ -20,6 +20,7 @@ class System extends ActiveRecord
     public $maintenance;
     public $open_suggest_list;
     public $duichong_audit;
+    public $open_cash;
 
     /**
      * @inheritdoc
@@ -51,7 +52,8 @@ class System extends ActiveRecord
             'cash_factorage' => '绩效提现手续费',
             'open_baodan_tree' => '报单员网络图',
             'maintenance' => '系统维护中',
-            'duichong_audit' => '对冲转账审核'
+            'duichong_audit' => '对冲转账审核',
+            'open_cash' => '允许提现',
             ];
     }
 
