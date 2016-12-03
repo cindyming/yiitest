@@ -15,49 +15,46 @@ class BonusController extends Controller
     private $_startTime;
     private $_lessInvestiments;
 
-    public function lessThan15Investment()
+    public function lessThan15Investment($user_id)
     {
-        $invertMents = Investment::find()->where(['>', 'created_at', $this->_startTime])->andWhere(['=', 'status', 1])->andWhere(['=', 'merited', 1])->orderBy(['created_at' => SORT_DESC])->all();
+
+        $invertMents = Investment::find()->where(['>', 'created_at', $this->_startTime])->andWhere(['=', 'status', 1])->andWhere(['=', 'user_id', $user_id])->andWhere(['=', 'merited', 1])->orderBy(['created_at' => SORT_DESC])->all();
         $inverts = array();
         foreach ($invertMents as $iv) {
-            $user_id = $iv->user_id;
             $id = $iv->id;
             $amount = $iv->amount;
-            if (isset($inverts[$user_id])) {
-                $inverts[$user_id][$id] = array('id' => $id, 'amount' => $amount, 'created_at' => $iv->created_at, 'merited' => $iv->merited);
-            } else {
-                $inverts[$user_id] = array( $id => array('id' => $id, 'amount' => $amount, 'created_at' => $iv->created_at,'merited' => $iv->merited));
-            }
+            $inverts[$id] = array('id' => $id, 'amount' => $amount, 'created_at' => $iv->created_at, 'merited' => $iv->merited);
         }
-        $this->_lessInvestiments = $inverts;
+
+        return $inverts;
     }
 
     public function addBonus($inverstiment, $days)
     {
         $rate = 1;
-        if ($days < 15) {
-            $rate = $days / 15;
+        if ($days < 30) {
+            $rate = $days / 30;
         }
 
         if ($inverstiment >= $this->_diff) {
-            $amount =  $inverstiment * 0.015 * $rate;
+            $amount =  $inverstiment * 0.03 * $rate;
         } else {
-            $amount =  $inverstiment * 0.01 * $rate;
+            $amount =  $inverstiment * 0.02 * $rate;
         }
         return $amount;
     }
 
     public function actionIndex()
     {
-        $this->_startTime = date("Y-m-d",strtotime("-15 days")) . ' 00:00:00';
-        $this->lessThan15Investment();
+        echo date('Y-m-d H:i:s', time()) . PHP_EOL;
+        $this->_startTime = date("Y-m-d",strtotime("-30 days")) . ' 00:00:00';
 
         $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['!=','locked', 1]);
 
         $provider = new ActiveDataProvider([
             'query' => $userQuery,
             'pagination' => [
-                'pageSize' => 1000,
+                'pageSize' => 500,
             ],
         ]);
         $provider->prepare();
@@ -69,7 +66,7 @@ class BonusController extends Controller
                 $provider = new ActiveDataProvider([
                     'query' => $userQuery,
                     'pagination' => [
-                        'pageSize' => 1000,
+                        'pageSize' => 500,
                         'page' => $i-1,
                     ],
                 ]);
@@ -89,8 +86,9 @@ class BonusController extends Controller
                 $total = $user->investment;
                 $bonusTotal = 0;
                 $lastDate = (int)(strtotime(date('Y-m-d', time())));
-                if (isset($this->_lessInvestiments[$user->id])) {
-                    foreach ($this->_lessInvestiments[$user->id] as $item){
+                $invers = $this->lessThan15Investment($user->id);
+                if (is_array($invers)  && count($invers)) {
+                    foreach ($invers as $item){
                         if (date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate)))) {
                             $days = ($lastDate - strtotime(date('Y-m-d', strtotime($item['created_at'])))) / 86400;
                             $bonusTotal += $this->addBonus($total, $days);
@@ -129,6 +127,7 @@ class BonusController extends Controller
             }
         }
         var_dump($j);
+        echo date('Y-m-d H:i:s', time()) . PHP_EOL;
 
     }
 }
