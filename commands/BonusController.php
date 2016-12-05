@@ -37,23 +37,23 @@ class BonusController extends Controller
     {
         $rate = 1;
 
-        if ($days < 15) {
-            $rate = $days / 15;
+        if ($days < 30) {
+            $rate = $days / 30;
         }
 
         if ($date >= $this->_diffTime) {
             if ($total >= 200000) {
-                $amount =  $inverstiment * 0.015;
+                $amount =  $inverstiment * 0.03;
             } else {
-                $amount =  $inverstiment * 0.01;
+                $amount =  $inverstiment * 0.02;
             }
         } else {
             if ($total < 100000) {
-                $amount =  $inverstiment * 0.01;
-            } else if ($total < 200000) {
-                $amount =  $inverstiment * 0.015;
-            } else {
                 $amount =  $inverstiment * 0.02;
+            } else if ($total < 200000) {
+                $amount =  $inverstiment * 0.03;
+            } else {
+                $amount =  $inverstiment * 0.04;
             }
         }
 
@@ -63,7 +63,7 @@ class BonusController extends Controller
 
     public function actionIndex()
     {
-        $this->_startTime = date("Y-m-d",strtotime("-15 days")) . ' 00:00:00';
+        $this->_startTime = date("Y-m-d",strtotime("-30 days")) . ' 00:00:00';
         $this->lessThan15Investment();
 
         $userQuery = User::find()->where(['=','role_id', 3])->andwhere(['=','locked', 0]);
