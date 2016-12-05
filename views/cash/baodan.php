@@ -15,7 +15,9 @@ $this->title = '转账给报单员';
 	<h1><?= Html::encode($this->title) ?></h1>
 
 	<ul class="tabswitch">
-		<li><?= HTML::a('申请现金提现', ['/cash/create'])?></li>
+		<?php if(\app\models\System::loadConfig('open_cash')):?>
+			<li><?= HTML::a('申请现金提现', ['/cash/create'])?></li>
+		<?php endif ?>
 		<li><?= HTML::a('申请股票提现', ['/cash/create', 'type' => 'transfer'])?></li>
 		<li class="active">转账给报单员</li>
 	</ul>
