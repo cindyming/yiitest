@@ -73,8 +73,7 @@ echo Nav::widget([
                     'label' => '提现管理', 'url' => ['/cash/index'],
                     'items' => [
                         ['label' => '提现管理', 'url' => ['/cash/index']],
-                        \app\models\System::loadConfig('open_cash') ?
-                        ['label' => '申请提现', 'url' => ['/cash/create']] : '',
+                        ['label' => '申请提现', 'url' => ['/cash/create']],
                     ]
                 ],
             ]
