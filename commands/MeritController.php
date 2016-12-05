@@ -208,7 +208,7 @@ class MeritController extends Controller
         if ($isFirst) {
             $parent = $user->getSuggest()->one();
         } else {
-            $parent = $user->getParennt()->one();
+            $parent = $user->getSuggest()->one();
         }
 
         if ($parent && $parent->role_id != 1) {
