@@ -15,7 +15,9 @@ $this->title = '申请股票提现';
     <h1><?= Html::encode($this->title) ?></h1>
 
     <ul class="tabswitch">
+        <?php if(\app\models\System::loadConfig('open_cash')):?>
         <li><?= HTML::a('申请现金提现', ['/cash/create'])?></li>
+        <?php endif ?>
         <li class="active">申请股票提现</li>
         <li><?= HTML::a('转账给报单员', ['/cash/create', 'type' => 'baodan'])?></li>
     </ul>
