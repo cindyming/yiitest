@@ -20,7 +20,7 @@ class UserSearch extends User
     {
         return [
             [['id', 'offical', 'locked', 'role_id', 'referer', 'investment', 'add_member', 'level'], 'integer'],
-            [['auth_key', 'access_token', 'username', 'password', 'password2', 'add_member', 'identity', 'phone','suggest_by', 'title', 'bank', 'cardname', 'cardnumber', 'bankaddress', 'email', 'qq', 'created_at', 'updated_at', 'approved_at'], 'safe'],
+            [['auth_key', 'access_token', 'added_by', 'username', 'password', 'password2', 'add_member', 'identity', 'phone','suggest_by', 'title', 'bank', 'cardname', 'cardnumber', 'bankaddress', 'email', 'qq', 'created_at', 'updated_at', 'approved_at'], 'safe'],
         ];
     }
 
@@ -65,6 +65,7 @@ class UserSearch extends User
             'locked' => $this->locked,
             'role_id' => $this->role_id,
             'referer' => $this->referer,
+            'added_by' => $this->added_by,
             'suggest_by' => $this->suggest_by,
             'level' => $this->level,
             'investment' => $this->investment,
