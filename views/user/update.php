@@ -34,13 +34,6 @@ $this->params['breadcrumbs'][] = 'Update';
         </div>
 
         <?php $form = ActiveForm::begin([
-                'enableAjaxValidation' => true,
-                'validateOnBlur' => true,
-                'validationUrl' => '/user/validate?' . ($model->id ? 'id=' . $model->id : ''),
-                'attributes' => array(
-                    'username',
-                    'referer'
-                )
             ]
         ); ?>
 
