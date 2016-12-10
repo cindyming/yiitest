@@ -42,7 +42,7 @@ class UserController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'changepassword', 'validate', 'create', 'success', 'view', 'applyaddmember', 'tree'],
+                        'actions' => ['index', 'update', 'changepassword', 'validate', 'create', 'success', 'view', 'applyaddmember', 'tree', 'baodanindex'],
                         'roles' => [User::ROLE_USER],
                     ],
                 ],
@@ -426,11 +426,11 @@ class UserController extends Controller
     }
 
     /**
-     * Updates an existing User model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param integer $id
-     * @return mixed
-     */
+ * Updates an existing User model.
+ * If update is successful, the browser will be redirected to the 'view' page.
+ * @param integer $id
+ * @return mixed
+ */
     public function actionAdminupdate($id)
     {
         $model = $this->findModel($id);
@@ -596,6 +596,32 @@ class UserController extends Controller
 
 
         return $this->render('index', [
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+
+    /**
+     * Lists all User models.
+     * @return mixed
+     */
+    public function actionBaodanindex()
+    {
+        $referer = Yii::$app->request->get('referer');
+
+        $query = User::find()->where(['!=','role_id',1]);
+
+        $query->andWhere(['=','added_by',Yii::$app->user->identity->id]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+        ]);
+
+
+        return $this->render('baodanindex', [
             'dataProvider' => $dataProvider,
         ]);
     }
@@ -785,6 +811,31 @@ class UserController extends Controller
         return $this->render('huobiindex', [
             'dataProvider' => $dataProvider,
             'searchModel' => $searchModel,
+        ]);
+    }
+
+    /**
+     * Updates an existing User model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post())) {
+            $user =  User::findOne($model->suggest_by);
+            if ($model->suggest_by === '#' || ($user && $user->getId())) {
+                if ($model->save(true, array('suggest_by'))) {
+                    return $this->redirect(['baodanindex']);
+                }
+            } else {
+                $model->addError('referer', '推荐人的会员ID不正确, 请确认之后重新输入');
+            }
+        }
+        return $this->render('update', [
+            'model' => $model,
         ]);
     }
 }

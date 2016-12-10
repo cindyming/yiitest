@@ -56,7 +56,9 @@ echo Nav::widget([
             'items' => [
                 Yii::$app->user->identity->add_member == 2 ?
                     ['label' => '会员注册', 'url' => ['/user/create']]:
-                  ['label' => '申请成为报单员', 'url' => ['/user/applyaddmember']],
+                    ['label' => '申请成为报单员', 'url' => ['/user/applyaddmember']],
+                ( Yii::$app->user->identity->openSuggestion()) ?
+                    ['label' => '我的报单', 'url' => ['/user/baodanindex']] : '',
                 Yii::$app->user->identity->openSuggestion() ? ['label' => '我的推荐', 'url' => ['/user/index', 'referer' => Yii::$app->user->identity->id]] : '',
                 Yii::$app->user->identity->haveTree() ? ['label' => '网络图', 'url' => ['/user/tree']] : '',
             ]
