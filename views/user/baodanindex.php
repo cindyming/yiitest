@@ -15,22 +15,31 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'layout' => '{items} {summary} {pager}',
+        'pjax' => true,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn', 'header' => '序号'],
             [
                 'attribute' => 'id',
                 'label'=>'会员编号',
+                'filter' => true,
             ],
             [
                 'attribute' => 'username',
                 'filter' => true,
             ],
             'investment',
-            'suggest_by',
-            'referer',
+            [
+                'attribute' => 'suggest_by',
+                'filter' => true,
+            ],
+            [
+                'attribute' => 'referer',
+                'filter' => true,
+            ],
             [
                 'attribute' => 'phone',
-                'filter' => true,
             ],
             'created_at:datetime',
             [
@@ -38,9 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'     => '状态',
                 'value'  => function($model) {
                         return $model->getStatus();
-                    },
-                'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=> [2 => '待审核', 3 => '正式', 4=> '拒绝'],
+                    }
             ],
             [
                 'class' => 'kartik\grid\ActionColumn',

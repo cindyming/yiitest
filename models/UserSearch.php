@@ -65,6 +65,7 @@ class UserSearch extends User
             'locked' => $this->locked,
             'role_id' => $this->role_id,
             'referer' => $this->referer,
+            'suggest_by' => $this->suggest_by,
             'level' => $this->level,
             'investment' => $this->investment,
             'add_member' => $this->add_member,
