@@ -607,22 +607,21 @@ class UserController extends Controller
      */
     public function actionBaodanindex()
     {
-        $referer = Yii::$app->request->get('referer');
+        $searchModel = new UserSearch();
 
-        $query = User::find()->where(['!=','role_id',1]);
+        $data = Yii::$app->request->queryParams;
 
-        $query->andWhere(['=','added_by',Yii::$app->user->identity->id]);
+        $data['UserSearch']['added_by'] = Yii::$app->user->identity->id;
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-            'pagination' => [
-                'pageSize' => 20,
-            ],
-        ]);
+        $dataProvider = $searchModel->search($data);
 
+        $dataProvider->pagination = [
+            'pageSize' => 20,
+        ];
 
         return $this->render('baodanindex', [
             'dataProvider' => $dataProvider,
+            'searchModel' => $searchModel,
         ]);
     }
 
