@@ -831,7 +831,7 @@ class UserController extends Controller
                         return $this->redirect(['baodanindex']);
                     }
                 } else {
-                    $model->addError('referer', '推荐人的会员ID不正确, 请确认之后重新输入');
+                    $model->addError('suggest_by', '推荐人的会员ID不正确, 请确认之后重新输入');
                 }
             }
             return $this->render('update', [
