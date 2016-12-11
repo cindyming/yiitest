@@ -823,18 +823,25 @@ class UserController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post())) {
-            $user =  User::findOne($model->suggest_by);
-            if ($model->suggest_by === '#' || ($user && $user->getId())) {
-                if ($model->save(true, array('suggest_by'))) {
-                    return $this->redirect(['baodanindex']);
+        if ($model->added_by == Yii::$app->user->identity->id) {
+            if ($model->load(Yii::$app->request->post())) {
+                $user =  User::findOne($model->suggest_by);
+                if ($model->suggest_by === '#' || ($user && $user->getId())) {
+                    if ($model->save(true, array('suggest_by'))) {
+                        return $this->redirect(['baodanindex']);
+                    }
+                } else {
+                    $model->addError('referer', '推荐人的会员ID不正确, 请确认之后重新输入');
                 }
-            } else {
-                $model->addError('referer', '推荐人的会员ID不正确, 请确认之后重新输入');
             }
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        } else {
+            Yii::$app->getSession()->set('message', '你没有权限修改该会员');
+            return $this->redirect(['baodanindex']);
         }
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+
+
     }
 }
