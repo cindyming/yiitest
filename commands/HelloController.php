@@ -8,6 +8,7 @@
 namespace app\commands;
 
 use app\models\Log;
+use app\models\User;
 use yii\console\Controller;
 use yii\data\Sort;
 
@@ -27,43 +28,49 @@ class HelloController extends Controller
      */
     public function actionIndex($message = 'hello world')
     {
+        $user = User::findOne(10006255);
+        $newInvestment = 410;
 
-//
-//        $userParents = array();
-//
-//        $userQuery = User::find()->orderBy('id', SORT_ASC);
-//
-//        $provider = new ActiveDataProvider([
-//            'query' => $userQuery,
-//            'pagination' => [
-//                'pageSize' => 1000,
-//            ],
-//        ]);
-//        $provider->prepare();
-//
-//        for($i=1; $i<=$provider->getPagination()->getPageCount();$i++) {
-//            if ($i != 1) {
-//                $provider = new ActiveDataProvider([
-//                    'query' => $userQuery,
-//                    'pagination' => [
-//                        'pageSize' => 1000,
-//                        'page' => $i - 1,
-//                    ],
-//                ]);
-//            }
-//            $users = $provider->getModels();
-//            foreach ($users as $user) {
-//                if (($user->referer)) {
-//                    if (isset($userParents[$user->referer])) {
-//                        $user->parentIds = $userParents[$user->referer]  . $user->id . ',';
-//                    } else {
-//                        $user->parentIds = $user->id . ',';
-//                    }
-//                    $userParents[$user->id] = $user->parentIds;
-//                    $user->save();
-//                }
-//
-//            }
-//        }
+        $investmentParents = array();
+        $this->listParentsAddInvestment($user, $investmentParents);
+        $this->dealWithInvestmentMembers($investmentParents, $newInvestment);
+
+    }
+
+
+    public function listParentsAddInvestment($user, &$parents )
+    {
+        /**
+         * 在这里不计算级别和总投资的原因是因为不合适
+         */
+        $parent = $user->getParennt()->one();
+        if ($parent && $parent->role_id != 1) {
+            $parents[] = $parent;
+
+            $this->listParentsAddInvestment($parent, $parents);
+        }
+    }
+
+    public function dealWithInvestmentMembers($parents, $newInvestment)
+    {
+        if (count($parents)) {
+            foreach ($parents as $level => $per) {
+                $this->addMeritForMember($per, $newInvestment);
+            }
+        }
+    }
+
+    public function addMeritForMember($user, $newInvestment = 0)
+    {
+        if ($newInvestment) {
+            $user->achievements -= $newInvestment;
+        }
+
+        $calLevel = $user->calculateLevel();
+        if (($user->level < $calLevel)) {
+            $user->level =  $calLevel;
+        }
+
+        $user->save();
     }
 }
