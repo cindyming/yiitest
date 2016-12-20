@@ -143,7 +143,7 @@ class BonusController extends Controller
                 if (date('Y-m-d', strtotime($this->_startTime)) < date('Y-m-d', strtotime($user->approved_at))) {
                     $days = ($lastDate - strtotime(date('Y-m-d', strtotime($user->approved_at)))) / 86400;
                 } else {
-                    $days = 15;
+                    $days = 30;
                 }
                 $bonusTotal += $this->addBonus($total, $total, $days, date('Y-m-d', strtotime($user->approved_at)));
                 var_dump('金额:' . $total);
