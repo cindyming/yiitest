@@ -115,7 +115,7 @@ class MeritController extends Controller
                 $note = '钻石总监绩效 - 新会员 - ' . $user->id;
                 $this->dealWithDiamondMembers($diamondMembers, $amount, $note);
 
-                Log::add('管理员', '计算绩效', true, "新会员" . $user->id );
+                Log::add('管理员', '计算绩效', true, "新会员" . $user->id);
                 $transaction->commit();
             } catch (Exception $e) {
                 $transaction->rollback();//回滚函数
