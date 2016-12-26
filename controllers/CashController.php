@@ -142,87 +142,101 @@ class CashController extends Controller
 
         $data = Yii::$app->request->post();
         if ($model->load(Yii::$app->request->post()) && isset($data['Cash']) && isset($data['Cash']['password2'])) {
-            $validateAmount = true;
-            if (!in_array($model->type, array(1,2,3))){
-                $model->addError('type', '请选择账户类型.');
-            } else {
-                if ($model->type == 1) {
-                    $compareAmount = Yii::$app->user->identity->bonus_remain;
-                } elseif($model->type == 2) {
-                    $compareAmount = Yii::$app->user->identity->merit_remain;
-                } elseif($model->type == 3) {
-                    $compareAmount = Yii::$app->user->identity->baodan_remain;
-                }
-                if ($model->amount > $compareAmount) {
-                    $validateAmount = false;
-                    $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 服务费余额: ' . (float)Yii::$app->user->identity->baodan_remain  . '.');
-                }
-            }
-
-            if ((float)$model->amount <= 0) {
-                $validateAmount = false;
-                $model->addError('amount', '提现金额必须大于0.');
-            }
-
-
-            if ($model->baodan_id) {
-                $user = User::findById(trim($model->baodan_id));
-
-                if ($user && $user->add_member) {
-                    $model->baodan_id = $user->id;
+            if ($model->user_id == Yii::$app->user->identity->id) {
+                $validateAmount = true;
+                if (!in_array($model->type, array(1, 2, 3))) {
+                    $model->addError('type', '请选择账户类型.');
                 } else {
-                    $model->addError('baodan_id', '报单员不存在,请确认后输入');
+                    if ($model->type == 1) {
+                        $compareAmount = Yii::$app->user->identity->bonus_remain;
+                    } elseif ($model->type == 2) {
+                        $compareAmount = Yii::$app->user->identity->merit_remain;
+                    } elseif ($model->type == 3) {
+                        $compareAmount = Yii::$app->user->identity->baodan_remain;
+                    }
+                    if ($model->amount > $compareAmount) {
+                        $validateAmount = false;
+                        $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain . ', 服务费余额: ' . (float)Yii::$app->user->identity->baodan_remain . '.');
+                    }
                 }
-            }
 
-            if ($model->amount < System::loadConfig('lowest_cash_amount')) {
-                $validateAmount = false;
-                $model->addError('amount', '最低提现额为: ' . System::loadConfig('lowest_cash_amount') . '.');
-            }
-            if (Yii::$app->user->identity->validatePassword2($data['Cash']['password2'])) {
+                if ((float)$model->amount <= 0) {
+                    $validateAmount = false;
+                    $model->addError('amount', '提现金额必须大于0.');
+                }
 
-                if ($validateAmount) {
-                    if ($type == 'transfer') {
-                        $model->cash_type = 1;
+
+                if ($model->baodan_id) {
+                    $user = User::findById(trim($model->baodan_id));
+
+                    if ($user && $user->add_member) {
+                        $model->baodan_id = $user->id;
+                    } else {
+                        $model->addError('baodan_id', '报单员不存在,请确认后输入');
                     }
+                }
 
-                    if ($type == 'baodan') {
-                        $model->cash_type = 3;
-                    }
+                if ($model->amount < System::loadConfig('lowest_cash_amount')) {
+                    $validateAmount = false;
+                    $model->addError('amount', '最低提现额为: ' . System::loadConfig('lowest_cash_amount') . '.');
+                }
+                if (Yii::$app->user->identity->validatePassword2($data['Cash']['password2'])) {
 
-                    $connection = Yii::$app->db;
-                    try {
-                        $transaction = $connection->beginTransaction();
-                        $user = User::findById(Yii::$app->user->identity->id);
-                        if ($model->type == 1) {
-                            $user->bonus_remain = $user->bonus_remain - $model->amount;
-                        } elseif($model->type == 2) {
-                            $user->merit_remain = $user->merit_remain - $model->amount;
-                        } elseif($model->type == 3) {
-                            $user->baodan_remain = $user->baodan_remain - $model->amount;
+                    if ($validateAmount) {
+                        if ($type == 'transfer') {
+                            $model->cash_type = 1;
                         }
 
-                        if (($model->cash_type == 3) && !System::loadConfig('duichong_audit')) {
-                            $baodanUser = User::findById($model->baodan_id);
-                            if ($baodanUser) {
-                                $model->status = 2;
-                                $realAmount =  $model->amount;
-                                if ($model->type == 2) {
-                                    $realAmount = $model->amount * (1 - floatval(3 / 100));
+                        if ($type == 'baodan') {
+                            $model->cash_type = 3;
+                        }
+
+                        $connection = Yii::$app->db;
+                        try {
+                            $transaction = $connection->beginTransaction();
+                            $user = User::findById(Yii::$app->user->identity->id);
+                            if ($model->type == 1) {
+                                $user->bonus_remain = $user->bonus_remain - $model->amount;
+                            } elseif ($model->type == 2) {
+                                $user->merit_remain = $user->merit_remain - $model->amount;
+                            } elseif ($model->type == 3) {
+                                $user->baodan_remain = $user->baodan_remain - $model->amount;
+                            }
+
+                            if (($model->cash_type == 3) && !System::loadConfig('duichong_audit')) {
+                                $baodanUser = User::findById($model->baodan_id);
+                                if ($baodanUser) {
+                                    $model->status = 2;
+                                    $realAmount = $model->amount;
+                                    if ($model->type == 2) {
+                                        $realAmount = $model->amount * (1 - floatval(3 / 100));
+                                    }
+                                    $baodanUser->duichong_total += $realAmount;
+                                    $baodanUser->duichong_remain += $realAmount;
+                                    $inRecord = array(
+                                        'user_id' => $model->baodan_id,
+                                        'type' => 3,
+                                        'note' => '会员(' . Yii::$app->user->id . ')对冲转账',
+                                        'duichong' => $realAmount,
+                                        'total' => $baodanUser->duichong_remain,
+                                    );
+                                    $model->note .= '; 对冲帐户帐号, ' . $baodanUser->id;
+                                    $revenue = new Revenue();
+                                    $revenue->load($inRecord, '');
+                                    if ($user->save() && $baodanUser->save() && $revenue->save() && $model->save()) {
+                                        $transaction->commit();
+                                        Yii::$app->getSession()->set('message', '提现申请提交成功');
+                                        return $this->redirect(['index']);
+                                    } else {
+                                        Yii::$app->getSession()->set('message', '提现申请提交失败');
+                                        $transaction->rollback();
+                                    }
+                                } else {
+                                    Yii::$app->getSession()->set('message', '提现申请提交失败');
+                                    $transaction->rollback();
                                 }
-                                $baodanUser->duichong_total += $realAmount;
-                                $baodanUser->duichong_remain += $realAmount;
-                                $inRecord = array(
-                                    'user_id' => $model->baodan_id,
-                                    'type' => 3,
-                                    'note' => '会员(' . Yii::$app->user->id . ')对冲转账',
-                                    'duichong' => $realAmount,
-                                    'total' => $baodanUser->duichong_remain,
-                                );
-                                $model->note .= '; 对冲帐户帐号, ' . $baodanUser->id;
-                                $revenue = new Revenue();
-                                $revenue->load($inRecord, '');
-                                if ($user->save() && $baodanUser->save() && $revenue->save() && $model->save()) {
+                            } else {
+                                if ($model->save() && $user->save()) {
                                     $transaction->commit();
                                     Yii::$app->getSession()->set('message', '提现申请提交成功');
                                     return $this->redirect(['index']);
@@ -230,27 +244,17 @@ class CashController extends Controller
                                     Yii::$app->getSession()->set('message', '提现申请提交失败');
                                     $transaction->rollback();
                                 }
-                            } else {
-                                Yii::$app->getSession()->set('message', '提现申请提交失败');
-                                $transaction->rollback();
                             }
-                        } else {
-                            if ($model->save() && $user->save()) {
-                                $transaction->commit();
-                                Yii::$app->getSession()->set('message', '提现申请提交成功');
-                                return $this->redirect(['index']);
-                            } else {
-                                Yii::$app->getSession()->set('message', '提现申请提交失败');
-                                $transaction->rollback();
-                            }
-                        }
 
-                    }  catch (Exception $e) {
-                        $transaction->rollback();//回滚函数
+                        } catch (Exception $e) {
+                            $transaction->rollback();//回滚函数
+                        }
                     }
+                } else {
+                    $model->addError('password2', '二级密码不正确, 请输入正确的二级密码');
                 }
             } else {
-                $model->addError('password2', '二级密码不正确, 请输入正确的二级密码');
+                Yii::$app->getSession()->set('danger', '提现申请失败请稍后再试.');
             }
         }
 
