@@ -25,6 +25,7 @@ $this->title = '申请股票提现';
 <div class="cash-_form sm-form">
 
     <?php $form = ActiveForm::begin(); ?>
+    <?= $form->field($model, 'user_id')->label('')->hiddenInput(['value' => Yii::$app->user->identity->id]) ?>
     <?= $form->field($model, 'type')->label('')->hiddenInput() ?>
     <?= $form->field($model, 'stack_number', ['options' => ['class' => 'form-group required']])->textInput(array( 'required'=> true)); ?>
     <?= $form->field($model, 'amount') ?>
