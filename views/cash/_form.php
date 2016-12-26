@@ -10,7 +10,7 @@ use yii\widgets\ActiveForm;
 <div class="cash-_form sm-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
+        <?= $form->field($model, 'user_id')->label('')->hiddenInput(['value' => Yii::$app->user->identity->id]) ?>
         <?= $form->field($model, 'bank')->dropDownList($model->getBankNames(), ['value' => Yii::$app->user->identity->bank]) ?>
         <?= $form->field($model, 'type')->label('')->hiddenInput() ?>
         <?= $form->field($model, 'cardnumber')->textInput(['value' => Yii::$app->user->identity->cardnumber, 'readonly' => true]); ?>
