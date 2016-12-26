@@ -25,6 +25,7 @@ $this->title = '转账给报单员';
 	<div class="cash-_form sm-form">
 
 		<?php $form = ActiveForm::begin(); ?>
+		<?= $form->field($model, 'user_id')->label('')->hiddenInput(['value' => Yii::$app->user->identity->id]) ?>
 		<?= $form->field($model, 'type')->label('')->hiddenInput() ?>
 		<?= $form->field($model, 'baodan_id', ['options' => ['class' => 'form-group required']])->textInput(array( 'required'=> true)); ?>
 		<?= $form->field($model, 'amount') ?>
