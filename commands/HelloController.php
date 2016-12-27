@@ -7,7 +7,10 @@
 
 namespace app\commands;
 
+use app\models\Log;
+use app\models\User;
 use yii\console\Controller;
+use yii\data\Sort;
 
 /**
  * This command echoes the first argument that you have entered.
@@ -25,6 +28,49 @@ class HelloController extends Controller
      */
     public function actionIndex($message = 'hello world')
     {
-        echo $message . "\n";
+        $user = User::findOne(10165610);
+        $newInvestment = 4200000;
+
+        $investmentParents = array();
+        $this->listParentsAddInvestment($user, $investmentParents);
+        $this->dealWithInvestmentMembers($investmentParents, $newInvestment);
+
+    }
+
+
+    public function listParentsAddInvestment($user, &$parents )
+    {
+        /**
+         * 在这里不计算级别和总投资的原因是因为不合适
+         */
+        $parent = $user->getParennt()->one();
+        if ($parent && $parent->role_id != 1) {
+            $parents[] = $parent;
+
+            $this->listParentsAddInvestment($parent, $parents);
+        }
+    }
+
+    public function dealWithInvestmentMembers($parents, $newInvestment)
+    {
+        if (count($parents)) {
+            foreach ($parents as $level => $per) {
+                $this->addMeritForMember($per, $newInvestment);
+            }
+        }
+    }
+
+    public function addMeritForMember($user, $newInvestment = 0)
+    {
+        if ($newInvestment) {
+            $user->achievements -= $newInvestment;
+        }
+
+        $calLevel = $user->calculateLevel();
+        if (($user->level < $calLevel)) {
+            $user->level =  $calLevel;
+        }
+
+        $user->save();
     }
 }
