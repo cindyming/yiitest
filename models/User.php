@@ -924,16 +924,20 @@ class User extends ActiveRecord implements IdentityInterface
     public function beforeSave($insert)
     {
         if (!$insert) {
-            $oldInfo = User::findById($this->id)->getAttributes();
-            $newInfo = $this->getAttributes();
+            $user  =  User::findById($this->id);
+            if ($user && $user->id) {
+                $oldInfo = $user->getAttributes();
+                $newInfo = $this->getAttributes();
 
-            $from = array_diff_assoc($oldInfo, $newInfo);
-            $to = array_diff_assoc($newInfo, $oldInfo);
+                $from = array_diff_assoc($oldInfo, $newInfo);
+                $to = array_diff_assoc($newInfo, $oldInfo);
 
-            $action = "属性更新:" . json_encode($from) . 'TO:' . json_encode($to);
-            $action .= Yii::$app->request->isConsoleRequest ? "Script: " . json_encode(Yii::$app->request->getParams()) :  "URL: " . Yii::$app->request->getAbsoluteUrl() ;
+                $action = "属性更新:" . json_encode($from) . 'TO:' . json_encode($to);
+                $action .= Yii::$app->request->isConsoleRequest ? "Script: " . json_encode(Yii::$app->request->getParams()) :  "URL: " . Yii::$app->request->getAbsoluteUrl() ;
 
-            Log::add('USER' . $this->id, '更新信息', true, $action);
+                Log::add('USER' . $this->id, '更新信息', true, $action);
+
+            }
 
         }
 
