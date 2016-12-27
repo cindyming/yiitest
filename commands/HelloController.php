@@ -28,8 +28,8 @@ class HelloController extends Controller
      */
     public function actionIndex($message = 'hello world')
     {
-        $user = User::findOne(10006257);
-        $newInvestment = 60000;
+        $user = User::findOne(10006704);
+        $newInvestment = 1800000;
 
         $investmentParents = array();
         $this->listParentsAddInvestment($user, $investmentParents);
