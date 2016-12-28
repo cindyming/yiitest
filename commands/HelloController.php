@@ -29,7 +29,7 @@ class HelloController extends Controller
     public function actionIndex($message = 'hello world')
     {
         $user = User::findOne(10006704);
-        $newInvestment = 1800000;
+        $newInvestment = 0;
 
         $investmentParents = array();
         $this->listParentsAddInvestment($user, $investmentParents);
@@ -67,10 +67,7 @@ class HelloController extends Controller
         }
 
         $calLevel = $user->calculateLevel();
-        if (($user->level < $calLevel)) {
-            $user->level =  $calLevel;
-        }
-
+        $user->level =  $calLevel;
         $user->save();
     }
 }
