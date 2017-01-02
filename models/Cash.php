@@ -47,6 +47,18 @@ class Cash extends ActiveRecord
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'cardnumber',
+                ],
+                'value' => function ($event) {
+                    if ($this->cardnumber) {
+                        return trim(Yii::$app->user->identity->cardnumber);
+                    }
+
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'cash_type',
                 ],
                 'value' => function ($event) {
