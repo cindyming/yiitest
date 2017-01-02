@@ -142,7 +142,7 @@ class CashController extends Controller
         if ($model->load(Yii::$app->request->post()) && isset($data['Cash']) && isset($data['Cash']['password2'])) {
             if ($model->user_id == Yii::$app->user->identity->id) {
                 $validateAmount = true;
-                if (!in_array($model->type, array(1,2,3))){
+                if (!in_array($model->type, array(1,2,3,9))  && (($model->type == 9) && ($type != 'mallmoney'))){
                     $model->addError('type', '请选择账户类型.');
                 } else {
                     if ($model->type == 1) {
@@ -151,10 +151,12 @@ class CashController extends Controller
                         $compareAmount = Yii::$app->user->identity->merit_remain;
                     } elseif($model->type == 3) {
                         $compareAmount = Yii::$app->user->identity->baodan_remain;
+                    } elseif($model->type == 9) {
+                        $compareAmount = Yii::$app->user->identity->mall_remain;
                     }
                     if ($model->amount > $compareAmount) {
                         $validateAmount = false;
-                        $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 服务费余额: ' . (float)Yii::$app->user->identity->baodan_remain  . '.');
+                        $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 服务费余额: ' . (float)Yii::$app->user->identity->baodan_remain .  ', 商城币余额: ' . (float)Yii::$app->user->identity->mall_remain . '.');
                     }
                 }
 
@@ -189,16 +191,27 @@ class CashController extends Controller
                             $model->cash_type = 3;
                         }
 
+                        if ($type == 'mallmoney') {
+                            $model->cash_type = 4;
+                        }
+
                         $connection = Yii::$app->db;
                         try {
                             $transaction = $connection->beginTransaction();
                             $user = User::findById(Yii::$app->user->identity->id);
+                            $total = 0;
                             if ($model->type == 1) {
                                 $user->bonus_remain = $user->bonus_remain - $model->amount;
+                                $total = $user->bonus_remain;
                             } elseif($model->type == 2) {
                                 $user->merit_remain = $user->merit_remain - $model->amount;
+                                $total = $user->merit_remain;
                             } elseif($model->type == 3) {
                                 $user->baodan_remain = $user->baodan_remain - $model->amount;
+                                $total = $user->baodan_remain;
+                            } elseif($model->type == 9) {
+                                $user->mall_remain = $user->mall_remain - $model->amount;
+                                $total = $user->mall_remain;
                             }
 
                             if (($model->cash_type == 3) && !System::loadConfig('duichong_audit')) {
@@ -219,7 +232,7 @@ class CashController extends Controller
                                         'total' => $baodanUser->duichong_remain,
                                     );
                                     $model->note .= '; 对冲帐户帐号, ' . $baodanUser->id;
-                                    $model->total = $user->baodan_remain;
+                                    $model->total = $total;
                                     $revenue = new Revenue();
                                     $revenue->load($inRecord, '');
                                     if ($user->save() && $baodanUser->save() && $revenue->save() && $model->save()) {
@@ -227,11 +240,11 @@ class CashController extends Controller
                                         Yii::$app->getSession()->set('message', '提现申请提交成功');
                                         return $this->redirect(['index']);
                                     } else {
-                                        Yii::$app->getSession()->set('message', '提现申请提交失败');
+                                        Yii::$app->getSession()->set('danger', '提现申请提交失败');
                                         $transaction->rollback();
                                     }
                                 } else {
-                                    Yii::$app->getSession()->set('message', '提现申请提交失败');
+                                    Yii::$app->getSession()->set('danger', '提现申请提交失败');
                                     $transaction->rollback();
                                 }
                             } else {
@@ -240,7 +253,7 @@ class CashController extends Controller
                                     Yii::$app->getSession()->set('message', '提现申请提交成功');
                                     return $this->redirect(['index']);
                                 } else {
-                                    Yii::$app->getSession()->set('message', '提现申请提交失败');
+                                    Yii::$app->getSession()->set('danger', '提现申请提交失败');
                                     $transaction->rollback();
                                 }
                             }
@@ -255,7 +268,7 @@ class CashController extends Controller
                 Yii::$app->getSession()->set('danger', '提现申请失败请稍后再试.');
             }
         }
-//var_dump($type);die;
+
         if ($type == 'transfer') {
             return $this->render('transfer', [
                 'model' => $model,
@@ -264,11 +277,15 @@ class CashController extends Controller
             return $this->render('baodan', [
                 'model' => $model,
             ]);
-        } else {
-            return $this->render('create', [
+        } else if ($type == 'mallmoney'){
+          return $this->render('mallmoney', [
                 'model' => $model,
             ]);
-        }
+        } else  {
+        return $this->render('create', [
+            'model' => $model,
+        ]);
+    }
 
     }
 
@@ -286,6 +303,8 @@ class CashController extends Controller
                 $model->total = $user->merit_remain;
             } elseif($model->type == 3) {
                 $model->total = $user->baodan_remain;
+            } elseif($model->type == 9) {
+                $model->total = $user->mall_remain;
             }
             $model->note = '提现成功';
 
@@ -319,7 +338,37 @@ class CashController extends Controller
                 } else {
                     $model->note .= '; 转移股票账号成功, id' . $response->id;
                 }
+            } else if ($model->cash_type == 4) {
+                //http://10.0.1.51:7001/membercenter/web/memberChongzhi/chongzhi?account=zf09&money=3&accountType=3
+                $service_url = Yii::$app->params['sc_url'] . http_build_query(array('account' => $model->sc_account, 'money' => $model->real_amount, 'accountType' => 3, 'system' => 'hainan'));
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_POST, true);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, array());
+                curl_setopt($curl, CURLOPT_URL, $service_url);
+                $ret = curl_exec($curl);
+
+                $curl_response = curl_exec($curl);
+                $response = json_decode($curl_response);
+                curl_close($curl);
+
+                Yii::info('会员(' . $model->user_id . ')' . ' 商城币提现' . '返回' .json_encode($response));
+                if ($response && $response->code) {
+                    if ( $response->code == 1) {
+                        $model->note .= '; 商城币提现,' . $response->code;
+                    } else {
+                        Yii::$app->getSession()->set('message', $response['result']);
+                        $pass = false;
+                        Log::add('会员(' . $model->user_id . ')', '商城币提现失败', '失败', json_encode($response));
+                    }
+                } else {
+                    $pass = false;
+                    Yii::$app->getSession()->set('message', '接口返回的失败,请稍后再试');
+                    Log::add('会员(' . $model->user_id . ')', '商城币提现失败', '失败', json_encode($response));
+                }
             }
+
             $connection=Yii::$app->db;
             $transaction = $connection->beginTransaction();
             if ($model->cash_type == 3) {
@@ -352,7 +401,7 @@ class CashController extends Controller
                     Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放成功');
                     $transaction->commit();
                 } else {
-                    Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放失败');
+                   // Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放失败');
                     $transaction->rollback();
                 }
             }
@@ -399,6 +448,11 @@ class CashController extends Controller
                 $data['baodan'] =  $model->amount;
                 $data['total'] =  $user->baodan_remain;
                 $model->total = $user->baodan_remain;
+            } elseif($model->type == 9) {
+                $user->mall_remain = $user->mall_remain + $model->amount;
+                $data['mall'] =  $model->amount;
+                $data['total'] =  $user->mall_remain;
+                $model->total = $user->mall_remain;
             }
             $model->note .= '拒绝提现,货币返还.';
             Yii::$app->getSession()->set('message', '提现申请拒绝成功');
