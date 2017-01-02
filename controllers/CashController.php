@@ -347,8 +347,6 @@ class CashController extends Controller
                 curl_setopt($curl, CURLOPT_POST, true);
                 curl_setopt($curl, CURLOPT_POSTFIELDS, array());
                 curl_setopt($curl, CURLOPT_URL, $service_url);
-                $ret = curl_exec($curl);
-
                 $curl_response = curl_exec($curl);
                 $response = json_decode($curl_response);
                 curl_close($curl);

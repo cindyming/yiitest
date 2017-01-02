@@ -21,7 +21,7 @@ $this->title = '转账到商城';
         <li><?= HTML::a('申请股票提现', ['/cash/create', 'type' => 'transfer'])?></li>
         <li><?= HTML::a('转账给报单员', ['/cash/create', 'type' => 'baodan'])?></li>
         <?php if(\app\models\System::loadConfig('open_mall_transfer')):?>
-            <li><?= HTML::a('转账到商城', ['/cash/create', 'type' => 'mallmoney'])?></li>
+            <li class="active">转账到商城</li>
         <?php endif ?>
     </ul>
 
