@@ -971,5 +971,7 @@ class User extends ActiveRecord implements IdentityInterface
         $parents = array();
         $this->listParentsAddInvestment($this, $parents);
 
+        return true;
+
     }
 }
