@@ -81,9 +81,9 @@ class GlobaltotalController extends Controller
 
         $kouchBonusTotal = $connection->createCommand("SELECT sum(amount) as 'total'  FROM cach WHERE type=4 and created_at > '{$date}' and (note like '%错误报单%' or note like '%管理员扣除%')")->queryOne();
 
-        $bonus  = $connection->createCommand("SELECT sum(merit) as 'merit_total', sum(baodan) as 'baodan_total'  FROM revenue WHERE created_at > '{$date}' AND type=1")->queryOne();
+        $bonus  = $connection->createCommand("SELECT sum(merit) as 'merit_total', sum(baodan) as 'baodan_total'  FROM revenue WHERE created_at > '{$date}' AND type in (1,2)")->queryOne();
 
-        $bonuss  = $connection->createCommand("SELECT  sum(bonus) as 'bonus_total' FROM revenue LEFT JOIN user on user.id=revenue.user_id WHERE revenue.created_at > '{$date}'  AND user.approved_at>'{$date}' ")->queryOne();
+        $bonuss  = $connection->createCommand("SELECT  sum(bonus) as 'bonus_total' FROM revenue LEFT JOIN user on user.id=revenue.user_id WHERE revenue.created_at > '{$date}'  AND user.approved_at>'{$date}'AND type in (1,2) ")->queryOne();
 
         $data = array(
             'GlobalTotal' => array(
