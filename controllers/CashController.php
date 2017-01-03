@@ -351,7 +351,7 @@ class CashController extends Controller
                 $response = json_decode($curl_response);
                 curl_close($curl);
 
-                Yii::info('会员(' . $model->user_id . ')' . ' 商城币提现' . '返回' .json_encode($response));
+                Log::add('会员(' . $model->user_id . ')' , ' 商城币提现' , '返回' .json_encode($response));
                 if ($response && $response->code) {
                     if ( $response->code == 1) {
                         $model->note .= '; 商城币提现,' . $response->code;
