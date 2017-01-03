@@ -178,33 +178,39 @@ class UserController extends Controller
         $model = $this->findModel($id);
         $data = array('User' => array('approved_at' => date('Y-m-d h:i:s', time()), 'role_id'=> 3));
 
-        if ($model->load($data) && $model->save()) {
-            $addedBy = User::findOne($model->added_by);
-            if ($addedBy && $addedBy->getId() && ($addedBy->role_id == 3)) {
-                $meritAmount = round($model->investment * 0.01, 2);
+        try {
+            if ($model->canApproved() && $model->load($data) && $model->save()) {
+                $addedBy = User::findOne($model->added_by);
+                if ($addedBy && $addedBy->getId() && ($addedBy->role_id == 3)) {
+                    $meritAmount = round($model->investment * 0.01, 2);
 //                if ($model->duichong_invest) {
 //                    $meritAmount +=  round($model->duichong_invest * 0.01, 2);
 //                }
-                $data = array(
-                    'user_id' => $addedBy->id,
-                    'note' => '会员：' .$model->id . '的报单奖励',
-                    'type' => 1,
-                    'baodan' => $meritAmount,
-                    'total' => $meritAmount +  $addedBy->baodan_remain
-                );
-                $merit = new Revenue();
-                $merit->load($data, '');
-                $merit->save();
-                $addedBy->baodan_remain += $meritAmount;
-                $addedBy->baodan_total += $meritAmount;
-                $addedBy->save();
+                    $data = array(
+                        'user_id' => $addedBy->id,
+                        'note' => '会员：' .$model->id . '的报单奖励',
+                        'type' => 1,
+                        'baodan' => $meritAmount,
+                        'total' => $meritAmount +  $addedBy->baodan_remain
+                    );
+                    $merit = new Revenue();
+                    $merit->load($data, '');
+                    $merit->save();
+                    $addedBy->baodan_remain += $meritAmount;
+                    $addedBy->baodan_total += $meritAmount;
+                    $addedBy->save();
 
+                }
+                Yii::$app->getSession()->set('message', '会员(' .$id. ')审核成功');
+                return $this->redirect(['adminindexapprove']);
+            } else {
+                return $this->redirect(['adminindexunapprove']);
             }
-            Yii::$app->getSession()->set('message', '会员(' .$id. ')审核成功');
-            return $this->redirect(['adminindexapprove']);
-        } else {
+        } catch(Exception $e) {
+            Yii::$app->getSession()->set('danger', $e->getMessage());
             return $this->redirect(['adminindexunapprove']);
         }
+
     }
 
     public function actionAdminresetpassword($id)
@@ -574,6 +580,7 @@ class UserController extends Controller
 
         if(($model->role_id == 3)  && ($model->merited == 1)) {
             $child = User::find()->where(['=', 'referer', $model->id])->andWhere(['=', 'role_id', 3])->count();
+            $child += User::find()->where(['=', 'suggest_by', $model->id])->andWhere(['=', 'role_id', 3])->count();
 
             $invests = Investment::find()->where(['=', 'user_id', $model->id])->andWhere(['=', 'status', 1])->count();
 

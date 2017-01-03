@@ -943,4 +943,53 @@ class User extends ActiveRecord implements IdentityInterface
 
         return parent::beforeSave($insert);
     }
+
+    public function listParentsAddMerit($user, &$parents)
+    {
+        $parent = $user->getSuggest()->one();
+
+        if ($parent && $parent->role_id != 1) {
+
+            if  (!$parent->locked) {
+                if (isset($parents[$parent->id])) {
+                    throw new Exception('用户:' . $user->id . '的推荐人存在死循环');
+                } else {
+                    $parents[$parent->id] = $parent->id;
+                    $this->listParentsAddMerit($parent, $parents);
+
+                }
+            }
+
+
+        }
+    }
+
+    public function listParentsAddInvestment($user, &$parents )
+    {
+        /**
+         * 在这里不计算级别和总投资的原因是因为不合适
+         */
+        $parent = $user->getParennt()->one();
+        if ($parent && $parent->role_id != 1) {
+            if (isset($parents[$parent->id])) {
+                throw new Exception('用户:' . $user->id . '的接点人存在死循环');
+            } else {
+                $parents[$parent->id] = $parent->id;
+                $this->listParentsAddInvestment($parent, $parents);
+            }
+
+        }
+    }
+
+    public function canApproved()
+    {
+        $parents = array();
+        $this->listParentsAddMerit($this, $parents);
+
+        $parents = array();
+        $this->listParentsAddInvestment($this, $parents);
+
+        return true;
+
+    }
 }
