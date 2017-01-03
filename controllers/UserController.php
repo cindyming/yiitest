@@ -637,6 +637,7 @@ class UserController extends Controller
 
         if(($model->role_id == 3)  && ($model->merited == 1)) {
             $child = User::find()->where(['=', 'referer', $model->id])->andWhere(['=', 'role_id', 3])->count();
+            $child += User::find()->where(['=', 'suggest_by', $model->id])->andWhere(['=', 'role_id', 3])->count();
 
             $invests = Investment::find()->where(['=', 'user_id', $model->id])->andWhere(['=', 'status', 1])->count();
 
