@@ -47,6 +47,18 @@ class Cash extends ActiveRecord
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'cardnumber',
+                ],
+                'value' => function ($event) {
+                    if ($this->cardnumber) {
+                        return trim(Yii::$app->user->identity->cardnumber);
+                    }
+
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'cash_type',
                 ],
                 'value' => function ($event) {
@@ -99,7 +111,7 @@ class Cash extends ActiveRecord
     {
         return [
             [['amount'], 'required'],
-            [['user_id', 'note', 'bank', 'status', 'cash_type', 'baodan_id', 'stack_number', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total'], 'trim'],
+            [['user_id', 'note', 'bank', 'status', 'cash_type', 'baodan_id', 'stack_number', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total', 'sc_account'], 'trim'],
             [['type'], 'integer'],
             [['baodan_id'], 'validateBaodan']
         ];
@@ -125,7 +137,8 @@ class Cash extends ActiveRecord
             'total' => '出账后余额',
             'note' => '摘要',
             'password2' => '二级密码',
-            'created_at' => '日期'
+            'created_at' => '日期',
+            'sc_account' => '商城会员名字'
         ];
     }
 
@@ -136,8 +149,8 @@ class Cash extends ActiveRecord
 
     public function getTypes($filter = false)
     {
-        return  $filter ? array(''=> '不限', 1 => '分红提现', 2 => '绩效提现', 3 => '服务费', 4 => '分红支出', 5 => '绩效支出', '6' => '服务费支出', '7' => '商城币支出', 8=>'对冲帐户')
-            : array(1 => '分红提现', 2 => '绩效提现', 3 => '服务费提现', 4 => '分红支出', 5 => '绩效支出', '6' => '服务费支出', '7' => '商城币支出',  8=>'对冲帐户');
+        return  $filter ? array(''=> '不限', 1 => '分红提现', 2 => '绩效提现', 3 => '服务费', 4 => '分红支出', 5 => '绩效支出', '6' => '服务费支出', '7' => '商城币支出', 8=>'对冲帐户', 9=>'商城币提现')
+            : array(1 => '分红提现', 2 => '绩效提现', 3 => '服务费提现', 4 => '分红支出', 5 => '绩效支出', '6' => '服务费支出', '7' => '商城币支出',  8=>'对冲帐户', 9=>'商城币提现');
     }
 
     public function getStatus($filter =false)
@@ -173,6 +186,7 @@ class Cash extends ActiveRecord
             1 => '股票提现',
             2 => '现金提现',
             3 => '转账报单员',
+            4 => '转账商城'
         );
 
         return $type ? (isset($data[$type]) ? $data[$type] : '未知类型') : $data;

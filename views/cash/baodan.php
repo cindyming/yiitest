@@ -20,6 +20,9 @@ $this->title = '转账给报单员';
         <?php endif ?>
         <li><?= HTML::a('申请股票提现', ['/cash/create', 'type' => 'transfer'])?></li>
         <li class="active">转账给报单员</li>
+        <?php if(\app\models\System::loadConfig('open_mall_transfer')):?>
+            <li><?= HTML::a('转账到商城', ['/cash/create', 'type' => 'mallmoney'])?></li>
+        <?php endif ?>
     </ul>
 
 <div class="cash-_form sm-form">
