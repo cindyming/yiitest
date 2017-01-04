@@ -112,7 +112,7 @@ class Cash extends ActiveRecord
     {
         return [
             [['amount'], 'required'],
-            [['user_id', 'note', 'bank', 'status', 'cash_type', 'baodan_id', 'stack_number', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total'], 'trim'],
+            [['user_id', 'note', 'bank', 'status', 'cash_type', 'sc_account', 'baodan_id', 'stack_number', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total'], 'trim'],
             [['type'], 'integer'],
             [['baodan_id'], 'validateBaodan']
         ];
@@ -139,6 +139,7 @@ class Cash extends ActiveRecord
             'password2' => '二级密码',
             'created_at' => '日期',
             'baodan_id' => '报单员编号',
+            'sc_account' => '商城会员名字'
         ];
     }
 
@@ -149,8 +150,8 @@ class Cash extends ActiveRecord
 
     public function getTypes($filter = false)
     {
-        return  $filter ? array(''=> '不限', 1 => '分红提现', 2 => '绩效提现', 3 => '服务费', 4 => '分红支出', 5 => '绩效支出', '6' => '服务费支出', '7' => '商城币支出', 8=>'对冲帐户')
-            : array(1 => '分红提现', 2 => '绩效提现', 3 => '服务费提现', 4 => '分红支出', 5 => '绩效支出', '6' => '服务费支出', '7' => '商城币支出',  8=>'对冲帐户');
+        return  $filter ? array(''=> '不限', 1 => '分红提现', 2 => '绩效提现', 3 => '服务费', 4 => '分红支出', 5 => '绩效支出', '6' => '服务费支出', '7' => '商城币支出', 8=>'对冲帐户', 9=>'商城币提现')
+            : array(1 => '分红提现', 2 => '绩效提现', 3 => '服务费提现', 4 => '分红支出', 5 => '绩效支出', '6' => '服务费支出', '7' => '商城币支出',  8=>'对冲帐户', 9=>'商城币提现');
     }
 
 
@@ -186,6 +187,7 @@ class Cash extends ActiveRecord
             1 => '股票提现',
             2 => '现金提现',
             3 => '转账报单员',
+            4 => '转账商城'
         );
 
         return $type ? (isset($data[$type]) ? $data[$type] : '未知类型') : $data;

@@ -22,6 +22,7 @@ class System extends ActiveRecord
     public $maintenance;
     public $duichong_audit;
     public $open_cash;
+    public $open_mall_transfer;
 
     /**
      * @inheritdoc
@@ -55,6 +56,7 @@ class System extends ActiveRecord
             'maintenance' => '系统维护中',
             'duichong_audit' => '对冲转账审核',
             'open_cash' => '允许提现',
+            'open_mall_transfer' => '允许商城提现',
             ];
     }
 

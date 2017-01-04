@@ -40,6 +40,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'stack_number',
             ],
             [
+                'attribute' => 'sc_account',
+            ],
+            [
                 'attribute' => 'bank',
                 'label'=>'银行名称',
                 'value' => function($model) {

@@ -591,7 +591,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function reduceAchivement($amount)
     {
-        $this->investment = $this->investment - $amount;
+        $this->investment = ($this->investment - $amount) ? $this->investment - $amount : $this->investment;
         $this->achievements = $this->achievements - $amount;
 
         $parents = array();
