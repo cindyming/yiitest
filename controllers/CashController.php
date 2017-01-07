@@ -341,18 +341,33 @@ class CashController extends Controller
             } else if ($model->cash_type == 4) {
                 //http://10.0.1.51:7001/membercenter/web/memberChongzhi/chongzhi?account=zf09&money=3&accountType=3
                 $service_url = Yii::$app->params['sc_url'] . http_build_query(array('account' => $model->sc_account, 'money' => $model->real_amount, 'accountType' => 3, 'system' => 'hainan'));
+
                 $curl = curl_init();
-                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($curl, CURLOPT_POST, true);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, array());
-                curl_setopt($curl, CURLOPT_URL, $service_url);
-                $curl_response = curl_exec($curl);
-                $response = json_decode($curl_response);
+
+                curl_setopt_array($curl, array(
+                    CURLOPT_PORT => "7001",
+                    CURLOPT_URL => $service_url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_CUSTOMREQUEST => "POST",
+                    CURLOPT_HTTPHEADER => array(
+                        "authorization: Basic aG5qczpoYmF1dGg=",
+                    ),
+                ));
+                $tmpfname = dirname(__FILE__).'/cookie.txt';
+                curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfname);
+                curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfname);
+
+                $response = curl_exec($curl);
+                $err = curl_error($curl);
+
+                $response = json_decode($response);
                 curl_close($curl);
 
-                Log::add('会员(' . $model->user_id . ')' , ' 商城币提现' , '返回' .json_encode($response));
-                if ($response && $response->code) {
+                Log::add('会员(' . $model->user_id . ')' , ' 商城币提现' , '返回' , json_encode($response));
+                if (!$err && $response && $response->code) {
                     if ( $response->code == 1) {
                         $model->note .= '; 商城币提现,' . $response->code;
                     } else {
