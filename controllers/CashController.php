@@ -374,7 +374,7 @@ class CashController extends Controller
                     }
                 } else {
                     $pass = false;
-                    Yii::$app->getSession()->set('message', '接口返回的失败,请稍后再试');
+                    Yii::$app->getSession()->set('danger', '接口返回的失败,请稍后再试');
                     Log::add('会员(' . $model->user_id . ')', '商城币提现失败', '失败', json_encode($response));
                 }
             } else {
