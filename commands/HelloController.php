@@ -67,9 +67,7 @@ class HelloController extends Controller
         }
 
         $calLevel = $user->calculateLevel();
-        if (($user->level < $calLevel)) {
-            $user->level =  $calLevel;
-        }
+        $user->level =  $calLevel;
 
         $user->save();
     }
