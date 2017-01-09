@@ -198,9 +198,34 @@ class User extends ActiveRecord implements IdentityInterface
             [['bonus_remain', 'baodan_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '分工余额不足', 'on' => 'cancel'],
             [['merit_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '绩效余额不足', 'on' => 'cancel'],
             [['email'], 'email'],
+            [['referer'], 'checkReferer'],
+            [['suggest_by'], 'checkSuggest'],
             [['qq', 'useBaodan'], 'number'],
             [['duichong_invest'], 'checkBaodanInvest'],
         ];
+    }
+
+
+
+    public function checkReferer($attribute, $params) {
+        try{
+            $parents = array($this->id => $this->id);
+            $this->listParentsAddInvestment($this, $parents);
+        } catch(Exception $e) {
+            $this->addError('referer', $e->getMessage());
+        }
+
+    }
+
+
+    public function checkSuggest($attribute, $params) {
+        try{
+            $parents = array($this->id => $this->id);
+            $this->listParentsAddMerit($this, $parents);
+        } catch(Exception $e) {
+            $this->addError('suggest_by', $e->getMessage());
+        }
+
     }
 
     /**
