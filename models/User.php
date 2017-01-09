@@ -195,6 +195,8 @@ class User extends ActiveRecord implements IdentityInterface
             [['merit_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '绩效余额不足', 'on' => 'cancel'],
             [['bonus_total', 'merit_total', 'duichong_total', 'duichong_remain'], 'double'],
             [['email'], 'email'],
+            [['referer'], 'checkReferer'],
+            [['suggest_by'], 'checkSuggest'],
             [['qq', 'useBaodan'], 'number'],
             [['duichong_invest'], 'checkBaodanInvest'],
         ];
@@ -959,8 +961,6 @@ class User extends ActiveRecord implements IdentityInterface
 
                 }
             }
-
-
         }
     }
 
@@ -979,6 +979,27 @@ class User extends ActiveRecord implements IdentityInterface
             }
 
         }
+    }
+
+    public function checkReferer($attribute, $params) {
+        try{
+            $parents = array($this->id => $this->id);
+            $this->listParentsAddInvestment($this, $parents);
+        } catch(Exception $e) {
+            $this->addError('referer', $e->getMessage());
+        }
+
+    }
+
+
+    public function checkSuggest($attribute, $params) {
+        try{
+            $parents = array($this->id => $this->id);
+            $this->listParentsAddMerit($this, $parents);
+        } catch(Exception $e) {
+            $this->addError('suggest_by', $e->getMessage());
+        }
+
     }
 
     public function canApproved()
