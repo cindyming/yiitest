@@ -10,6 +10,7 @@ namespace app\commands;
 use app\models\Log;
 use app\models\User;
 use yii\console\Controller;
+use yii\data\ActiveDataProvider;
 use yii\data\Sort;
 
 /**
@@ -28,12 +29,46 @@ class HelloController extends Controller
      */
     public function actionIndex($message = 'hello world')
     {
-        $user = User::findOne(10169220);
-        $newInvestment = 720000;
+        $userQuery = User::find()->where(['=','role_id', 3]);
 
-        $investmentParents = array();
-        $this->listParentsAddInvestment($user, $investmentParents);
-        $this->dealWithInvestmentMembers($investmentParents, $newInvestment);
+        $provider = new ActiveDataProvider([
+            'query' => $userQuery,
+            'pagination' => [
+                'pageSize' => 500,
+            ],
+        ]);
+        $provider->prepare();
+        $filename = 'kunming.csv';
+        $fp = fopen($filename, 'w');
+        $data = array();
+        $u = new User();
+        $options = $u->getLevelOptions();
+        $j = 0;
+       fputcsv($fp, array('用户编号', '当前等级', '计算等级'));
+
+        for($i=1; $i<=$provider->getPagination()->getPageCount();$i++) {
+            if($i != 1) {
+                $provider = new ActiveDataProvider([
+                    'query' => $userQuery,
+                    'pagination' => [
+                        'pageSize' => 500,
+                        'page' => $i-1,
+                    ],
+                ]);
+            }
+            $users = $provider->getModels();
+            foreach ($users as $user) {
+                $caLevel = $user->calculateLevel();
+                if ($caLevel != $user->level) {
+                    $j ++;
+                    fputcsv($fp, array($user->id , $options[$user->level], $options[$caLevel]));
+                   // echo PHP_EOL . "Id:".  $user->id . ' , Calculate Level:' . $caLevel . ' Real Level:' . $user->level;
+                }
+            }
+
+        }
+
+        echo $j;
 
     }
 
