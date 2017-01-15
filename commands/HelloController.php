@@ -10,6 +10,7 @@ namespace app\commands;
 use app\models\Log;
 use app\models\User;
 use yii\console\Controller;
+use yii\data\ActiveDataProvider;
 use yii\data\Sort;
 
 /**
@@ -28,12 +29,39 @@ class HelloController extends Controller
      */
     public function actionIndex($message = 'hello world')
     {
-        $user = User::findOne(10006704);
-        $newInvestment = 0;
 
-        $investmentParents = array();
-        $this->listParentsAddInvestment($user, $investmentParents);
-        $this->dealWithInvestmentMembers($investmentParents, $newInvestment);
+        $userQuery = User::find()->where(['=','role_id', 3]);
+
+        $provider = new ActiveDataProvider([
+            'query' => $userQuery,
+            'pagination' => [
+                'pageSize' => 500,
+            ],
+        ]);
+        $provider->prepare();
+        $j = 0;
+
+        for($i=1; $i<=$provider->getPagination()->getPageCount();$i++) {
+            if($i != 1) {
+                $provider = new ActiveDataProvider([
+                    'query' => $userQuery,
+                    'pagination' => [
+                        'pageSize' => 500,
+                        'page' => $i-1,
+                    ],
+                ]);
+            }
+            $users = $provider->getModels();
+            foreach ($users as $user) {
+                $caLevel = $user->calculateLevel();
+                if ($caLevel != $user->level) {
+                    $j ++;
+                    echo PHP_EOL . "Id:".  $user->id . ' , Calculate Level:' . $caLevel . ' Real Level:' . $user->level;
+                }
+            }
+
+        }
+        echo $j;
 
     }
 
