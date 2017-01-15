@@ -525,7 +525,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function diamondLevel()
     {
-         $users = User::find()->where(['=', 'referer', $this->id])->andWhere(['=', 'role_id', 3])->andWhere(['=', 'merited', 1])->orderBy(['id' => SORT_ASC])->limit(3)->all();
+         $users = User::find()->where(['=', 'referer', $this->id])->andWhere(['=', 'role_id', 3])->andWhere(['=', 'merited', 1])->orderBy(['approved_at' => SORT_ASC])->limit(3)->all();
 
         if (count($users) == 3 ) {
             $a = 1000000000;

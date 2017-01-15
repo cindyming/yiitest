@@ -389,12 +389,23 @@ class UserController extends Controller
 
     public function actionAdmintree()
     {
-
-        $users=Yii::$app->db->createCommand('SELECT id,role_id,username,referer,investment,achievements,locked FROM user where role_id in (2,3)')->query();
+        ini_set('max_execution_time', 600);
+        $users=Yii::$app->db->createCommand('SELECT id,role_id,username,referer,investment,achievements,locked,level FROM user where role_id in (2,3)')->query();
 
         $result = array();
 
         $ids = array();
+        $options = array(
+            1 => '实习生',
+            2 => '业务员',
+            3 => '主任',
+            4 => '经理',
+            5 => '一级总监',
+            6 => '二级总监',
+            7 => '三级总监',
+            //     8 => '区域总监',
+            9 => '全国总监',
+            10 => '钻石级总监');
 
         $id = Yii::$app->getRequest()->get('id');
 
@@ -402,25 +413,33 @@ class UserController extends Controller
             $referer = (($user['referer'] == '#') || ($user['referer'] == 0)) ? '#' : $user['referer'];
 
             if (($referer == '#')  || in_array($referer, $ids)) {
+                $userModel = User::findById($user['id']);
+                $cleve = $userModel->calculateLevel();
+                $error = (int)($cleve != $user['level']);
                 if ($id == $user['id']) {
-                    $result[] = array(
+                    $data = array(
                         "id" => $user['id'],
                         "parent" => (($user['referer'] == '#') || ($user['referer'] == 0)) ? '#' : $user['referer'],
-                        'a_attr' => (($user['role_id'] == 2) ? array('class'=>"gray-icon") : array()),
-                        "text" => $user['id']. "(昵称: " . $user['username']  . ", 投资额 : " . ($user['investment'] / 10000) . "万, 总业绩 : "  . ($user['achievements']/10000) . "万)" . (($user['role_id'] == 2) ? ' - 待审核' : ''),
+                        'a_attr' => (($user['role_id'] == 2) ? array('class'=>"gray-icon") : ($error ? array('class' => 'red-icon') : array())),
+                        "text" => $user['id']. "(昵称: " . $user['username']  . ", 投资额 : " . ($user['investment'] / 10000) . "万, 总业绩 : "  . ($user['achievements']/10000) . "万)" . (($user['role_id'] == 2) ? ' - 待审核' : '') ,
                         "state" => array(
                             "opened" => true,
                             "selected" => true
                         )
                     );
                 } else {
-                    $result[] = array(
+                    $data = array(
                         "id" => $user['id'],
                         "parent" => (($user['referer'] == '#') || ($user['referer'] == 0)) ? '#' : $user['referer'],
-                        'a_attr' => (($user['role_id'] == 2 || $user['locked']) ? array('class'=>"gray-icon") : array()),
+                        'a_attr' => (($user['role_id'] == 2 || $user['locked']) ? array('class'=>"gray-icon") : ($error ? array('class' => 'red-icon') : array())),
                         "text" => $user['id'] . "(昵称: " . $user['username']  . ", 投资额 : " . ($user['investment'] / 10000) . "万, 总业绩 : "  . ($user['achievements']/10000) . "万)" . (($user['role_id'] == 2) ? ' - 待审核' : ($user['locked'] ? ' - 已锁定' : ''))
                     );
                 }
+
+                if ($error) {
+                    $data['text'] = $data['text']. ', 等级:' . $options[$user['level']] . ', 应等级:' . $options[$cleve];
+                }
+                $result[] = $data;
                 $ids[] = $user['id'];
             } else {
 
