@@ -55,13 +55,13 @@ class HelloController extends Controller
             foreach ($users as $user) {
                 $caLevel = $user->calculateLevel();
                 if ($caLevel != $user->level) {
-                    $j ++;
-                    echo PHP_EOL . "Id:".  $user->id . ' , Calculate Level:' . $caLevel . ' Real Level:' . $user->level;
+                    $user->level = $caLevel;
+                    $user->save();
                 }
             }
 
         }
-        echo $j;
+        echo PHP_EOL . $j . PHP_EOL;
 
     }
 
