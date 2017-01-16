@@ -38,13 +38,8 @@ class HelloController extends Controller
             ],
         ]);
         $provider->prepare();
-        $filename = 'kunming.csv';
-        $fp = fopen($filename, 'w');
-        $data = array();
-        $u = new User();
-        $options = $u->getLevelOptions();
+
         $j = 0;
-       fputcsv($fp, array('用户编号', '当前等级', '计算等级'));
 
         for($i=1; $i<=$provider->getPagination()->getPageCount();$i++) {
             if($i != 1) {
@@ -61,8 +56,8 @@ class HelloController extends Controller
                 $caLevel = $user->calculateLevel();
                 if ($caLevel != $user->level) {
                     $j ++;
-                    fputcsv($fp, array($user->id , $options[$user->level], $options[$caLevel]));
-                   // echo PHP_EOL . "Id:".  $user->id . ' , Calculate Level:' . $caLevel . ' Real Level:' . $user->level;
+                    $user->level = $caLevel;
+                    $user->save();
                 }
             }
 
