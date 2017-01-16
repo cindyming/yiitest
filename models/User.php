@@ -525,14 +525,10 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function diamondLevel()
     {
-         $users = User::find()->where(['=', 'referer', $this->id])->andWhere(['=', 'role_id', 3])->andWhere(['=', 'merited', 1])->orderBy(['approved_at' => SORT_ASC])->limit(3)->all();
+         $users = User::find()->where(['=', 'referer', $this->id])->andWhere(['=', 'role_id', 3])->andWhere(['=', 'merited', 1])->orderBy(['achievements' => SORT_ASC])->limit(3)->all();
 
         if (count($users) == 3 ) {
-            $a = 1000000000;
-            foreach($users as $user)  {
-                $a = ($a > $user->achievements) ? $user->achievements : $a;
-            }
-            return $a;
+            return $users[0]->achievements;
         } else {
             return 0;
         }
