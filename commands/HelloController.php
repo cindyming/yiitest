@@ -10,7 +10,6 @@ namespace app\commands;
 use app\models\Log;
 use app\models\User;
 use yii\console\Controller;
-use yii\data\ActiveDataProvider;
 use yii\data\Sort;
 
 /**
@@ -29,39 +28,12 @@ class HelloController extends Controller
      */
     public function actionIndex($message = 'hello world')
     {
+        $user = User::findOne(10000923);
+        $newInvestment = 100000;
 
-        $userQuery = User::find()->where(['=','role_id', 3]);
-
-        $provider = new ActiveDataProvider([
-            'query' => $userQuery,
-            'pagination' => [
-                'pageSize' => 500,
-            ],
-        ]);
-        $provider->prepare();
-        $j = 0;
-
-        for($i=1; $i<=$provider->getPagination()->getPageCount();$i++) {
-            if($i != 1) {
-                $provider = new ActiveDataProvider([
-                    'query' => $userQuery,
-                    'pagination' => [
-                        'pageSize' => 500,
-                        'page' => $i-1,
-                    ],
-                ]);
-            }
-            $users = $provider->getModels();
-            foreach ($users as $user) {
-                $caLevel = $user->calculateLevel();
-                if ($caLevel != $user->level) {
-                    $user->level = $caLevel;
-                    $user->save();
-                }
-            }
-
-        }
-        echo PHP_EOL . $j . PHP_EOL;
+        $investmentParents = array();
+        $this->listParentsAddInvestment($user, $investmentParents);
+        $this->dealWithInvestmentMembers($investmentParents, $newInvestment);
 
     }
 
@@ -91,11 +63,13 @@ class HelloController extends Controller
     public function addMeritForMember($user, $newInvestment = 0)
     {
         if ($newInvestment) {
-            $user->achievements -= $newInvestment;
+            $user->achievements += $newInvestment;
         }
 
         $calLevel = $user->calculateLevel();
-        $user->level =  $calLevel;
+        if ($calLevel > $user->level) {
+            $user->level =  $calLevel;
+        }
         $user->save();
     }
 }
