@@ -164,23 +164,23 @@ class InvestmentController extends Controller
 
                             $meritAmount = 0;
 
-//                            if ($model->duichong_invest && $model->useBaodan) {
-//                                $meritAmount += round($model->duichong_invest * 0.01, 2);
-//
-//                                $addedBy->duichong_remain -= $model->duichong_invest;
-//                                $data = array(
-//                                    'user_id' => $addedBy->id,
-//                                    'amount' => $model->duichong_invest,
-//                                    'status' => 2,
-//                                    'type' => 8,
-//                                    'fee' => 0,
-//                                    'total' => $addedBy->duichong_remain,
-//                                    'note' => '追加投资' . $model->id . ', 使用对冲帐户金额:' . $model->duichong_invest
-//                                );
-//                                $cash = new Cash();
-//                                $cash->setAttributes($data);
-//                                $cash->save();
-//                            }
+                            if ($model->duichong_invest) {
+                                $meritAmount += round($model->duichong_invest * 0.01, 2);
+
+                                $addedBy->duichong_remain -= $model->duichong_invest;
+                                $data = array(
+                                    'user_id' => $addedBy->id,
+                                    'amount' => $model->duichong_invest,
+                                    'status' => 2,
+                                    'type' => 8,
+                                    'fee' => 0,
+                                    'total' => $addedBy->duichong_remain,
+                                    'note' => '追加投资' . $model->id . ', 使用对冲帐户金额:' . $model->duichong_invest
+                                );
+                                $cash = new Cash();
+                                $cash->setAttributes($data);
+                                $cash->save();
+                            }
                             if ($meritAmount) {
 
                                 $data = array(
