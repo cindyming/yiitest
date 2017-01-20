@@ -65,7 +65,7 @@ class BonusController extends Controller
     {
         $this->_startTime = date("Y-m-d",strtotime("-30 days")) . ' 00:00:00';
 
-        $userQuery = User::find()->where(['=','role_id', 3])->andwhere(['=','locked', 0])->andWhere(['=', 'id', 1000191115]);
+        $userQuery = User::find()->where(['=','role_id', 3])->andwhere(['=','locked', 0]);
 
         $provider = new ActiveDataProvider([
             'query' => $userQuery,
