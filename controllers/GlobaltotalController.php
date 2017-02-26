@@ -81,19 +81,22 @@ class GlobaltotalController extends Controller
 
         $kouchBonusTotal = $connection->createCommand("SELECT sum(amount) as 'total'  FROM cach WHERE type=4 and created_at > '{$date}' and (note like '%错误报单%' or note like '%管理员扣除%')")->queryOne();
 
-        $bonus  = $connection->createCommand("SELECT sum(merit) as 'merit_total', sum(baodan) as 'baodan_total'  FROM revenue WHERE created_at > '{$date}' AND type in (1,2)")->queryOne();
+        $bonus  = $connection->createCommand("SELECT sum(merit) as 'merit_total', sum(baodan) as 'baodan_total'  FROM revenue WHERE created_at > '{$date}' AND type in (1)")->queryOne();
 
-        $bonuss  = $connection->createCommand("SELECT  sum(bonus) as 'bonus_total' FROM revenue LEFT JOIN user on user.id=revenue.user_id WHERE revenue.created_at > '{$date}'  AND user.approved_at>'{$date}'AND type in (1,2) ")->queryOne();
+        $maun  = $connection->createCommand("SELECT sum(merit) as 'merit_total', sum(baodan) as 'baodan_total'  FROM revenue WHERE created_at > '{$date}' AND type in (2)")->queryOne();
+
+        $bonuss  = $connection->createCommand("SELECT  sum(bonus) as 'bonus_total' FROM revenue LEFT JOIN user on user.id=revenue.user_id WHERE revenue.created_at > '{$date}'  AND user.approved_at>'{$date}'AND type in (1,2)")->queryOne();
 
         $data = array(
             'GlobalTotal' => array(
                 'total_in' => $invertTotal['total'] + (float)$zhuijianvertTotal['total'],
-                'mall' =>  ((float)$bonus['merit_total']  - (float)$kouchMeritTotal['total'])/9 ,
+                'mall' =>  ((float)$bonus['merit_total'] * 0.9 - (float)$kouchMeritTotal['total'])/9 ,
                 'bonus' => (float)$bonuss['bonus_total'] - (float)$kouchBonusTotal['total'],
-                'baodan' => (float)$bonus['baodan_total'] - (float)$kouchBoadanTotal['total'],
-                'merit' => (float)$bonus['merit_total']  - (float)$kouchMeritTotal['total']
+                'baodan' => (float)$bonus['baodan_total'] - (float)$kouchBoadanTotal['total'] + (float)$maun['baodan_total'],
+                'merit' => ((float)$bonus['merit_total'] * 0.9)  - (float)$kouchMeritTotal['total'] + (float)$maun['merit_total'],
             )
         );
+
 
         $data['GlobalTotal']['total_out'] =  $data['GlobalTotal']['mall'] +  $data['GlobalTotal']['bonus'] +  $data['GlobalTotal']['baodan']  +  $data['GlobalTotal']['merit'] ;
 
