@@ -112,7 +112,7 @@ class MeritController extends Controller
                 $note = '新会员绩效 -  ' . $user->id;
                 $this->dealWithParentMembers($parents, $amount, $note);
 
-                $note = '钻石总监绩效 - 新会员 - ' . $user->id;
+                $note = '钻石总监绩效 - ' . $note;
                 $this->dealWithDiamondMembers($diamondMembers, $amount, $note);
 
                 Log::add('管理员', '计算绩效', true, "新会员" . $user->id);
