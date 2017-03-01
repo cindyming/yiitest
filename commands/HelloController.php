@@ -42,13 +42,22 @@ class HelloController extends Controller
                     if($merit_amount) {
                         $merit_amount = round($merit_amount, 2);
                         $merit_remain = round($merit_amount * 0.9);
+                        $mall = $merit_amount - $merit_remain;
 
                         $user->mall_remain -= ($merit_amount - $merit_remain);
                         $user->mall_total -= ($merit_amount - $merit_remain);
                         $user->merit_total -= $merit_amount;
                         $user->merit_remain -= $merit_remain;
 
-                        $sql     = "UPDATE revenue set total=total-" . $merit_remain . ' WHERE user_id=' . $merit->user_id . ' and created_at > "' . $merit->created_at . '" AND created_at < "'  .$now.' AND type=1 AND merit>0"';
+                        $sql     = "UPDATE revenue set total=total-" . $merit_remain . ' WHERE user_id=' . $merit->user_id . ' and created_at > "' . $merit->created_at . '" AND created_at < "'  .$now.'" AND type=1 AND merit>0';
+                        $command = $connection->createCommand($sql);
+                        $res     = $command->execute($sql);
+
+                        $sql     = "UPDATE cach set total=total-" . $merit_remain . ' WHERE user_id=' . $merit->user_id . ' and created_at > "' . $merit->created_at . '" AND created_at < "'  .$now.'" AND type in(2,5)';
+                        $command = $connection->createCommand($sql);
+                        $res     = $command->execute($sql);
+
+                        $sql     = "UPDATE cach set total=total-" . $mall . ' WHERE user_id=' . $merit->user_id . ' and created_at > "' . $merit->created_at . '" AND created_at < "'  .$now.'" AND type=7';
                         $command = $connection->createCommand($sql);
                         $res     = $command->execute($sql);
 
