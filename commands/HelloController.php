@@ -1,75 +1,88 @@
 <?php
-/**
- * @link http://www.yiiframework.com/
- * @copyright Copyright (c) 2008 Yii Software LLC
- * @license http://www.yiiframework.com/license/
- */
 
 namespace app\commands;
 
+use app\models\Cash;
+use app\models\Investment;
 use app\models\Log;
-use app\models\User;
+use Yii;
+use yii\base\Exception;
 use yii\console\Controller;
-use yii\data\Sort;
+use app\models\User;
+use app\models\Revenue;
 
-/**
- * This command echoes the first argument that you have entered.
- *
- * This command is provided as an example for you to learn how to create console commands.
- *
- * @author Qiang Xue <qiang.xue@gmail.com>
- * @since 2.0
- */
+
 class HelloController extends Controller
 {
-    /**
-     * This command echoes what you have entered as the message.
-     * @param string $message the message to be echoed.
-     */
+    public function loadDiamondMembers()
+    {
+        $diamonds = User::find()->where(['=','role_id', 3])->andWhere(['=', 'level',10]);
+        return $diamonds->all();
+    }
+
     public function actionIndex($message = 'hello world')
     {
-        $user = User::findOne(10000923);
-        $newInvestment = 100000;
+        //$diamonds = $this->loadDiamondMembers();
+        $users = User::find()->where(['=','role_id', 4])->andWhere(['=','merited', 1])->orderBy([ 'created_at' => SORT_ASC])->all();
+        $connection  = Yii::$app->db;
+        $now = date('Y-m-d H:i:s', time());
+        foreach ($users as $user) {
 
-        $investmentParents = array();
-        $this->listParentsAddInvestment($user, $investmentParents);
-        $this->dealWithInvestmentMembers($investmentParents, $newInvestment);
+            $merits = Revenue::find()->where(['=','type', 1])->andWhere(['like','note', '钻石总监绩效 - 新会员 - ' . $user->id])->all();
+            $note = '错误报单,撤销会员[' . $user->id . '%';
+            echo $user->id . ';MERIT:' . $user->merited . ';绩效:' . count($merits) . PHP_EOL;
 
-    }
+            foreach ($merits as $merit) {
 
+                $cash = Cash::find()->where(['=','user_id', $merit->user_id])->andWhere(['like','note', $note])->all();
+                echo $merit->amount  . ';COUNT;' . count($cash). PHP_EOL;
+                if (!count($cash)) {
+                    $merit_amount = $merit->merit;
+                    $user = User::findById($merit->user_id);
+                    if($merit_amount) {
+                        $merit_amount = round($merit_amount, 2);
+                        $merit_remain = round($merit_amount * 0.9);
 
-    public function listParentsAddInvestment($user, &$parents )
-    {
-        /**
-         * 在这里不计算级别和总投资的原因是因为不合适
-         */
-        $parent = $user->getParennt()->one();
-        if ($parent && $parent->role_id != 1) {
-            $parents[] = $parent;
+                        $user->mall_remain -= ($merit_amount - $merit_remain);
+                        $user->mall_total -= ($merit_amount - $merit_remain);
+                        $user->merit_total -= $merit_amount;
+                        $user->merit_remain -= $merit_remain;
 
-            $this->listParentsAddInvestment($parent, $parents);
-        }
-    }
+                        $sql     = "UPDATE revenue set total=total-" . $merit_remain . ' WHERE user_id=' . $merit->user_id . ' and created_at > "' . $merit->created_at . '" AND created_at < "'  .$now.' AND type=1 AND merit>0"';
+                        $command = $connection->createCommand($sql);
+                        $res     = $command->execute($sql);
 
-    public function dealWithInvestmentMembers($parents, $newInvestment)
-    {
-        if (count($parents)) {
-            foreach ($parents as $level => $per) {
-                $this->addMeritForMember($per, $newInvestment);
+//                        $meritData = array(
+//                            'user_id' => $merit->user_id,
+//                            'note' => '错误报单,撤销新会员[' .$this->id . '],绩效扣除: ' . $merit->id,
+//                            'amount' => $merit_remain,
+//                            'type' => 5,
+//                            'status' => 2,
+//                            'total' => $user->merit_remain
+//                        );
+//
+//                        $merit = new Cash();
+//                        $merit->load($meritData, '');
+
+//                        $mallData = array(
+//                            'user_id' => $merit->user_id,
+//                            'note' => '错误报单,撤销会员[' .$this->id . '],商城币扣除:' . $merit->id,
+//                            'amount' => ($merit_amount - $merit_remain),
+//                            'type' => 7,
+//                            'status' => 2,
+//                            'total' => $user->mall_remain
+//                        );
+//                        $mall = new Cash();
+//                        $mall->load($mallData, '');
+                        $user->setScenario('cancel');
+                        if(!$user->save(true, array('mall_remain', 'mall_total','merit_total', 'merit_remain'))) {
+                            throw new Exception('会员扣除失败 ' . User::arrayToString($user->getErrors()));
+                            break;
+                        }
+                        $merit->delete();
+                    }
+                }
             }
         }
-    }
-
-    public function addMeritForMember($user, $newInvestment = 0)
-    {
-        if ($newInvestment) {
-            $user->achievements += $newInvestment;
-        }
-
-        $calLevel = $user->calculateLevel();
-        if ($calLevel > $user->level) {
-            $user->level =  $calLevel;
-        }
-        $user->save();
     }
 }
