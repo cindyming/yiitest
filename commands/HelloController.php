@@ -1,81 +1,213 @@
 <?php
+/**
+ * @link http://www.yiiframework.com/
+ * @copyright Copyright (c) 2008 Yii Software LLC
+ * @license http://www.yiiframework.com/license/
+ */
 
 namespace app\commands;
 
 use app\models\Cash;
 use app\models\Investment;
 use app\models\Log;
-use Yii;
-use yii\console\Controller;
-use app\models\User;
 use app\models\Revenue;
+use app\models\User;
+use yii\console\Controller;
+use yii\data\ActiveDataProvider;
+use yii\data\Sort;
+use yii\debug\panels\ProfilingPanel;
 
-
+/**
+ * This command echoes the first argument that you have entered.
+ *
+ * This command is provided as an example for you to learn how to create console commands.
+ *
+ * @author Qiang Xue <qiang.xue@gmail.com>
+ * @since 2.0
+ */
 class HelloController extends Controller
 {
-	public function loadDiamondMembers()
-	{
-		$diamonds = User::find()->where(['=','role_id', 3])->andWhere(['=', 'level',10]);
-		return $diamonds->all();
-	}
-
+	private $_currentDate = 0;
+	private $_startTime;
+	private $_oneYear;
+	private $_diffTime = '2016-06-05';
+	/**
+	 * This command echoes what you have entered as the message.
+	 * @param string $message the message to be echoed.
+	 */
 	public function actionIndex($message = 'hello world')
 	{
-		//$diamonds = $this->loadDiamondMembers();
-		$users = User::find()->where(['=','role_id', 4])->andWhere(['=','merited', 1])->orderBy([ 'created_at' => SORT_ASC])->all();
+//		$ids = "1000165,1002143,1002218,1002253,1002269,1002315,1002561,1002585,1002594,1002841,1002855,1003426,1003589,1003744,1003831,1004002,1004065,1004087,1004241,1004255,1004353,1004388,1004406,1004473,1004484,1004536,1004825,10019615,10021715,10022014,10023214,10023512,10023620,10024713,10026216,10026615,10026713,10027119,10029720,10030011,10030517,10031020,10031215,10033013,10033217,10033619,10034714,10035111,10035213,10036416,10036719,10037216,10038012,10038216,10038418,10039317,10040912,10041218,10042018,10043120,10043313,10044410,10046112,100015579,100015995,100016168,100016442,100016474,100016663,100016752,100017038,100017348,100017359,100017733,100017751,100017769,100017852,100018037,100018212,100018226,100018247,100018657,100018667,100018709,100018766,100018773,100018887,100018954,100018987,100018997,100019008,100019168,100019177,100019212,100019392,100019539,1000151420,1000153212,1000155520,1000157211,1000158714,1000160219,1000161219,1000161314,1000162810,1000164320,1000164911,1000165414,1000165910,1000166715";
 
+		 // $ids = "1000166715";
+		$users = User::find()->where(['=','role_id', 3])->andWhere(['<','approved_at', '2016-06-05 00:00:00'])->all();
+		$dates = array(
+            '2016-07-05',
+            '2016-07-20',
+            '2016-08-05',
+            '2016-08-20',
+            '2016-09-05',
+            '2016-09-20',
+            '2016-10-05',
+            '2016-10-20',
+            '2016-11-05',
+            '2016-11-20',
+            '2016-12-20',
+			'2017-01-20',
+			'2017-02-20',
+		);
+		$filename = 'kunming.csv';
+		$fp = fopen($filename, 'w');
+		fputcsv($fp, array('用户编号', '实际分红', '现发分红', '备注'));
+		$ids = array();
 		foreach ($users as $user) {
+			$allInvesments = Investment::find()->where(['=', 'user_id', $user->id])->andWhere(['>', 'created_at', '2016-06-15 00:00'])->andWhere(['=', 'status', 1])->andWhere(['=', 'merited', 1])->orderBy(['created_at' => SORT_DESC])->all();
 
-			$merits = Revenue::find()->where(['=','type', 1])->andWhere(['like','note', '钻石总监绩效 - 新会员 - ' . $user->id])->all();
-			$note = '错误报单,撤销会员[' . $user->id . '%';
-			echo $user->id . ';MERIT:' . $user->merited . ';绩效:' . count($merits) . PHP_EOL;
+			foreach ($dates as $date) {//var_dump($date);
+				$start = 0;
+				if  (($user->approved_at > $date . ' 00:00:00')) {
+					continue;
+				}
+				if ($date < '2016-12-20') {
+					$start = date('Y-m-d H:i:s', (strtotime($date) - 15 * 86400));
+				} else {
+					$start = date('Y-m-d H:i:s',(strtotime($date) - 30 * 86400));
+				}
 
-			foreach ($merits as $merit) {
+				$useOldBonusLogic = (int) (($user->approved_at < $this->_diffTime . ' 00:00:00') && ($user->approved_at >= date('Y-m-d H:i:s',strtotime('-1 year', strtotime($date)))));
 
-				$cash = Cash::find()->where(['=','user_id', $merit->user_id])->andWhere(['like','note', $note])->all();
-				echo $merit->id  . ';COUNT;' . count($cash). PHP_EOL;
-				if (!count($cash)) {
-					$merit_amount = $merit->merit;
-					$user = User::findById($merit->user_id);
-					if($merit_amount) {
-						$merit_amount = round($merit_amount, 2);
-						$merit_remain = round($merit_amount * 0.9);
+				$inversments =  Investment::find()->where(['<', 'created_at', $start])->andWhere(['>', 'created_at', '2016-06-15 00:00'])->andWhere(['=', 'user_id', $user->id])->andWhere(['=', 'status', 1])->andWhere(['=', 'merited', 1])->orderBy(['created_at' => SORT_DESC])->all();
 
-						$user->mall_remain -= ($merit_amount - $merit_remain);
-						$user->mall_total -= ($merit_amount - $merit_remain);
-						$user->merit_total -= $merit_amount;
-						$user->merit_remain -= $merit_remain;
+				if (count($inversments)) {
+					$this->_currentDate = $date;
+					$bonus = Revenue::find()->where(['=', 'user_id', $user->id])->andWhere(['=', 'type', 1])->andWhere(['=', 'note', '分红结算: ' . $date])->all();
+					$oldTotal = 0;
+					foreach ($bonus as $b) {
+						$oldTotal += $b->bonus;
+					}
 
-						$meritData = array(
-							'user_id' => $merit->user_id,
-							'note' => '错误报单,撤销新会员[' .$this->id . '],绩效扣除: ' . $merit->id,
-							'amount' => $merit_remain,
-							'type' => 5,
-							'status' => 2,
-							'total' => $user->merit_remain
-						);
+					if ($oldTotal) {
+						$mustBe = $this->calculateBouns($user, $date . ' 00:00:00', $allInvesments, $start, $useOldBonusLogic);
+						//	var_dump($mustBe .':'. $oldTotal);
+						if ($mustBe != $oldTotal) {
+							if (!in_array($user->id, $ids)) {
+								$ids[] = $user->id;
+							}
+							fputcsv($fp, array($user->id , $mustBe, $oldTotal, $date . ' 分红'));
+							/*                       $redu = $oldTotal - $mustBe;
+												   $user->bonus_remain = $user->bonus_remain - $redu;
+												   $data = array(
+													   'user_id' => $user->id,
+													   'type' => 4,
+													   'amount' => $redu,
+													   'real_amount' => $redu,
+													   'status' => 2,
+													   'total' => $user->bonus_remain,
+													   'note' => '分红扣除' . $date .  '多发的金额'
+												   );
 
-						$merit = new Cash();
-						$merit->load($meritData, '');
+												   $cash = new Cash();
+												   $cash->load($data, '');
+												   if (!$cash->save()) {
+													   echo json_encode($cash->getErrors());
+												   }*/
 
-						$mallData = array(
-							'user_id' => $merit->user_id,
-							'note' => '错误报单,撤销会员[' .$this->id . '],商城币扣除:' . $merit->id,
-							'amount' => ($merit_amount - $merit_remain),
-							'type' => 7,
-							'status' => 2,
-							'total' => $user->mall_remain
-						);
-						$mall = new Cash();
-						$mall->load($mallData, '');
-						$user->setScenario('cancel');
-						if(!$user->save(true, array('mall_remain', 'mall_total','merit_total', 'merit_remain')) || !$merit->save() || !$mall->save()) {
-							throw new Exception('会员扣除失败 ' . User::arrayToString($user->getErrors()).User::arrayToString($merit->getErrors()). User::arrayToString($mall->getErrors()));
-							break;
 						}
 					}
+
 				}
 			}
 		}
+echo count($ids);
+
 	}
+
+	public function addBonus($total, $inverstiment, $days, $useOldBonusLogic)
+	{
+		$rate = 1;
+		if ( $this->_currentDate > '2016-12-00') {
+			if ($days < 30) {
+				$rate = $days / 30;
+			}
+
+			if (!$useOldBonusLogic) {
+				if ($total >= 200000) {
+					$amount =  $inverstiment * 0.03;
+				} else {
+					$amount =  $inverstiment * 0.02;
+				}
+			} else {
+				if ($total < 100000) {
+					$amount =  $inverstiment * 0.02;
+				} else if ($total < 200000) {
+					$amount =  $inverstiment * 0.03;
+				} else {
+					$amount =  $inverstiment * 0.04;
+				}
+			}
+		} else {
+			if ($days < 15) {
+				$rate = $days / 15;
+			}
+
+			if (!$useOldBonusLogic) {
+				if ($total >= 200000) {
+					$amount =  $inverstiment * 0.015;
+				} else {
+					$amount =  $inverstiment * 0.01;
+				}
+			} else {
+				if ($total < 100000) {
+					$amount =  $inverstiment * 0.01;
+				} else if ($total < 200000) {
+					$amount =  $inverstiment * 0.015;
+				} else {
+					$amount =  $inverstiment * 0.02;
+				}
+			}
+		}
+
+//echo $inverstiment, ':', $amount, ':', $rate . PHP_EOL;
+		$amount = $amount * $rate;
+		return $amount;
+	}
+
+	public function calculateBouns($user, $date, $allInvesments, $start, $useOldBonusLogic) {
+
+		$total = $user->investment;
+		$basie = $user->investment;
+		$bonusTotal = 0;
+		foreach ($allInvesments as $key => $item) {
+			if ((date('Y-m-d', strtotime($item->created_at)) < date('Y-m-d', strtotime($date)))  && (date('Y-m-d', strtotime($item->created_at))  != date('Y-m-d', strtotime($user->approved_at)))) {
+				$days = (strtotime($date)- strtotime(date('Y-m-d', strtotime($item->created_at)))) / 86400;
+				$bonusTotal += $this->addBonus($total, $item->amount, $days, false);
+				//var_dump("BOUNUS: ". $bonusTotal);
+			}
+			if ((date('Ymd', strtotime($item->created_at)) > date('Ymd', strtotime($date))) || ((date('Ymd', strtotime($item->created_at)) > date('Ymd', strtotime($start))))) {
+				$total -= $item['amount'];
+			}
+
+			$basie -= $item['amount'];
+		}
+
+		if (date('Y-m-d', strtotime($this->_startTime)) < date('Y-m-d', strtotime($user->approved_at))) {
+			$days = (strtotime($date) - strtotime(date('Y-m-d', strtotime($user->approved_at)))) / 86400;
+		} else {
+			$days = 30;
+		}
+
+		if ($useOldBonusLogic) {
+			if ($basie <= 200000) {
+				$oldLevel = floor($total/100000);
+				$newLevel = floor($basie/100000);
+				if ($newLevel - $oldLevel) {
+					$useOldBonusLogic = false;
+				}
+			}
+		}
+		$bonusTotal += $this->addBonus($total, $basie, $days, $useOldBonusLogic);
+
+		return round($bonusTotal, 2);
+	}
+
 }
