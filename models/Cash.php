@@ -138,7 +138,7 @@ class Cash extends ActiveRecord
             'note' => '摘要',
             'password2' => '二级密码',
             'created_at' => '日期',
-            'sc_account' => '商城会员名字'
+            'sc_account' => '商城登录名'
         ];
     }
 
