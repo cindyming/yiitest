@@ -139,7 +139,7 @@ class Cash extends ActiveRecord
             'password2' => '二级密码',
             'created_at' => '日期',
             'baodan_id' => '报单员编号',
-            'sc_account' => '商城会员名字'
+            'sc_account' => '商城会员登录名'
         ];
     }
 
