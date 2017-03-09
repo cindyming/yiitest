@@ -367,7 +367,7 @@ class CashController extends Controller
                     if ( $response->code == 1) {
                         $model->note .= '; 商城币提现,' . $response->code;
                     } else {
-                        Yii::$app->getSession()->set('message', $response['result']);
+                        Yii::$app->getSession()->set('message', $response->result);
                         $pass = false;
                         Log::add('会员(' . $model->user_id . ')', '商城币提现失败', '失败', json_encode($response));
                     }
