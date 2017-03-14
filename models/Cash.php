@@ -186,7 +186,7 @@ class Cash extends ActiveRecord
             1 => '股票提现',
             2 => '现金提现',
             3 => '转账报单员',
-            4 => '转账商城'
+            4 => '商城币转海币'
         );
 
         return $type ? (isset($data[$type]) ? $data[$type] : '未知类型') : $data;
