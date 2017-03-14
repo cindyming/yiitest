@@ -19,7 +19,7 @@ $this->title = '申请现金提现';
         <li><?= HTML::a('申请股票提现', ['/cash/create', 'type' => 'transfer'])?></li>
         <li><?= HTML::a('转账给报单员', ['/cash/create', 'type' => 'baodan'])?></li>
         <?php if(\app\models\System::loadConfig('open_mall_transfer')):?>
-            <li><?= HTML::a('转账到商城', ['/cash/create', 'type' => 'mallmoney'])?></li>
+            <li><?= HTML::a('商城币转海币', ['/cash/create', 'type' => 'mallmoney'])?></li>
         <?php endif ?>
     </ul>
 
