@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Cash */
 
-$this->title = '转账到商城';
+$this->title = '商城币转海币';
 ?>
 
 <div class="cash-create">
@@ -21,7 +21,7 @@ $this->title = '转账到商城';
         <li><?= HTML::a('申请股票提现', ['/cash/create', 'type' => 'transfer'])?></li>
         <li><?= HTML::a('转账给报单员', ['/cash/create', 'type' => 'baodan'])?></li>
         <?php if(\app\models\System::loadConfig('open_mall_transfer')):?>
-            <li class="active">转账到商城</li>
+            <li class="active">商城币转海币</li>
         <?php endif ?>
     </ul>
 
