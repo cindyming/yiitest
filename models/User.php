@@ -603,7 +603,8 @@ class User extends ActiveRecord implements IdentityInterface
         foreach ($parents as $parent) {
             if ($parent && $parent->role_id != 1) {
                 $parent->achievements = $parent->achievements - $amount;
-                if (!$parent->save(true, array('achievements'))) {
+                $parent->level = $parent->calculateLevel();
+                if (!$parent->save(true, array('achievements', 'level'))) {
                     throw new Exception('Failed to save user ' . User::arrayToString($parent->getErrors()));
                 }
             }
