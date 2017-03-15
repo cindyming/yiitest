@@ -111,6 +111,9 @@ class Cash extends ActiveRecord
     {
         return [
             [['amount'], 'required'],
+            [['cardnumber'], 'number'],
+            [['cardname'], 'trim'],
+            [['cardnumber'], 'string', 'max' => 19],
             [['user_id', 'note', 'bank', 'status', 'cash_type', 'baodan_id', 'stack_number', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total', 'sc_account'], 'trim'],
             [['type'], 'integer'],
             [['baodan_id'], 'validateBaodan']

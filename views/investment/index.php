@@ -27,6 +27,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => '序号'
             ],
             'amount',
+            [
+                'attribute' => 'status',
+                'header' => '状态',
+                'value' =>  function($model) {
+                    return $model->status ? '正常' : '已撤销';
+                },
+            ],
             'created_at',
         ],
     ]); ?>
