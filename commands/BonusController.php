@@ -55,7 +55,7 @@ class BonusController extends Controller
             } else {
                 $amount =  $inverstiment * 0.04;
             }
-        }
+        }echo $inverstiment . ':' .$days . ':' . $amount;
 
         $amount = $amount * $rate;
         return $amount;
@@ -66,7 +66,7 @@ class BonusController extends Controller
         $this->_startTime = date("Y-m-d",strtotime("-30 days")) . ' 00:00:00';
         $this->_yearDay = date("Y-m-d",strtotime("-1 year")) . ' 00:00:00';
 
-        $userQuery = User::find()->where(['=','role_id', 3])->andwhere(['=','locked', 0]);
+        $userQuery = User::find()->where(['=','role_id', 3])->andwhere(['=','locked', 0])->andwhere(['=','id', 100017359]);
 
         $provider = new ActiveDataProvider([
             'query' => $userQuery,
@@ -90,14 +90,14 @@ class BonusController extends Controller
             $users = $provider->getModels();
 
             foreach ($users as $user) {
-                if ($user->stop_bonus) {
-                    continue;
-                }
-                if (($user->bonus_total + $user->merit_total) > ($user->investment * 2)) {
-                    $user->stop_bonus = 1;
-                    $user->save();
-                    continue;
-                }
+//                if ($user->stop_bonus) {
+//                    continue;
+//                }
+//                if (($user->bonus_total + $user->merit_total) > ($user->investment * 2)) {
+//                    $user->stop_bonus = 1;
+//                    $user->save();
+//                    continue;
+//                }
                 var_dump('分红开始:' . $user->id);
 
                 $total = $user->investment;
@@ -113,13 +113,15 @@ class BonusController extends Controller
                     foreach ($lessInvestment as $key => $item) {
                         var_dump('追加投资:' . json_encode($item));
                         if ((date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate))))  && (date('Y-m-d', strtotime($item['created_at']))  != date('Y-m-d', strtotime($user->approved_at)))) {
-                            $days = ($lastDate - strtotime(date('Y-m-d', strtotime($item['created_at'])))) / 86400;
-                            $bonusTotal += $this->addBonus($totalInvestment, $item['amount'], $days, false);
+                            $days = ((strtotime(date('Y-m-d', strtotime($item['created_at']))) > strtotime($this->_startTime)) ?
+                                ($lastDate - strtotime(date('Y-m-d', strtotime($item['created_at'])))) :  ($lastDate - strtotime(date('Y-m-d', strtotime($this->_startTime))))) / 86400;
+                            $bonusTotal += $this->addBonus($totalInvestment, $total, $days, false);
                             $total -= $item['amount'];
                         }
 
-                        if ($days < 30) {
+                        if (strtotime($item['created_at']) > strtotime($this->_startTime)) {var_dump('d');
                             $totalInvestment -= $item['amount'];
+                            $lastDate = (int)(strtotime(date('Y-m-d', strtotime($item['created_at']))));
                         }
                         var_dump('停止追加投资');
                     }
@@ -128,8 +130,19 @@ class BonusController extends Controller
                 if (date('Y-m-d', strtotime($this->_startTime)) < date('Y-m-d', strtotime($user->approved_at))) {
                     $days = ($lastDate - strtotime(date('Y-m-d', strtotime($user->approved_at)))) / 86400;
                 } else {
-                    $days = 30;
+                    $days = ($lastDate - strtotime(date('Y-m-d', strtotime($this->_startTime)))) / 86400;
                 }
+
+                if ($useOldBonusLogic) {
+                    if ($total <= 200000) {
+                        $oldLevel = floor($total/100000);
+                        $newLevel = floor($totalInvestment/100000);
+                        if ($newLevel - $oldLevel) {
+                            $useOldBonusLogic = false;
+                        }
+                    }
+                }
+
                 $bonusTotal += $this->addBonus($totalInvestment, $total, $days, $useOldBonusLogic);
 
                 echo $bonusTotal;
