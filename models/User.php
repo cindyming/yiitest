@@ -200,9 +200,9 @@ class User extends ActiveRecord implements IdentityInterface
             [['email'], 'email'],
             [['referer'], 'checkReferer'],
             [['suggest_by'], 'checkSuggest'],
-            [['cardname'], 'trim'],
-            [['cardnumber'], 'string', 'max' => 19],
-            [['cardnumber'], 'number'],
+            [['cardname', 'cardnumber'], 'trim'],
+            //[['cardnumber'], 'string', 'max' => 19],
+            //[['cardnumber'], 'number'],
             [['qq', 'useBaodan'], 'number'],
             [['duichong_invest'], 'checkBaodanInvest'],
         ];
