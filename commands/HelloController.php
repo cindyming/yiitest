@@ -40,7 +40,7 @@ class HelloController extends Controller
 //		$ids = "1000165,1002143,1002218,1002253,1002269,1002315,1002561,1002585,1002594,1002841,1002855,1003426,1003589,1003744,1003831,1004002,1004065,1004087,1004241,1004255,1004353,1004388,1004406,1004473,1004484,1004536,1004825,10019615,10021715,10022014,10023214,10023512,10023620,10024713,10026216,10026615,10026713,10027119,10029720,10030011,10030517,10031020,10031215,10033013,10033217,10033619,10034714,10035111,10035213,10036416,10036719,10037216,10038012,10038216,10038418,10039317,10040912,10041218,10042018,10043120,10043313,10044410,10046112,100015579,100015995,100016168,100016442,100016474,100016663,100016752,100017038,100017348,100017359,100017733,100017751,100017769,100017852,100018037,100018212,100018226,100018247,100018657,100018667,100018709,100018766,100018773,100018887,100018954,100018987,100018997,100019008,100019168,100019177,100019212,100019392,100019539,1000151420,1000153212,1000155520,1000157211,1000158714,1000160219,1000161219,1000161314,1000162810,1000164320,1000164911,1000165414,1000165910,1000166715";
 
 		 // $ids = "1000166715";
-		$users = User::find()->where(['=','role_id', 3])->andWhere(['<','approved_at', '2016-06-05 00:00:00'])->all();
+		$users = User::find()->where(['=','role_id', 3])->andWhere(['=', 'id',1000194718])->andWhere(['<','approved_at', '2016-06-05 00:00:00'])->all();
 		$dates = array(
             '2016-07-05',
             '2016-07-20',
@@ -167,38 +167,49 @@ echo count($ids);
 			}
 		}
 
-//echo $inverstiment, ':', $amount, ':', $rate . PHP_EOL;
+       echo $total . ':' .$inverstiment, ":days", $days, ':', $amount, ':', $rate . PHP_EOL;
 		$amount = $amount * $rate;
 		return $amount;
 	}
 
 	public function calculateBouns($user, $date, $allInvesments, $start, $useOldBonusLogic) {
 
+		echo $date . PHP_EOL;
+		echo $start . PHP_EOL;
 		$total = $user->investment;
 		$basie = $user->investment;
 		$bonusTotal = 0;
+		$afterDiffIn = 0;
 		foreach ($allInvesments as $key => $item) {
-			if ((date('Y-m-d', strtotime($item->created_at)) < date('Y-m-d', strtotime($date)))  && (date('Y-m-d', strtotime($item->created_at))  != date('Y-m-d', strtotime($user->approved_at)))) {
-				$days = (strtotime($date)- strtotime(date('Y-m-d', strtotime($item->created_at)))) / 86400;
-				$bonusTotal += $this->addBonus($total, $item->amount, $days, false);
-				//var_dump("BOUNUS: ". $bonusTotal);
+			if (((date('Ymd', strtotime($item->created_at)) < date('Ymd', strtotime($date))))) {
+				if (((date('Ymd', strtotime($item->created_at)) > date('Ymd', strtotime($start))))) {
+					echo $item->amount . ';' . $item->created_at . PHP_EOL;
+					$days = (strtotime($date)- strtotime(date('Y-m-d', strtotime($item->created_at)))) / 86400;
+					$bonusTotal += $this->addBonus($total, $total, $days, false);
+					$date = date('Y-m-d 00:00:00', strtotime($item->created_at));
+					$total -= $item->amount;
+				} else if(date('Ymd', strtotime($item->created_at)) > '20160605') {
+					$afterDiffIn += $item->amount;
+				}
+			} else {
+				$total -= $item->amount;
 			}
-			if ((date('Ymd', strtotime($item->created_at)) > date('Ymd', strtotime($date))) || ((date('Ymd', strtotime($item->created_at)) > date('Ymd', strtotime($start))))) {
-				$total -= $item['amount'];
-			}
-
-			$basie -= $item['amount'];
+			$basie -= $item->amount;
 		}
 
-		if (date('Y-m-d', strtotime($this->_startTime)) < date('Y-m-d', strtotime($user->approved_at))) {
+		if (date('Y-m-d', strtotime($start)) < date('Y-m-d', strtotime($user->approved_at))) {
 			$days = (strtotime($date) - strtotime(date('Y-m-d', strtotime($user->approved_at)))) / 86400;
 		} else {
-			$days = 30;
+			$days = (strtotime($date) - strtotime(date('Y-m-d', strtotime($start)))) / 86400;
+		}
+
+		if ($afterDiffIn) {
+			$bonusTotal += $this->addBonus($total, $afterDiffIn, $days, false);
 		}
 
 		if ($useOldBonusLogic) {
 			if ($basie <= 200000) {
-				$oldLevel = floor($total/100000);
+				$oldLevel = floor($user->investment/100000);
 				$newLevel = floor($basie/100000);
 				if ($newLevel - $oldLevel) {
 					$useOldBonusLogic = false;

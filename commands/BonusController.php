@@ -105,6 +105,7 @@ class BonusController extends Controller
                     $user->save();
                     continue;
                 }
+                $this->_investAfterDiffTime = 0;
                 var_dump('分红开始:' . $user->id);
 
                 $total = $user->investment;
@@ -140,13 +141,14 @@ class BonusController extends Controller
                     $days = ($lastDate - strtotime(date('Y-m-d', strtotime($this->_startTime)))) / 86400;
                 }
 
-                if ($this->_investAfterDiffTime) {
-                    $bonusTotal += $this->addBonus($totalInvestment, $this->_investAfterDiffTime, $days, false);
-                    $total -= $this->_investAfterDiffTime;
-
-                }
-
                 if ($useOldBonusLogic) {
+
+                    if ($this->_investAfterDiffTime ) {
+                        $bonusTotal += $this->addBonus($totalInvestment, $this->_investAfterDiffTime, $days, false);
+                        $total -= $this->_investAfterDiffTime;
+
+                    }
+
                     if ($total <= 200000) {
                         $oldLevel = floor($total/100000);
                         $newLevel = floor($totalInvestment/100000);
