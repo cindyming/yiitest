@@ -149,7 +149,7 @@ class BonusController extends Controller
 
                     }
 
-                    if ($total <= 200000) {
+                    if ($total < 200000) {
                         $oldLevel = floor($total/100000);
                         $newLevel = floor($totalInvestment/100000);
                         if ($newLevel - $oldLevel) {
