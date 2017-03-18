@@ -17,7 +17,7 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'cardnumber')->textInput(['value' => Yii::$app->user->identity->cardnumber, 'readonly' => true]); ?>
         <?= $form->field($model, 'cardname')->textInput(['value' => Yii::$app->user->identity->cardname]); ?>
         <?= $form->field($model, 'bankaddress')->textInput(['value' => Yii::$app->user->identity->bankaddress, 'readonly' => true]); ?>
-        <?= $form->field($model, 'amount') ?>
+    <?= $form->field($model, 'amount', [])->textInput(['class'=>'amountNumber'])->hint("您输入的金额是: <span class='realAmount'></span>") ?>
         <?= $form->field($model, 'password2')->passwordInput() ?>
         <div class="form-group">
             <?= Html::submitButton('确认[分红]提现', ['class' => 'btn btn-primary', 'onClick' => "$('#cash-type').val(1)"]) ?>

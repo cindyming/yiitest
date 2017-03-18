@@ -29,7 +29,7 @@ $this->title = '商城币转海币';
 
     <?php $form = ActiveForm::begin(); ?>
     <?= $form->field($model, 'sc_account', ['options' => ['class' => 'form-group required']])->textInput(array( 'required'=> true)); ?>
-    <?= $form->field($model, 'amount') ?>
+    <?= $form->field($model, 'amount', [])->textInput(['class'=>'amountNumber'])->hint("您输入的金额是: <span class='realAmount'></span>") ?>
     <?= $form->field($model, 'password2')->passwordInput() ?>
     <div class="form-group">
         <?= Html::submitButton('确认提现', ['class' => 'btn btn-primary']) ?>

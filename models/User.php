@@ -106,6 +106,15 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'init_investment',
+                ],
+                'value' => function ($event) {
+                    return $this->investment * 10000;
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'investment',
                 ],
                 'value' => function ($event) {
@@ -182,7 +191,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password', 'password','title', 'password2',  'identity', 'phone',  'investment', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'required'],
+            [['username', 'password', 'password','title', 'password2', 'identity', 'phone',  'investment', 'bank', 'cardname', 'cardnumber', 'bankaddress'], 'required'],
             [['username', 'password'], 'string', 'max' => 100],
             [['password1'], 'compare', 'compareAttribute' => 'password'],
             [['password3'], 'compare', 'compareAttribute' => 'password2'],
@@ -200,7 +209,7 @@ class User extends ActiveRecord implements IdentityInterface
             //[['cardnumber'], 'string', 'max' => 19],
             //[['cardnumber'], 'number'],
             [['suggest_by'], 'checkSuggest'],
-            [['qq', 'useBaodan'], 'number'],
+            [['qq', 'useBaodan', 'init_investment'], 'number'],
             [['duichong_invest'], 'checkBaodanInvest'],
         ];
     }
@@ -251,7 +260,8 @@ class User extends ActiveRecord implements IdentityInterface
             'password_old' => '原一级密码',
             'password2_old' => '原二级密码',
             'duichong_total' => '对冲帐户总额',
-            'duichong_remain' => '对冲帐户余额'
+            'duichong_remain' => '对冲帐户余额',
+            'init_investment' => '初始投资额'
         ];
     }
 
@@ -515,25 +525,25 @@ class User extends ActiveRecord implements IdentityInterface
     public function calculateLevel()
     {
         $achievements = $this->achievements ? $this->achievements : $this->investment;
-        if (500000 > $achievements && $achievements< 500000) {
+        if (50000 < $achievements && $achievements <= 500000) {
             $level = 1;
-        } elseif ( $achievements < 1000000 ) {
+        } elseif ( $achievements <= 1000000 ) {
             $level = 2;
-        } elseif ( $achievements < 2000000) {
+        } elseif ( $achievements <= 2000000) {
             $level = 3;
-        } elseif ( $achievements < 9000000) {
+        } elseif ( $achievements <= 9000000) {
             $level = 4;
         } else {
             $minAchivements = $this->diamondLevel();
-            if ($minAchivements < 3000000) {
+            if ($minAchivements <= 3000000) {
                 $level = 4;
-            } elseif ($minAchivements < 6000000) {
+            } elseif ($minAchivements <= 6000000) {
                 $level = 5;
-            } elseif ($minAchivements < 10000000) {
+            } elseif ($minAchivements <= 10000000) {
                 $level = 6;
-            } elseif ($minAchivements < 20000000) {
+            } elseif ($minAchivements <= 20000000) {
                 $level = 7;
-            } elseif ($minAchivements < 20000000&&false) {
+            } elseif ($minAchivements <= 20000000&&false) {
                 $level = 8;
             } elseif ($this->isDiamondLevel()) {
                 $level = 10;
@@ -598,7 +608,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->investment = ($this->investment - $amount) ? ($this->investment - $amount) : $this->investment;
         $this->achievements = ($this->achievements - $amount) ? ($this->achievements - $amount) : $this->achievements;
-        $this->level = $this->calculateLevel();
+       // $this->level = $this->calculateLevel();
 
         $parents = array();
 
@@ -607,7 +617,7 @@ class User extends ActiveRecord implements IdentityInterface
         foreach ($parents as $parent) {
             if ($parent && $parent->role_id != 1) {
                 $parent->achievements = $parent->achievements - $amount;
-                $parent->level = $parent->calculateLevel();
+             //   $parent->level = $parent->calculateLevel();
                 if (!$parent->save(true, array('achievements', 'level'))) {
                     throw new Exception('Failed to save user ' . User::arrayToString($parent->getErrors()));
                 }

@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Investment;
 use app\models\Cash;
+use app\models\System;
 use Yii;
 use app\models\User;
 use yii\base\Exception;
@@ -338,6 +339,10 @@ class UserController extends Controller
     }
     public function actionTree()
     {
+        if (!System::loadConfig('open_member_tree')) {
+            Yii::$app->getSession()->set('danger', '网络图功能已关闭,请联系管理员.');
+            return $this->redirect(['/news/index']);
+        }
         $id = Yii::$app->user->identity->id;
 
         $user = $this->findModel($id);
@@ -631,6 +636,10 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
+        if (!System::loadConfig('open_suggest_list')) {
+            Yii::$app->getSession()->set('danger', '会员推荐列表功能已关闭,请联系管理员.');
+            return $this->redirect(['/news/index']);
+        }
         $referer = Yii::$app->request->get('referer');
 
         $query = User::find()->where(['!=','role_id',1]);

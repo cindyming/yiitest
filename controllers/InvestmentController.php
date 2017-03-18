@@ -165,7 +165,7 @@ class InvestmentController extends Controller
                             $meritAmount = 0;
 
                             if ($model->duichong_invest) {
-                                $meritAmount += round($model->duichong_invest * 0.01, 2);
+                               // $meritAmount += round($model->duichong_invest * 0.01, 2);
 
                                 $addedBy->duichong_remain -= $model->duichong_invest;
                                 $data = array(

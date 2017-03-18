@@ -16,6 +16,7 @@ class BonusController extends Controller
     private $_yearDay;
     private $_diffTime = '2016-06-05';
     private $_investAfterDiffTime = 0;
+    private $_totalDiff = 0;
 
     public function lessThan15Investment($id, $lessThanStart = true)
     {
@@ -61,7 +62,7 @@ class BonusController extends Controller
             } else {
                 $amount =  $inverstiment * 0.04;
             }
-        }
+        }var_dump($useOldBonusLogic);
 
         $amount = $amount * $rate;
         echo $inverstiment . ':' .$days . ':' . $amount . PHP_EOL;
@@ -71,9 +72,9 @@ class BonusController extends Controller
     public function actionIndex()
     {
         $this->_startTime = date("Y-m-d",strtotime("-30 days")) . ' 00:00:00';
-        $this->_yearDay = date("Y-m-d",strtotime("-1 year")) . ' 00:00:00';
+        $this->_yearDay = date("Y-m-d",strtotime("-11 months")) . ' 00:00:00';
 
-        $userQuery = User::find()->where(['=','role_id', 3])->andwhere(['=','locked', 0]);
+        $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['=', 'id', 1002253])->andwhere(['=','locked', 0]);
 
         $provider = new ActiveDataProvider([
             'query' => $userQuery,
@@ -149,7 +150,7 @@ class BonusController extends Controller
 
                     }
 
-                    if ($total <= 200000) {
+                    if ($total < 200000) {
                         $oldLevel = floor($total/100000);
                         $newLevel = floor($totalInvestment/100000);
                         if ($newLevel - $oldLevel) {

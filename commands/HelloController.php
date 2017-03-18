@@ -74,7 +74,7 @@ class HelloController extends Controller
 					$start = date('Y-m-d H:i:s',(strtotime($date) - 30 * 86400));
 				}
 
-				$useOldBonusLogic = (int) (($user->approved_at < $this->_diffTime . ' 00:00:00') && ($user->approved_at >= date('Y-m-d H:i:s',strtotime('-1 year', strtotime($date)))));
+				$useOldBonusLogic = (int) (($user->approved_at < $this->_diffTime . ' 00:00:00') && ($user->approved_at >= date('Y-m-d H:i:s',strtotime('-11 months', strtotime($date)))));
 
 				$inversments =  Investment::find()->where(['<', 'created_at', $start])->andWhere(['>', 'created_at', '2016-06-15 00:00'])->andWhere(['=', 'user_id', $user->id])->andWhere(['=', 'status', 1])->andWhere(['=', 'merited', 1])->orderBy(['created_at' => SORT_DESC])->all();
 
@@ -94,24 +94,25 @@ class HelloController extends Controller
 								$ids[] = $user->id;
 							}
 							fputcsv($fp, array($user->id , $mustBe, $oldTotal, $date . ' 分红'));
-							/*                       $redu = $oldTotal - $mustBe;
-												   $user->bonus_remain = $user->bonus_remain - $redu;
-												   $data = array(
-													   'user_id' => $user->id,
-													   'type' => 4,
-													   'amount' => $redu,
-													   'real_amount' => $redu,
-													   'status' => 2,
-													   'total' => $user->bonus_remain,
-													   'note' => '分红扣除' . $date .  '多发的金额'
-												   );
-
-												   $cash = new Cash();
-												   $cash->load($data, '');
-												   if (!$cash->save()) {
-													   echo json_encode($cash->getErrors());
-												   }*/
-
+	                       $redu = $oldTotal - $mustBe;
+//							if ($redu > 0) {
+//								$user->bonus_remain = $user->bonus_remain - $redu;
+//								$data = array(
+//									'user_id' => $user->id,
+//									'type' => 4,
+//									'amount' => $redu,
+//									'real_amount' => $redu,
+//									'status' => 2,
+//									'total' => $user->bonus_remain,
+//									'note' => '分红扣除' . $date .  '多发的金额'
+//								);
+//
+//								$cash = new Cash();
+//								$cash->load($data, '');
+//								if (!$cash->save()) {
+//									echo json_encode($cash->getErrors());
+//								}
+//							}
 						}
 					}
 
@@ -125,6 +126,7 @@ echo count($ids);
 	public function addBonus($total, $inverstiment, $days, $useOldBonusLogic)
 	{
 		$rate = 1;
+		$days = intval($days);
 		if ( $this->_currentDate > '2016-12-00') {
 			if ($days < 30) {
 				$rate = $days / 30;
@@ -179,12 +181,12 @@ echo count($ids);
 		$total = $user->investment;
 		$basie = $user->investment;
 		$bonusTotal = 0;
-		$afterDiffIn = 0;
+		$afterDiffIn = 0;var_dump($date);
 		foreach ($allInvesments as $key => $item) {
 			if (((date('Ymd', strtotime($item->created_at)) < date('Ymd', strtotime($date))))) {
-				if (((date('Ymd', strtotime($item->created_at)) > date('Ymd', strtotime($start))))) {
+				if (((date('Ymd', strtotime($item->created_at))) > date('Ymd', strtotime($start)))) {
 					echo $item->amount . ';' . $item->created_at . PHP_EOL;
-					$days = (strtotime($date)- strtotime(date('Y-m-d', strtotime($item->created_at)))) / 86400;
+					$days = (strtotime($date) - strtotime(date('Y-m-d 00:00:00', strtotime($item->created_at)))) / 86400;
 					$bonusTotal += $this->addBonus($total, $total, $days, false);
 					$date = date('Y-m-d 00:00:00', strtotime($item->created_at));
 					$total -= $item->amount;

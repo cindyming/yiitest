@@ -64,7 +64,7 @@ use yii\widgets\ActiveForm;
     <div class="clearfix">
          <?= $form->field($model, 'referer', [ 'template' => "{label}<label class='des'>如会员没有接点人请键入“#”</label>\n{input}\n{hint}\n{error}"])->textInput(['class' => 'popup form-control','maxlength' => true,'readonly' => true, 'value' => ($model->referer == 0) ? '#' : $model->referer])->label() ?>
     <?php else: ?>
-        <?= $form->field($model, 'investment',[ 'template' => "{label}\n{input}<label class='des' style='color:#ff0000'>万,例如你输入1就代表1万</label>\n{hint}\n{error}"])->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'investment',['template' => "{label}\n{input}<label class='des' style='color:#ff0000'>万,例如你输入1就代表1万</label>\n{hint}\n{error}"])->textInput(['maxlength' => true,'class'=> 'amountNumber needBig'])->hint("您输入的金额是: <span class='realAmount'></span>") ?>
         <?php if (Yii::$app->user->identity->isBaodan() && Yii::$app->user->identity->duichong_remain) : ?>
             <?= $form->field($model, 'useBaodan')->checkbox([1 => '使用对冲帐户余额'])?>
             <?= $form->field($model, 'duichong_invest')->textInput() ?>
