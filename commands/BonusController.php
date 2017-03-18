@@ -42,7 +42,7 @@ class BonusController extends Controller
     public function addBonus($total, $inverstiment, $days, $useOldBonusLogic)
     {
         $rate = 1;
-
+        $days = intval($days);
         if ($days < 30) {
             $rate = $days / 30;
         }
