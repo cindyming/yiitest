@@ -515,25 +515,25 @@ class User extends ActiveRecord implements IdentityInterface
     public function calculateLevel()
     {
         $achievements = $this->achievements ? $this->achievements : $this->investment;
-        if (500000 > $achievements && $achievements< 500000) {
+        if ($achievements <= 500000) {
             $level = 1;
-        } elseif ( $achievements < 1000000 ) {
+        } elseif ( $achievements <= 1000000 ) {
             $level = 2;
-        } elseif ( $achievements < 2000000) {
+        } elseif ( $achievements <= 2000000) {
             $level = 3;
-        } elseif ( $achievements < 9000000) {
+        } elseif ( $achievements <= 9000000) {
             $level = 4;
         } else {
             $minAchivements = $this->diamondLevel();
-            if ($minAchivements < 3000000) {
+            if ($minAchivements <= 3000000) {
                 $level = 4;
-            } elseif ($minAchivements < 6000000) {
+            } elseif ($minAchivements <= 6000000) {
                 $level = 5;
-            } elseif ($minAchivements < 10000000) {
+            } elseif ($minAchivements <= 10000000) {
                 $level = 6;
-            } elseif ($minAchivements < 20000000) {
+            } elseif ($minAchivements <= 20000000) {
                 $level = 7;
-            } elseif ($minAchivements < 20000000&&false) {
+            } elseif ($minAchivements <= 20000000&&false) {
                 $level = 8;
             } elseif ($this->isDiamondLevel()) {
                 $level = 10;

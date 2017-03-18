@@ -71,7 +71,7 @@ class BonusController extends Controller
     public function actionIndex()
     {
         $this->_startTime = date("Y-m-d",strtotime("-30 days")) . ' 00:00:00';
-        $this->_yearDay = date("Y-m-d",strtotime("-1 year")) . ' 00:00:00';
+        $this->_yearDay = date("Y-m-d",strtotime("-11 months")) . ' 00:00:00';
 
         $userQuery = User::find()->where(['=','role_id', 3])->andwhere(['=','locked', 0]);
 
