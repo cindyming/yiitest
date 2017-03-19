@@ -362,12 +362,12 @@ class CashController extends Controller
                 $response = json_decode($response);
                 curl_close($curl);
 
-                Log::add('会员(' . $model->user_id . ')' , ' 商城币提现' , '返回' , json_encode($response));
+                Log::add('会员(' . $model->user_id . ')' , ' 商城币提现' , '返回' , json_encode($response) . ':' . $service_url);
                 if (!$err && $response && $response->code) {
-                    if ( $response->code == 1) {
+                    if ( ($response->code == 1) && $response->result) {
                         $model->note .= '; 商城币提现,' . $response->code;
                     } else {
-                        Yii::$app->getSession()->set('message', $response->result);
+                        Yii::$app->getSession()->set('message', $response->result ? $response->result : '会员提现发送失败,请重试.');
                         $pass = false;
                         Log::add('会员(' . $model->user_id . ')', '商城币提现失败', '失败', json_encode($response));
                     }
