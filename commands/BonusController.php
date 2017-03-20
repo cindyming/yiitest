@@ -135,7 +135,6 @@ class BonusController extends Controller
                     if ($useOldBonusLogic) {
                         $bonusTotal += $this->addBonus(($total - $this->_investmentAfterStartTime), $beforeDiffTimeInvestment, 30, true);
                         $total -= $beforeDiffTimeInvestment;
-                        $totalInvestment -= $beforeDiffTimeInvestment;
                     }
                 }
 
