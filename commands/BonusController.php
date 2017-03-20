@@ -126,7 +126,7 @@ class BonusController extends Controller
 
                     if ($beforeDiffTimeInvestment < 200000) {
                         $oldLevel = floor($beforeDiffTimeInvestment/100000);
-                        $newLevel = floor(($total - $this->_investmentAfterStartTime)/100000);
+                        $newLevel = floor(($total)/100000);
                         if ($newLevel - $oldLevel) {
                             $useOldBonusLogic = false;
                         }
@@ -181,7 +181,7 @@ class BonusController extends Controller
                 if ($total) {
                     $bonusTotal += $this->addBonus($totalInvestment, $total, $days, $useOldBonusLogic);
                 } else {
-                    echo "WRONG USER: " . $user->id;
+                    echo "WRONG USER: " . $user->id . PHP_EOL;
                 }
 
 
