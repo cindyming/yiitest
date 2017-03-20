@@ -123,9 +123,10 @@ class BonusController extends Controller
 
                 if ($useOldBonusLogic) {
                     $beforeDiffTimeInvestment = $total - $this->_investmentAfterStartTime -   $this->_investAfterDiffTime;
+
                     if ($beforeDiffTimeInvestment < 200000) {
                         $oldLevel = floor($beforeDiffTimeInvestment/100000);
-                        $newLevel = floor(($total - $this->_investAfterDiffTime)/100000);
+                        $newLevel = floor(($total - $this->_investmentAfterStartTime)/100000);
                         if ($newLevel - $oldLevel) {
                             $useOldBonusLogic = false;
                         }
