@@ -100,9 +100,11 @@ class BonusController extends Controller
 
             foreach ($users as $user) {
                 if ($user->stop_bonus) {
+                    echo $user->id . PHP_EOL;
                     continue;
                 }
                 if (($user->bonus_total + $user->merit_total) > ($user->investment * 2)) {
+                    echo $user->id . PHP_EOL;
                     $user->stop_bonus = 1;
                     $user->save();
                     continue;
@@ -148,7 +150,7 @@ class BonusController extends Controller
                             $total -= $item['amount'];
                         }
 
-                        if (strtotime($item['created_at']) > strtotime($this->_startTime)) {
+                        if ((strtotime($item['created_at']) > strtotime($this->_startTime)) && (date('Y-m-d', strtotime($item['created_at']))  != date('Y-m-d', strtotime($user->approved_at)))) {
                             $totalInvestment -= $item['amount'];
                             $lastDate = (int)(strtotime(date('Y-m-d', strtotime($item['created_at']))));
                         }
