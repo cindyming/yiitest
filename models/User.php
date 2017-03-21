@@ -628,7 +628,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->investment = ($this->investment - $amount) ? ($this->investment - $amount) : $this->investment;
         $this->achievements = ($this->achievements - $amount) ? ($this->achievements - $amount) : $this->achievements;
-        $this->level = $this->calculateLevel();
+        //$this->level = $this->calculateLevel();
 
         $parents = array();
 
@@ -637,7 +637,7 @@ class User extends ActiveRecord implements IdentityInterface
         foreach ($parents as $parent) {
             if ($parent && $parent->role_id != 1) {
                 $parent->achievements = $parent->achievements - $amount;
-                $parent->level = $parent->calculateLevel();
+               // $parent->level = $parent->calculateLevel();
                 if (!$parent->save(true, array('achievements', 'level'))) {
                     throw new Exception('Failed to save user ' . json_encode($parent->getErrors()));
                 }
