@@ -206,8 +206,8 @@ class User extends ActiveRecord implements IdentityInterface
             [['email'], 'email'],
             [['referer'], 'checkReferer'],
             [['cardname', 'cardnumber'], 'trim'],
-            //[['cardnumber'], 'string', 'max' => 19],
-            //[['cardnumber'], 'number'],
+            [['cardnumber'], 'string', 'max' => 20, "on" => "create"],
+            [['cardnumber'], 'number', "on" => "create"],
             [['suggest_by'], 'checkSuggest'],
             [['qq', 'useBaodan', 'init_investment'], 'number'],
             [['duichong_invest'], 'checkBaodanInvest'],
@@ -525,7 +525,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function calculateLevel()
     {
         $achievements = $this->achievements ? $this->achievements : $this->investment;
-        if (50000 < $achievements && $achievements <= 500000) {
+        if ($achievements <= 500000) {
             $level = 1;
         } elseif ( $achievements <= 1000000 ) {
             $level = 2;

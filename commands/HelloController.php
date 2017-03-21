@@ -74,7 +74,8 @@ class HelloController extends Controller
 					$start = date('Y-m-d H:i:s',(strtotime($date) - 30 * 86400));
 				}
 
-				$useOldBonusLogic = (int) (($user->approved_at < $this->_diffTime . ' 00:00:00') && ($user->approved_at >= date('Y-m-d H:i:s',strtotime('-11 months', strtotime($date)))));
+
+				$useOldBonusLogic = (int) (($user->approved_at < $this->_diffTime . ' 00:00:00') && ($user->approved_at >= date('Y-m-d H:i:s',strtotime('-13 months', strtotime($date)))));
 
 				$inversments =  Investment::find()->where(['<', 'created_at', $start])->andWhere(['>', 'created_at', '2016-06-15 00:00'])->andWhere(['=', 'user_id', $user->id])->andWhere(['=', 'status', 1])->andWhere(['=', 'merited', 1])->orderBy(['created_at' => SORT_DESC])->all();
 
@@ -181,13 +182,46 @@ echo count($ids);
 		$total = $user->investment;
 		$basie = $user->investment;
 		$bonusTotal = 0;
-		$afterDiffIn = 0;var_dump($date);
+
+		$afterDiffIn = 0;
+
+		$beforeInvestment = $total;
+		$beforeInvestmentTotal = $total;
+
+		foreach ($allInvesments as $key => $item) {
+			if (((date('Ymd', strtotime($item->created_at)) < date('Ymd', strtotime($date)))) && ((date('Ymd', strtotime($item->created_at)) > date('Ymd', strtotime($start))))) {
+				$beforeInvestmentTotal -= $item->amount;
+			} else if ((date('Ymd', strtotime($item->created_at)) > date('Ymd', strtotime($date)))) {
+				$beforeInvestmentTotal -= $item->amount;
+			}
+			$beforeInvestment -= $item->amount;
+		}
+
+		if ($useOldBonusLogic) {
+
+			if ($beforeInvestment < 200000) {
+				$oldLevel = floor($beforeInvestment/100000);
+				$newLevel = floor(($beforeInvestmentTotal)/100000);
+				if ($newLevel - $oldLevel) {
+					$useOldBonusLogic = false;
+				}
+			}
+
+			if ($useOldBonusLogic) {
+				$bonusTotal += $this->addBonus(($beforeInvestmentTotal), $beforeInvestment, 30, true);
+				$basie -= $beforeInvestment;
+			}
+		}
+
+
 		foreach ($allInvesments as $key => $item) {
 			if (((date('Ymd', strtotime($item->created_at)) < date('Ymd', strtotime($date))))) {
 				if (((date('Ymd', strtotime($item->created_at))) > date('Ymd', strtotime($start)))) {
 					echo $item->amount . ';' . $item->created_at . PHP_EOL;
-					$days = (strtotime($date) - strtotime(date('Y-m-d 00:00:00', strtotime($item->created_at)))) / 86400;
-					$bonusTotal += $this->addBonus($total, $total, $days, false);
+
+					$days = (strtotime($date)- strtotime(date('Y-m-d', strtotime($item->created_at)))) / 86400;
+					$bonusTotal += $this->addBonus($total, $basie, $days, false);
+
 					$date = date('Y-m-d 00:00:00', strtotime($item->created_at));
 					$total -= $item->amount;
 				} else if(date('Ymd', strtotime($item->created_at)) > '20160605') {
@@ -218,8 +252,10 @@ echo count($ids);
 				}
 			}
 		}
-		$bonusTotal += $this->addBonus($total, $basie, $days, $useOldBonusLogic);
 
+		if ($basie) {
+			$bonusTotal += $this->addBonus($total, $basie, $days, $useOldBonusLogic);
+		}
 		return round($bonusTotal, 2);
 	}
 
