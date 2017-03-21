@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Cash;
 use app\models\Revenue;
+use app\models\System;
 use common\models\JLock;
 use Yii;
 use app\models\Investment;
@@ -165,7 +166,9 @@ class InvestmentController extends Controller
                             $meritAmount = 0;
 
                             if ($model->duichong_invest) {
-                               // $meritAmount += round($model->duichong_invest * 0.01, 2);
+                                if (System::loadConfig('opend_duichong_baodan_fee')) {
+                                    $meritAmount += round($model->duichong_invest * 0.01, 2);
+                                }
 
                                 $addedBy->duichong_remain -= $model->duichong_invest;
                                 $data = array(

@@ -61,6 +61,7 @@ class HelloController extends Controller
 		fputcsv($fp, array('用户编号', '实际分红', '现发分红', '备注'));
 		$ids = array();
 		foreach ($users as $user) {
+			$total = 0;
 			$allInvesments = Investment::find()->where(['=', 'user_id', $user->id])->andWhere(['>', 'created_at', '2016-06-15 00:00'])->andWhere(['=', 'status', 1])->andWhere(['=', 'merited', 1])->orderBy(['created_at' => SORT_DESC])->all();
 
 			foreach ($dates as $date) {//var_dump($date);
@@ -94,6 +95,7 @@ class HelloController extends Controller
 							if (!in_array($user->id, $ids)) {
 								$ids[] = $user->id;
 							}
+							$total += ($oldTotal -  $mustBe);
 							fputcsv($fp, array($user->id , $mustBe, $oldTotal, $date . ' 分红'));
 	                       $redu = $oldTotal - $mustBe;
 //							if ($redu > 0) {
@@ -118,6 +120,9 @@ class HelloController extends Controller
 					}
 
 				}
+			}
+			if ($total) {
+				fputcsv($fp, array('' , '', '', $total));
 			}
 		}
 echo count($ids);

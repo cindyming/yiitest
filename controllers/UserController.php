@@ -184,7 +184,7 @@ class UserController extends Controller
                 $addedBy = User::findOne($model->added_by);
                 if ($addedBy && $addedBy->getId() && ($addedBy->role_id == 3)) {
                     $meritAmount = round($model->investment * 0.01, 2);
-                    if ($model->duichong_invest) {
+                    if ($model->duichong_invest && System::loadConfig('opend_duichong_baodan_fee')) {
                         $meritAmount +=  round($model->duichong_invest * 0.01, 2);
                     }
                     $data = array(
@@ -304,6 +304,7 @@ class UserController extends Controller
         $model = new User();
 
         if ($model->load(Yii::$app->request->post())) {
+            $model->setScenario("create");
             $result = ActiveForm::validate($model);
             $this->validateUserData($model);
             foreach ($model->getErrors() as $attribute => $errors) {
@@ -325,6 +326,7 @@ class UserController extends Controller
     public function actionAdmincreate()
     {
         $model = new User();
+        $model->setScenario('create');
 
         if ($model->load(Yii::$app->request->post())) {
             $validate = $this->validateUserData($model);

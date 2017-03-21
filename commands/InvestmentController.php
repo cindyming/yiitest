@@ -45,11 +45,12 @@ class InvestmentController extends Controller
 		$provider = new ActiveDataProvider([
 			'query' => $userQuery,
 			'pagination' => [
-				'pageSize' => 100,
+				'pageSize' => 1000,
 			],
 		]);
 		$provider->prepare();
-		for($i=1; $i<=$provider->getPagination()->getPageCount();$i++) {
+		$count = $provider->getPagination()->getPageCount();
+		for($i=1; $i<=$count;$i++) {
 			if ($i != 1) {
 				$provider = new ActiveDataProvider([
 					'query' => $userQuery,
@@ -63,6 +64,7 @@ class InvestmentController extends Controller
 
 			foreach ($users as $user) {
 				$investment = $this->lessThan15Investment($user->id);
+
 				$allInverstment = $user->investment;
 				if ($allInverstment - $investment) {
 					$user->init_investment = $allInverstment - $investment;
