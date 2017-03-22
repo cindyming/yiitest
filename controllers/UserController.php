@@ -624,7 +624,7 @@ class UserController extends Controller
 
                 $mallData = array(
                     'user_id' => $revenu->user_id,
-                    'note' => '错误报单,撤销会员[' .$this->id . '],投资'.$model->investment.'保单费扣除:' . $revenu->id,
+                    'note' => '错误报单,撤销会员[' .$model->id . '],投资'.$model->investment.'保单费扣除:' . $revenu->id,
                     'amount' => $baodan_amount,
                     'type' => 6,
                     'status' => 2,
