@@ -314,10 +314,10 @@ class CashController extends Controller
                 $service_url = Yii::$app->params['stack_url'] . 'v1/accounts';
                 $curl = curl_init($service_url);
                 curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                curl_setopt($curl, CURLOPT_USERPWD, "admin:admin123"); //Your credentials goes here
+                curl_setopt($curl, CURLOPT_USERPWD, "admin:lml1314"); //Your credentials goes here
                 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($curl, CURLOPT_POST, true);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array('member_id' => $model->stack_number, 'amount' => $model->real_amount, 'refer_id' => $model->id)));
+                curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array('member_id' => $model->stack_number, 'amount' => $model->real_amount, 'refer_id' => $model->user_id)));
                 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
                 $curl_response = curl_exec($curl);
@@ -370,7 +370,7 @@ class CashController extends Controller
                     if ( $response->code == 1 && $response->result) {
                         $model->note .= '; 商城币提现,' . $response->code;
                     } else {
-                        Yii::$app->getSession()->set('message', $response->result ? $response->result : '海币充值失败');
+                        Yii::$app->getSession()->set('message', $response->result ? $response->result : '提现失败请稍后再试.');
                         $pass = false;
                         Log::add('会员(' . $model->user_id . ')', '商城币提现失败', '失败', json_encode($response));
                     }
