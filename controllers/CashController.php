@@ -413,7 +413,7 @@ class CashController extends Controller
                 }
             } else if ($model->cash_type == 4) {
                 //http://10.0.1.51:7001/membercenter/web/memberChongzhi/chongzhi?account=zf09&money=3&accountType=3
-                $data = array('account' => $model->sc_account, 'money' => $model->real_amount, 'accountType' => 3, 'system' => '玫瑰家园:' . $model->user_id);
+                $data = array('account' => $model->sc_account, 'money' => $model->real_amount, 'accountType' => 3, 'system' => '玫瑰家园:' . $model->user_id, 'mobile' => $model->telephone);
                 if ($model->type != 9) {
                     $data['accountType'] = 0;
                 }
