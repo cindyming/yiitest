@@ -203,6 +203,9 @@ class CashController extends Controller
 
         $data = Yii::$app->request->post();
         if ($model->load(Yii::$app->request->post()) && isset($data['Cash']) && isset($data['Cash']['password2'])) {
+            $key = 'INVESTIMENT' . Yii::$app->user->identity->id;
+            $sellLock = new \app\models\JLock($key);
+            $sellLock->start();
             if ($model->user_id == Yii::$app->user->identity->id) {
                 $validateAmount = true;
                 if (!in_array($model->type, array(1,2,3,9))  && (($model->type == 9) && ($type != 'mallmoney'))){
@@ -335,6 +338,7 @@ class CashController extends Controller
             } else {
                 Yii::$app->getSession()->set('danger', '提现申请失败请稍后再试.');
             }
+            $sellLock->end();
         }
 
 
