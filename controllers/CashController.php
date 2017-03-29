@@ -492,8 +492,6 @@ class CashController extends Controller
                 } else {
                     Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放失败');
                     $transaction->rollback();
-                    var_dump($model->getErrors());
-                    var_dump($user->save());die;
                 }
             }
             $this->redirect(Yii::$app->request->referrer);

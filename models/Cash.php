@@ -110,15 +110,15 @@ class Cash extends ActiveRecord
     public function rules()
     {
         return [
-            [['amount', 'type', 'password2'], 'required'],
+            [['amount', 'type'], 'required'],
             [['cardnumber'], 'number'],
             [['amount'], 'double'],
             [['cardname'], 'trim'],
             [['cardnumber'], 'string', 'max' => 19],
-            [['cardnumber', 'cardname', 'bank', 'bankaddress'], 'required', 'on' => 'create'],
-            [['stack_number'], 'required', 'on' => 'transfer'],
-            [['user_id'], 'required', 'on' => 'baodan'],
-            [['sc_account', 'telephone'], 'required', 'on' => 'mallmoney'],
+            [['cardnumber', 'cardname', 'bank', 'bankaddress', 'password2'], 'required', 'on' => 'create'],
+            [['stack_number', 'password2'], 'required', 'on' => 'transfer'],
+            [['user_id', 'password2'], 'required', 'on' => 'baodan'],
+            [['sc_account', 'telephone', 'password2'], 'required', 'on' => 'mallmoney'],
             [['telephone'], 'checkAccount', 'on' => 'mallmoney'],
             [['user_id', 'note', 'bank', 'status', 'cash_type', 'baodan_id', 'stack_number', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total', 'sc_account'], 'trim'],
             [['type'], 'integer'],
@@ -240,7 +240,7 @@ class Cash extends ActiveRecord
                     if ($response->code == 1 && $response->result) {
 
                     } else {
-                       // $this->addError('telephone', '商城用户名和手机号码不匹配请确认后输入');
+                        $this->addError('telephone', '商城用户名和手机号码不匹配请确认后输入');
                     }
                 } else {
                     $this->addError('telephone', '商城用户名和手机号码不匹配请确认后输入');
