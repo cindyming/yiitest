@@ -8,12 +8,15 @@ use app\models\System;
 use Yii;
 use app\models\Cash;
 use app\models\CashSearch;
+use yii\helpers\Html;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use app\components\AccessRule;
 use app\models\User;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 /**
  * CashController implements the CRUD actions for Cash model.
@@ -37,7 +40,7 @@ class CashController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'create','out'],
+                        'actions' => ['index', 'create','out', 'validate'],
                         'roles' => [User::ROLE_USER],
                     ],
                 ],
@@ -124,6 +127,63 @@ class CashController extends Controller
         ]);
     }
 
+
+    public function actionValidate()
+    {
+        $type = Yii::$app->request->getQueryParam('type');
+        $model = new Cash();
+
+        $model->setScenario($type ? $type  : 'create');
+        $data = Yii::$app->request->post();
+
+        if ($model->load(Yii::$app->request->post()) && isset($data['Cash']) && isset($data['Cash']['password2'])) {
+            $result = ActiveForm::validate($model);
+            if (!in_array($model->type, array(1,2,3,9))){
+                $model->addError('type', '请选择账户类型.');
+            }
+            $compareAmount = 1;
+            if ($model->type == 1) {
+                $compareAmount = Yii::$app->user->identity->bonus_remain;
+            } elseif($model->type == 2) {
+                $compareAmount = Yii::$app->user->identity->merit_remain;
+            } elseif($model->type == 3) {
+                $compareAmount = Yii::$app->user->identity->baodan_remain;
+            } elseif($model->type == 9) {
+                $compareAmount = Yii::$app->user->identity->mall_remain;
+            }
+            if ($model->amount > $compareAmount) {
+                $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 服务费余额: ' . (float)Yii::$app->user->identity->baodan_remain .  ', 商城币余额: ' . (float)Yii::$app->user->identity->mall_remain . '.');
+            }
+
+
+            if ($model->baodan_id) {
+                $user = User::findById(trim($model->baodan_id));
+
+                if ($user && $user->add_member) {
+                    $model->baodan_id = $user->id;
+                } else {
+                    $model->addError('baodan_id', '报单员不存在,请确认后输入');
+                }
+            }
+
+
+            if ($model->amount < System::loadConfig('lowest_cash_amount')) {
+                $model->addError('amount', '最低提现额为: ' . System::loadConfig('lowest_cash_amount') . '.');
+            }
+
+            if (!Yii::$app->user->identity->validatePassword2($data['Cash']['password2'])) {
+                $model->addError('password2', '二级密码不正确, 请输入正确的二级密码');
+            }
+
+            foreach ($model->getErrors() as $attribute => $errors) {
+                $result[Html::getInputId($model, $attribute)] = $errors;
+            }
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return $result;
+        }
+    }
+
+
     /**
      * Creates a new Cash model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -137,6 +197,9 @@ class CashController extends Controller
         }
         $type = Yii::$app->request->getQueryParam('type');
         $model = new Cash();
+
+
+        $model->setScenario($type ? $type  : 'create');
 
         $data = Yii::$app->request->post();
         if ($model->load(Yii::$app->request->post()) && isset($data['Cash']) && isset($data['Cash']['password2'])) {
@@ -180,6 +243,11 @@ class CashController extends Controller
                     $validateAmount = false;
                     $model->addError('amount', '最低提现额为: ' . System::loadConfig('lowest_cash_amount') . '.');
                 }
+
+                if ($type == 'mallmoney') {
+                    $model->checkAccount('', '');
+                }
+
                 if (Yii::$app->user->identity->validatePassword2($data['Cash']['password2'])) {
 
                     if ($validateAmount) {
@@ -269,21 +337,26 @@ class CashController extends Controller
             }
         }
 
+
         if ($type == 'transfer') {
             return $this->render('transfer', [
                 'model' => $model,
+                'type' => $type
             ]);
         } else if ($type == 'baodan') {
             return $this->render('baodan', [
                 'model' => $model,
+                'type' => $type
             ]);
         } else if ($type == 'mallmoney'){
           return $this->render('mallmoney', [
                 'model' => $model,
+                'type' => $type
             ]);
         } else  {
         return $this->render('create', [
             'model' => $model,
+            'type' => 'create'
         ]);
     }
 
@@ -340,7 +413,11 @@ class CashController extends Controller
                 }
             } else if ($model->cash_type == 4) {
                 //http://10.0.1.51:7001/membercenter/web/memberChongzhi/chongzhi?account=zf09&money=3&accountType=3
-                $service_url = Yii::$app->params['sc_url'] . http_build_query(array('account' => $model->sc_account, 'money' => $model->real_amount, 'accountType' => 3, 'system' => '玫瑰家园:' . $model->user_id));
+                $data = array('account' => $model->sc_account, 'money' => $model->real_amount, 'accountType' => 3, 'system' => '玫瑰家园:' . $model->user_id);
+                if ($model->type != 9) {
+                    $data['accountType'] = 0;
+                }
+                $service_url = Yii::$app->params['sc_url'] . http_build_query($data);
 
                 $curl = curl_init();
 

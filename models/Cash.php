@@ -110,10 +110,16 @@ class Cash extends ActiveRecord
     public function rules()
     {
         return [
-            [['amount'], 'required'],
+            [['amount', 'type', 'password2'], 'required'],
             [['cardnumber'], 'number'],
+            [['amount'], 'double'],
             [['cardname'], 'trim'],
             [['cardnumber'], 'string', 'max' => 19],
+            [['cardnumber', 'cardname', 'bank', 'bankaddress'], 'required', 'on' => 'create'],
+            [['stack_number'], 'required', 'on' => 'transfer'],
+            [['user_id'], 'required', 'on' => 'baodan'],
+            [['sc_account', 'telephone'], 'required', 'on' => 'mallmoney'],
+            [['telephone'], 'checkAccount', 'on' => 'mallmoney'],
             [['user_id', 'note', 'bank', 'status', 'cash_type', 'baodan_id', 'stack_number', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total', 'sc_account'], 'trim'],
             [['type'], 'integer'],
             [['baodan_id'], 'validateBaodan']
@@ -128,7 +134,7 @@ class Cash extends ActiveRecord
         return [
             'id'   => '编号',
             'user_id' => '会员编号',
-            'type'  => '账户类型',
+            'type'  => '出账账户',
             'status' => '状态',
             'bank' => '开户银行',
             'cardname' => '开户名',
@@ -141,7 +147,8 @@ class Cash extends ActiveRecord
             'note' => '摘要',
             'password2' => '二级密码',
             'created_at' => '日期',
-            'sc_account' => '商城登录名'
+            'sc_account' => '商城登录名',
+            'telephone' => '商城用户手机号码'
         ];
     }
 
@@ -186,12 +193,62 @@ class Cash extends ActiveRecord
     public static function getCachType($type = null) {
         $data = array(
             '' => '不限',
-            1 => '股票提现',
-            2 => '现金提现',
-            3 => '转账报单员',
-            4 => '商城币转海币'
+            1 => '提现至股票',
+            2 => '银行卡提现',
+            3 => '提现至报单员',
+            4 => '提现至商城'
         );
 
         return $type ? (isset($data[$type]) ? $data[$type] : '未知类型') : $data;
+    }
+
+    public function validaccount()
+    {
+        $service_url = Yii::$app->params['valid_account_url'] . http_build_query(array('account' => $this->sc_account, 'mobile' => $this->telephone));
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => $service_url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_CUSTOMREQUEST => "GET",
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        $response = json_decode($response);
+        curl_close($curl);
+
+        Log::add('会员(' . $this->user_id . ')' , ' 商城信息验证' , '返回' , json_encode($response) . ':' . $service_url);
+
+        return $response;
+    }
+
+    public function checkAccount($attribute, $params) {
+
+        if ($this->sc_account && $this->telephone && $this->isNewRecord) {
+            $response = $this->validaccount();
+            if ($response && $response->code) {
+                if ( $response->code == 1) {
+                    if (!$response->result) {
+                        $response = $this->validaccount();
+                    }
+                    if ($response->code == 1 && $response->result) {
+
+                    } else {
+                       // $this->addError('telephone', '商城用户名和手机号码不匹配请确认后输入');
+                    }
+                } else {
+                    $this->addError('telephone', '商城用户名和手机号码不匹配请确认后输入');
+                }
+            } else {
+                $this->addError('telephone', '商城用户名和手机号码不匹配请确认后输入');
+            }
+        }
+
     }
 }

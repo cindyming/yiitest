@@ -105,6 +105,15 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'init_investment',
+                ],
+                'value' => function ($event) {
+                    return $this->investment * 10000;
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'investment',
                 ],
                 'value' => function ($event) {
@@ -200,9 +209,9 @@ class User extends ActiveRecord implements IdentityInterface
             [['email'], 'email'],
             [['referer'], 'checkReferer'],
             [['suggest_by'], 'checkSuggest'],
-            [['cardname', 'cardnumber'], 'trim'],
-            //[['cardnumber'], 'string', 'max' => 19],
-            //[['cardnumber'], 'number'],
+            [['cardname', 'cardnumber', 'init_investment'], 'trim'],
+            [['cardnumber'], 'string', 'max' => 20, "on" => "create"],
+            [['cardnumber'], 'number', "on" => "create"],
             [['qq', 'useBaodan'], 'number'],
             [['duichong_invest'], 'checkBaodanInvest'],
         ];
@@ -277,7 +286,8 @@ class User extends ActiveRecord implements IdentityInterface
             'password_old' => '原一级密码',
             'password2_old' => '原二级密码',
             'duichong_total' => '对冲帐户总额',
-            'duichong_remain' => '对冲帐户余额'
+            'duichong_remain' => '对冲帐户余额',
+            'init_investment' => '初始投资额'
         ];
     }
 

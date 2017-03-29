@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\Cash;
 use app\models\Investment;
+use app\models\System;
 use Yii;
 use app\models\User;
 use app\models\Revenue;
@@ -183,7 +184,7 @@ class UserController extends Controller
                 $addedBy = User::findOne($model->added_by);
                 if ($addedBy && $addedBy->getId() && ($addedBy->role_id == 3)) {
                     $meritAmount = round($model->investment * 0.01, 2);
-                    if ($model->duichong_invest) {
+                    if ($model->duichong_invest && System::loadConfig('opend_duichong_baodan_fee')) {
                         $meritAmount +=  round($model->duichong_invest * 0.01, 2);
                     }
 
@@ -294,6 +295,7 @@ class UserController extends Controller
         $model = new User();
 
         if ($model->load(Yii::$app->request->post())) {
+            $model->setScenario("create");
             $result = ActiveForm::validate($model);
             $this->validateUserData($model);
             foreach ($model->getErrors() as $attribute => $errors) {
@@ -327,6 +329,7 @@ class UserController extends Controller
     public function actionAdmincreate()
     {
         $model = new User();
+        $model->setScenario('create');
 
         if ($model->load(Yii::$app->request->post())) {
             $validate = $this->validateUserData($model);
@@ -342,6 +345,11 @@ class UserController extends Controller
 
     public function actionTree()
     {
+        if (!System::loadConfig('open_member_tree')) {
+            Yii::$app->getSession()->set('danger', '网络图功能已关闭,请联系管理员.');
+            return $this->redirect(['/news/index']);
+        }
+
         $users=Yii::$app->db->createCommand('SELECT id,role_id,username,referer,investment,achievements,locked FROM user where role_id in (2,3) AND id>=' . Yii::$app->user->identity->id)->query();
 
         $result = array();
@@ -586,6 +594,10 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
+        if (!System::loadConfig('open_suggest_list')) {
+            Yii::$app->getSession()->set('danger', '会员推荐列表功能已关闭,请联系管理员.');
+            return $this->redirect(['/news/index']);
+        }
         $referer = Yii::$app->request->get('referer');
 
         $query = User::find()->where(['!=','role_id',1]);

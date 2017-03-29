@@ -17,6 +17,7 @@ class System extends ActiveRecord
     public $cash_factorage;
     public $stop_banus_times;
     public $open_baodan_tree;
+    public $opend_duichong_baodan_fee;
     public $maintenance;
     public $open_suggest_list;
     public $duichong_audit;
@@ -56,6 +57,7 @@ class System extends ActiveRecord
             'duichong_audit' => '对冲转账审核',
             'open_cash' => '允许提现',
             'open_mall_transfer' => '允许商城币转海币',
+            'opend_duichong_baodan_fee' => '使用对冲账号是否有报单费'
             ];
     }
 

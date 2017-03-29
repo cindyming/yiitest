@@ -69,6 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filterType'=>GridView::FILTER_SELECT2,
                 'filter'=> [''=> '不限', 0=>'否', 2=> '是']
             ],
+            'init_investment',
             'investment',
             [
                 'attribute' => 'referer',

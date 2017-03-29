@@ -15,8 +15,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'user_id')->textInput() ?>
     <?= $form->field($model, 'added_by')->textInput() ?>
 
-    <?= $form->field($model, 'amount',[ 'template' => "{label}\n{input}<label class='des' style='color:#ff0000'>万,例如你输入1就代表1万</label>\n{hint}\n{error}"])->textInput(['maxlength' => true]) ?>
-
+    <?= $form->field($model, 'amount',['template' => "{label}\n{input}<label class='des' style='color:#ff0000'>万,例如你输入1就代表1万</label>\n{hint}\n{error}"])->textInput(['maxlength' => true, 'class'=>'amountNumber needBig'])->hint("您输入的金额是: <span class='realAmount'></span>")?>
 
     <?= $form->field($model, 'useBaodan', [ 'template' => "{label}\n{input}<label id='message'></label>"])->checkbox([1 => '使用对冲帐户余额'])?>
     <?= $form->field($model, 'duichong_invest', [ 'template' => "{label}\n{input}<label id='duichongRemain'></label>"])->textInput() ?>
