@@ -27,7 +27,7 @@ $this->title = '申请股票提现';
     ]); ?>
     <?= $form->field($model, 'type')->radioList(array('1' => '分红', 2 => '绩效', 3 =>'服务费')) ?>
     <?= $form->field($model, 'stack_number', ['options' => ['class' => 'form-group required']])->textInput(); ?>
-    <?= $form->field($model, 'amount', [])->textInput(['class'=>'amountNumber form-control'])->hint("您输入的金额是: <span class='realAmount'></span>") ?>`
+    <?= $form->field($model, 'amount', [])->textInput(['class'=>'amountNumber form-control'])->hint("您输入的金额是: <span class='realAmount'></span>") ?>
     <?= $form->field($model, 'password2')->passwordInput() ?>
     <div class="form-group">
         <?= Html::submitButton('提交', ['class' => 'btn btn-primary']) ?>
