@@ -262,12 +262,13 @@ class InvestmentController extends Controller
                     $user->reduceAchivement($amount);
                     $user->reduceMerit($model);
                     $user->reduceBonus($model);
+                    Yii::$app->getSession()->set('big', '追加投资撤销成功, 撤单后等级不自动变化，请核对等级');
+                } else {
+                    Yii::$app->getSession()->set('message', '追加投资撤销成功');
                 }
                 $user->reduceBaodan($model);
                 if ($user->save()) {
                     $transaction->commit();
-
-                    Yii::$app->getSession()->set('message', '追加投资撤销成功, 撤单后等级不自动变化，请核对等级');
                 } else {
                     throw new Exception('Failed to save user ' . json_encode($user->getErrors()));
                 }
