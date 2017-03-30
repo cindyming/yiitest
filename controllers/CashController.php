@@ -302,7 +302,7 @@ class CashController extends Controller
                                         'duichong' => $realAmount,
                                         'total' => $baodanUser->duichong_remain,
                                     );
-                                    $model->note .= '; 对冲帐户帐号, ' . $baodanUser->id;
+                                    $model->note .= ($model->note ? $model->note . '; ' : '') . '对冲帐户帐号, ' . $baodanUser->id ;
                                     $model->total = $total;
                                     $revenue = new Revenue();
                                     $revenue->load($inRecord, '');
