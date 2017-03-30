@@ -156,12 +156,13 @@ class InvestmentController extends Controller
                     if ($validateAmount && $model->save()) {
 
                         if ($addedBy && $addedBy->getId() && ($addedBy->role_id == 3)) {
-                            if (System::loadConfig('opend_duichong_baodan_fee')) {
-                                $meritAmount = round($model->amount * 0.01, 2);
-                            }
+                            $meritAmount = round($model->amount * 0.01, 2);
+
 
                             if ($model->duichong_invest && $model->useBaodan) {
-                                $meritAmount += round($model->duichong_invest * 0.01, 2);
+                                if (System::loadConfig('opend_investment_duichong_baodan_fee')) {
+                                    $meritAmount += round($model->duichong_invest * 0.01, 2);
+                                }
 
                                 $addedBy->duichong_remain -= $model->duichong_invest;
                                 $data = array(
@@ -262,12 +263,13 @@ class InvestmentController extends Controller
                     $user->reduceAchivement($amount);
                     $user->reduceMerit($model);
                     $user->reduceBonus($model);
+                    Yii::$app->getSession()->set('big', '追加投资撤销成功, 撤单后等级不自动变化，请核对等级');
+                } else {
+                    Yii::$app->getSession()->set('message', '追加投资撤销成功');
                 }
                 $user->reduceBaodan($model);
                 if ($user->save()) {
                     $transaction->commit();
-
-                    Yii::$app->getSession()->set('message', '追加投资撤销成功, 撤单后等级不自动变化，请核对等级');
                 } else {
                     throw new Exception('Failed to save user ' . json_encode($user->getErrors()));
                 }

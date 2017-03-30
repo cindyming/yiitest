@@ -18,6 +18,7 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'maintenance')->dropDownList([1 => '否', 0 => '是']) ?>
         <?= $form->field($model, 'duichong_audit')->dropDownList([1 => '是', 0 => '否']) ?>
         <?= $form->field($model, 'opend_duichong_baodan_fee')->dropDownList([1 => '是', 0 => '否']) ?>
+        <?= $form->field($model, 'opend_investment_duichong_baodan_fee')->dropDownList([1 => '是', 0 => '否']) ?>
         <?= $form->field($model, 'open_suggest_list')->dropDownList([1 => '开放', 0 => '关闭']) ?>
         <?= $form->field($model, 'open_mall_transfer')->dropDownList([1 => '开放', 0 => '关闭']) ?>
         <?= $form->field($model, 'open_cash')->dropDownList([1 => '开放', 0 => '关闭']) ?>
@@ -27,7 +28,6 @@ use yii\widgets\ActiveForm;
         <div class="form-group">
             <?= Html::submitButton($model->isNewRecord ? '保存' : '保存', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
-'
         <?php ActiveForm::end(); ?>
 
     </div>
