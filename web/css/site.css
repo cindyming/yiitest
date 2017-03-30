@@ -233,10 +233,11 @@ label[for="investment-amount"]{display:block;}
 #investment-amount{width:200px;display:inline-block;}
 label.des{font-size:12px;margin-left:8px}
 .help-block{font-size:12px}
-div.required label:after {
+div.required label.control-label:after {
     content: " *";
     color: red;
 }
+.form-group label{margin-right:20px}
 div.required label.des:after{content:none;}
 .table-bordered > thead > tr > th{background:#efefef}
 .summary{text-align:right;margin: 0 0 5px}
