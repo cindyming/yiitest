@@ -267,7 +267,7 @@ class InvestmentController extends Controller
                 if ($user->save()) {
                     $transaction->commit();
 
-                    Yii::$app->getSession()->set('message', '追加投资撤销成功');
+                    Yii::$app->getSession()->set('message', '追加投资撤销成功, 撤单后等级不自动变化，请核对等级');
                 } else {
                     throw new Exception('Failed to save user ' . json_encode($user->getErrors()));
                 }
