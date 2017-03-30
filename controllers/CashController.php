@@ -152,7 +152,7 @@ class CashController extends Controller
                 $compareAmount = Yii::$app->user->identity->mall_remain;
             }
             if ($model->amount > $compareAmount) {
-                $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 服务费余额: ' . (float)Yii::$app->user->identity->baodan_remain .  ', 商城币余额: ' . (float)Yii::$app->user->identity->mall_remain . '.');
+                $model->addError('amount', '可供提现余额不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 服务费余额: ' . (float)Yii::$app->user->identity->baodan_remain .  ', 商城币余额: ' . (float)Yii::$app->user->identity->mall_remain . '.');
             }
 
 
@@ -222,7 +222,7 @@ class CashController extends Controller
                     }
                     if ($model->amount > $compareAmount) {
                         $validateAmount = false;
-                        $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 服务费余额: ' . (float)Yii::$app->user->identity->baodan_remain .  ', 商城币余额: ' . (float)Yii::$app->user->identity->mall_remain . '.');
+                        $model->addError('amount', '可供提现余额不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 服务费余额: ' . (float)Yii::$app->user->identity->baodan_remain .  ', 商城币余额: ' . (float)Yii::$app->user->identity->mall_remain . '.');
                     }
                 }
 
@@ -640,7 +640,7 @@ class CashController extends Controller
                     }
                     if ($model->amount > $compareAmount) {
                         $validateAmount = false;
-                        $model->addError('amount', '可供提现的约不足, 请确认后重新输入. 分红余额: ' . $user->bonus_remain . ', 绩效余额: ' . $user->merit_remain .  ', 服务费余额: ' . (float)$user->baodan_remain  .  ', 商城币余额: ' . (float)$user->mall_remain  . '.');
+                        $model->addError('amount', '可供提现余额不足, 请确认后重新输入. 分红余额: ' . $user->bonus_remain . ', 绩效余额: ' . $user->merit_remain .  ', 服务费余额: ' . (float)$user->baodan_remain  .  ', 商城币余额: ' . (float)$user->mall_remain  . '.');
                     }
                 } else {
                     $validateAmount = false;
