@@ -37,7 +37,7 @@ class CashController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'create','out'],
+                        'actions' => ['index', 'create','out', 'validate'],
                         'roles' => [User::ROLE_USER],
                     ],
                 ],
@@ -122,6 +122,62 @@ class CashController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+
+    public function actionValidate()
+    {
+        $type = Yii::$app->request->getQueryParam('type');
+        $model = new Cash();
+
+        $model->setScenario($type ? $type  : 'create');
+        $data = Yii::$app->request->post();
+
+        if ($model->load(Yii::$app->request->post()) && isset($data['Cash']) && isset($data['Cash']['password2'])) {
+            $result = ActiveForm::validate($model);
+            if (!in_array($model->type, array(1,2,3,9))){
+                $model->addError('type', '请选择账户类型.');
+            }
+            $compareAmount = 1;
+            if ($model->type == 1) {
+                $compareAmount = Yii::$app->user->identity->bonus_remain;
+            } elseif($model->type == 2) {
+                $compareAmount = Yii::$app->user->identity->merit_remain;
+            } elseif($model->type == 3) {
+                $compareAmount = Yii::$app->user->identity->baodan_remain;
+            } elseif($model->type == 9) {
+                $compareAmount = Yii::$app->user->identity->mall_remain;
+            }
+            if ($model->amount > $compareAmount) {
+                $model->addError('amount', '可供提现余额不足, 请确认后重新输入. 分红余额: ' . Yii::$app->user->identity->bonus_remain . ', 绩效余额: ' . Yii::$app->user->identity->merit_remain .  ', 服务费余额: ' . (float)Yii::$app->user->identity->baodan_remain .  ', 商城币余额: ' . (float)Yii::$app->user->identity->mall_remain . '.');
+            }
+
+
+            if ($model->baodan_id) {
+                $user = User::findById(trim($model->baodan_id));
+
+                if ($user && $user->add_member) {
+                    $model->baodan_id = $user->id;
+                } else {
+                    $model->addError('baodan_id', '报单员不存在,请确认后输入');
+                }
+            }
+
+
+            if ($model->amount < System::loadConfig('lowest_cash_amount')) {
+                $model->addError('amount', '最低提现额为: ' . System::loadConfig('lowest_cash_amount') . '.');
+            }
+
+            if (!Yii::$app->user->identity->validatePassword2($data['Cash']['password2'])) {
+                $model->addError('password2', '二级密码不正确, 请输入正确的二级密码');
+            }
+
+            foreach ($model->getErrors() as $attribute => $errors) {
+                $result[Html::getInputId($model, $attribute)] = $errors;
+            }
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return $result;
+        }
     }
 
     /**
@@ -231,7 +287,7 @@ class CashController extends Controller
                                         'duichong' => $realAmount,
                                         'total' => $baodanUser->duichong_remain,
                                     );
-                                    $model->note .= '; 对冲帐户帐号, ' . $baodanUser->id;
+                                    $model->note = ($model->note ? $model->note .'; ' : '') .  '对冲帐户帐号, ' . $baodanUser->id;
                                     $model->total = $total;
                                     $revenue = new Revenue();
                                     $revenue->load($inRecord, '');
@@ -395,7 +451,7 @@ class CashController extends Controller
                         'duichong' => $model->real_amount,
                         'total' => $baodanUser->duichong_remain,
                     );
-                    $model->note .= '; 对冲帐户帐号, ' . $baodanUser->id;
+                    $model->note = ($model->note ? $model->note .'; ' : '') . '对冲帐户帐号, ' . $baodanUser->id;
                     $revenue = new Revenue();
                     $revenue->load($inRecord, '');
                     if ($model->save() && $user->save() && $baodanUser->save() && $revenue->save()) {
@@ -619,5 +675,29 @@ class CashController extends Controller
         return $this->render('manualadd', [
             'model' => $model,
         ]);
+    }
+
+    public function checkAccount($attribute, $params) {
+
+        if ($this->sc_account && $this->telephone && $this->isNewRecord) {
+            $response = $this->validaccount();
+            if ($response && $response->code) {
+                if ( $response->code == 1) {
+                    if (!$response->result) {
+                        $response = $this->validaccount();
+                    }
+                    if ($response->code == 1 && $response->result) {
+
+                    } else {
+                        $this->addError('telephone', '商城用户名和手机号码不匹配请确认后输入');
+                    }
+                } else {
+                    $this->addError('telephone', '商城用户名和手机号码不匹配请确认后输入');
+                }
+            } else {
+                $this->addError('telephone', '商城用户名和手机号码不匹配请确认后输入');
+            }
+        }
+
     }
 }

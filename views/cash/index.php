@@ -50,7 +50,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
             ],
             'cardname',
-            'cardnumber',
+            [
+                'attribute' => 'cardnumber',
+                'value' => function($model) {
+                    return $model->cardnumber ? $model->cardnumber : '';
+                }
+            ],
             [
                 'attribute' => 'bankaddress',
                 'label'=>'开户行',

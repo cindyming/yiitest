@@ -17,6 +17,7 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'enable_memmber_login')->dropDownList([1 => '开放', 0 => '关闭']) ?>
         <?= $form->field($model, 'duichong_audit')->dropDownList([1 => '是', 0 => '否']) ?>
         <?= $form->field($model, 'opend_duichong_baodan_fee')->dropDownList([1 => '是', 0 => '否']) ?>
+        <?= $form->field($model, 'opend_investment_duichong_baodan_fee')->dropDownList([1 => '是', 0 => '否']) ?>
         <?= $form->field($model, 'maintenance')->dropDownList([1 => '否', 0 => '是']) ?>
         <?= $form->field($model, 'open_suggest_list')->dropDownList([1 => '开放', 0 => '关闭']) ?>
         <?= $form->field($model, 'open_mall_transfer')->dropDownList([1 => '开放', 0 => '关闭']) ?>

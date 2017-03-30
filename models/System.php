@@ -19,6 +19,7 @@ class System extends ActiveRecord
     public $open_baodan_tree;
     public $last_id;
     public $open_suggest_list;
+    public $opend_investment_duichong_baodan_fee;
     public $opend_duichong_baodan_fee;
     public $maintenance;
     public $duichong_audit;
@@ -58,7 +59,8 @@ class System extends ActiveRecord
             'duichong_audit' => '对冲转账审核',
             'open_cash' => '允许提现',
             'open_mall_transfer' => '允许商城币转海币',
-            'opend_duichong_baodan_fee' => '使用对冲账号是否有报单费'
+            'opend_duichong_baodan_fee' => '新会员使用对冲账号是否有报单费',
+            'opend_investment_duichong_baodan_fee' => '追加投资使用对冲账号是否有报单费'
             ];
     }
 

@@ -166,7 +166,7 @@ class InvestmentController extends Controller
                             $meritAmount = 0;
 
                             if ($model->duichong_invest) {
-                                if (System::loadConfig('opend_duichong_baodan_fee')) {
+                                if (System::loadConfig('opend_investment_duichong_baodan_fee')) {
                                     $meritAmount += round($model->duichong_invest * 0.01, 2);
                                 }
 

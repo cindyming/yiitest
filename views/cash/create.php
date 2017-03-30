@@ -6,7 +6,6 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\models\Cash */
 
-
 $this->title = '申请现金提现';
 ?>
 <div class="cash-create">
@@ -14,17 +13,12 @@ $this->title = '申请现金提现';
     <h1><?= Html::encode($this->title) ?></h1>
 
 
-    <ul class="tabswitch">
-        <li class="active">申请现金提现</li>
-        <li><?= HTML::a('申请股票提现', ['/cash/create', 'type' => 'transfer'])?></li>
-        <li><?= HTML::a('转账给报单员', ['/cash/create', 'type' => 'baodan'])?></li>
-        <?php if(\app\models\System::loadConfig('open_mall_transfer')):?>
-            <li><?= HTML::a('商城币转海币', ['/cash/create', 'type' => 'mallmoney'])?></li>
-        <?php endif ?>
-    </ul>
-
+    <?= $this->render('_tabs', [
+        'type' => $type,
+    ]) ?>
     <?= $this->render('_form', [
         'model' => $model,
+        'type' => $type
     ]) ?>
 
 </div>
