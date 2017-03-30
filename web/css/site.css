@@ -241,7 +241,7 @@ div.required label.control-label:after {
 div.required label.des:after{content:none;}
 .table-bordered > thead > tr > th{background:#efefef}
 .summary{text-align:right;margin: 0 0 5px}
-
+#w0 .field-cash-user_id{display:none;}
 body.u_admin .top-header{background:url('bg.jpg') repeat scroll 20% 42% #2E363F}
 .sm-form{width:50%}
 
