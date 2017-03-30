@@ -608,7 +608,7 @@ class UserController extends Controller
 
                     if ($model->save()) {
                         $transaction->commit();
-                        Yii::$app->getSession()->set('message', '会员撤销成功');
+                        Yii::$app->getSession()->set('big', '新会员撤销成功, 撤单后等级不自动变化，请核对等级');
                     } else {
                         throw new Exception('Failed to save user ' . json_encode($model->getErrors()));
                     }
@@ -671,7 +671,7 @@ class UserController extends Controller
         $query = User::find()->where(['!=','role_id',1]);
 
         if ($referer) {
-            $query->andWhere(['=','suggest_by',$referer]);
+            $query->andWhere(['=','suggest_by',Yii::$app->user->identity->id]);
         }
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

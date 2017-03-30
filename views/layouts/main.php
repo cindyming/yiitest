@@ -48,6 +48,15 @@ $isAdmin = Yii::$app->user->identity->isAdmin();
     </div>
 
     <div class="container">
+
+        <?php if (Yii::$app->getSession()->get('big')): ?>
+            <div class="Message big">
+                <?= Yii::$app->getSession()->get('big');
+                Yii::$app->getSession()->set('big',null);
+                ?>
+            </div>
+        <?php endif ?>
+
         <?php if (Yii::$app->getSession()->get('message')): ?>
             <div class="Message">
                 <?= Yii::$app->getSession()->get('message');

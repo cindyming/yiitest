@@ -14,6 +14,9 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use app\components\AccessRule;
 use app\models\User;
+use yii\web\Response;
+use yii\widgets\ActiveForm;
+use yii\helpers\Html;
 
 /**
  * CashController implements the CRUD actions for Cash model.
@@ -196,8 +199,13 @@ class CashController extends Controller
         $type = Yii::$app->request->getQueryParam('type');
         $model = new Cash();
 
+        $model->setScenario($type ? $type  : 'create');
+
         $data = Yii::$app->request->post();
         if ($model->load(Yii::$app->request->post()) && isset($data['Cash']) && isset($data['Cash']['password2'])) {
+            $key = 'INVESTIMENT' . Yii::$app->user->identity->id;
+            $sellLock = new \app\models\JLock($key);
+            $sellLock->start();
             if ($model->user_id == Yii::$app->user->identity->id) {
                 $validateAmount = true;
                 if (!in_array($model->type, array(1, 2, 3, 9))) {
@@ -232,6 +240,10 @@ class CashController extends Controller
                     } else {
                         $model->addError('baodan_id', '报单员不存在,请确认后输入');
                     }
+                }
+
+                if ($type == 'mallmoney') {
+                    $model->checkAccount('', '');
                 }
 
                 if ($model->amount < System::loadConfig('lowest_cash_amount')) {
@@ -324,23 +336,29 @@ class CashController extends Controller
             } else {
                 Yii::$app->getSession()->set('danger', '提现申请失败请稍后再试.');
             }
+            $sellLock->end();
         }
+
 
         if ($type == 'transfer') {
             return $this->render('transfer', [
                 'model' => $model,
+                'type' => $type
             ]);
         } else if ($type == 'baodan') {
             return $this->render('baodan', [
                 'model' => $model,
+                'type' => $type
             ]);
         } else if ($type == 'mallmoney'){
             return $this->render('mallmoney', [
                 'model' => $model,
+                'type' => $type
             ]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'type' => 'create'
             ]);
         }
     }
@@ -393,7 +411,11 @@ class CashController extends Controller
                 }
             } else if ($model->cash_type == 4) {
                 //http://10.0.1.51:7001/membercenter/web/memberChongzhi/chongzhi?account=zf09&money=3&accountType=3
-                $service_url = Yii::$app->params['sc_url'] . http_build_query(array('account' => $model->sc_account, 'money' => $model->real_amount, 'accountType' => 3, 'system' => '昆明地产:'.$model->user_id));
+                $data = array('account' => $model->sc_account, 'money' => $model->real_amount, 'accountType' => 3, 'system' => '玫瑰家园:' . $model->user_id, 'mobile' => $model->telephone);
+                if ($model->type != 9) {
+                    $data['accountType'] = 0;
+                }
+                $service_url = Yii::$app->params['sc_url'] . http_build_query($data);
 
                 $curl = curl_init();
 
@@ -418,7 +440,7 @@ class CashController extends Controller
                 $response = json_decode($response);
                 curl_close($curl);
 
-                Log::add('会员(' . $model->user_id . ')' , ' 商城币提现' , '返回' , json_encode($response) . ':' .  $service_url);
+                Log::add('会员(' . $model->user_id . ')' , ' 商城币提现' , '返回' , json_encode($response) . ':' . $service_url);
                 if (!$err && $response && $response->code) {
                     if ( $response->code == 1 && $response->result) {
                         $model->note .= '; 商城币提现,' . $response->code;
