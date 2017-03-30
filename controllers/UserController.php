@@ -622,6 +622,30 @@ class UserController extends Controller
 
 
         } else {
+            $revenu = Revenue::find()->andFilterWhere(['like', 'note',  $model->id . '的报单奖励'])->one();
+            if($revenu && $revenu->baodan) {
+                $baodan_amount = $revenu->baodan;
+                $user = User::findById($revenu->user_id);
+                $user->baodan_total -= $baodan_amount;
+                $user->baodan_remain -= $baodan_amount;
+
+                $mallData = array(
+                    'user_id' => $revenu->user_id,
+                    'note' => '错误报单,撤销会员[' .$model->id . '],投资'.$model->investment.'保单费扣除:' . $revenu->id,
+                    'amount' => $baodan_amount,
+                    'type' => 6,
+                    'status' => 2,
+                    'total' => $user->baodan_remain
+                );
+                $mall = new Cash();
+                $mall->load($mallData, '');
+                $user->setScenario('cancel');
+
+                if (!$mall->save()  || !$user->save(true, array('baodan_total', 'baodan_remain'))) {
+                    throw new Exception('会员扣除失败 ' . User::arrayToString($user->getErrors()).User::arrayToString($mall->getErrors()));
+                }
+            }
+
             $model->reduceDuicong();
             $model->role_id = 4;
             $model->save();
