@@ -160,10 +160,10 @@ class InvestmentController extends Controller
 
 
                             if ($model->duichong_invest && $model->useBaodan) {
-                                if (System::loadConfig('opend_duichong_baodan_fee')) {
+                                if (System::loadConfig('opend_investment_duichong_baodan_fee')) {
                                     $meritAmount += round($model->duichong_invest * 0.01, 2);
                                 }
-                                
+
                                 $addedBy->duichong_remain -= $model->duichong_invest;
                                 $data = array(
                                     'user_id' => $addedBy->id,
