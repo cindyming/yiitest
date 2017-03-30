@@ -602,8 +602,8 @@ class UserController extends Controller
 
         $query = User::find()->where(['!=','role_id',1]);
 
-        if ($referer) {
-            $query->andWhere(['=','suggest_by',$referer]);
+        if (Yii::$app->user->identity->id) {
+            $query->andWhere(['=','suggest_by',Yii::$app->user->identity->id]);
         }
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
