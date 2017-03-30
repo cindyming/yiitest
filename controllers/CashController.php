@@ -476,7 +476,7 @@ class CashController extends Controller
                         'duichong' => $model->real_amount,
                         'total' => $baodanUser->duichong_remain,
                     );
-                    $model->note .= ($model->note ? $model->note . '; ' : '') . '对冲帐户帐号, ' . $baodanUser->id : ;
+                    $model->note .= ($model->note ? $model->note . '; ' : '') . '对冲帐户帐号, ' . $baodanUser->id ;
                     $revenue = new Revenue();
                     $revenue->load($inRecord, '');
                     if ($model->save() && $user->save() && $baodanUser->save() && $revenue->save()) {
