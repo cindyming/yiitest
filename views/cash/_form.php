@@ -6,6 +6,9 @@ use yii\widgets\ActiveForm;
 /* @var $this yii\web\View */
 /* @var $model app\models\Cash */
 /* @var $form ActiveForm */
+
+$model->bank = $model->bank ? $model->bank : Yii::$app->user->identity->bank;
+
 ?>
 <div class="cash-_form sm-form">
 
@@ -15,7 +18,7 @@ use yii\widgets\ActiveForm;
         'validationUrl' => '/cash/validate?type='.$type,
     ]); ?>
         <?= $form->field($model, 'type')->radioList(array('1' => '分红', 2 => '绩效', 3 =>'服务费')) ?>
-        <?= $form->field($model, 'bank')->dropDownList($model->getBankNames(), ['value' => Yii::$app->user->identity->bank]) ?>
+        <?= $form->field($model, 'bank')->dropDownList($model->getBankNames(), ['options' => array(($model->bank ? $model->bank : Yii::$app->user->identity->bank) => array('selected' => 'selected'))]) ?>
         <?= $form->field($model, 'cardnumber')->textInput(['value' => Yii::$app->user->identity->cardnumber, 'readonly' => true]); ?>
         <?= $form->field($model, 'cardname')->textInput(['value' => Yii::$app->user->identity->cardname]); ?>
         <?= $form->field($model, 'bankaddress')->textInput(['value' => Yii::$app->user->identity->bankaddress, 'readonly' => true]); ?>
