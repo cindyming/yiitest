@@ -443,7 +443,7 @@ class CashController extends Controller
                 Log::add('会员(' . $model->user_id . ')' , ' 商城币提现' , '返回' , json_encode($response) . ':' . $service_url);
                 if (!$err && $response && $response->code) {
                     if ( $response->code == 1 && $response->result) {
-                        $model->note .= '; 商城币提现,' . $response->code;
+                        $model->note .= ($model->note ? $model->note . ';' : '') . ' 商城币提现成功. ' . $response->result;
                     } else {
                         Yii::$app->getSession()->set('message', $response->result ? $response->result : '提现失败请稍后再试.');
                         $pass = false;
