@@ -45,7 +45,7 @@ class InvestmentController extends Controller
         $provider = new ActiveDataProvider([
             'query' => $userQuery,
             'pagination' => [
-                'pageSize' => 1000,
+                'pageSize' => 300,
             ],
         ]);
         $provider->prepare();
@@ -55,7 +55,7 @@ class InvestmentController extends Controller
                 $provider = new ActiveDataProvider([
                     'query' => $userQuery,
                     'pagination' => [
-                        'pageSize' => 1000,
+                        'pageSize' => 300,
                         'page' => $i - 1,
                     ],
                 ]);
