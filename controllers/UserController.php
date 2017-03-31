@@ -693,6 +693,7 @@ class UserController extends Controller
      */
     public function actionView($id)
     {
+        $id = Yii::$app->user->id;
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
