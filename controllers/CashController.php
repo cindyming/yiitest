@@ -446,19 +446,19 @@ class CashController extends Controller
                 $response = json_decode($response);
                 curl_close($curl);
 
-                Log::add('会员(' . $model->user_id . ')' , ' 商城币提现' , '返回' , json_encode($response) . ':' . $service_url);
+                Log::add('会员(' . $model->user_id . ')' , ' 商城提现' , '返回' , json_encode($response) . ':' . $service_url);
                 if (!$err && $response && $response->code) {
                     if ( $response->code == 1 && $response->result) {
-                        $model->note .= '; 商城币提现,' . $response->code;
+                        $model->note .= ($model->note ? $model->note . ';' : '') . ' 商城提现成功. ' . $response->result;
                     } else {
                         Yii::$app->getSession()->set('message', $response->result ? $response->result : '提现失败请稍后再试.');
                         $pass = false;
-                        Log::add('会员(' . $model->user_id . ')', '商城币提现失败', '失败', json_encode($response));
+                        Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
                     }
                 } else {
                     $pass = false;
                     Yii::$app->getSession()->set('danger', '接口返回的失败,请稍后再试');
-                    Log::add('会员(' . $model->user_id . ')', '商城币提现失败', '失败', json_encode($response));
+                    Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
                 }
             }
 
