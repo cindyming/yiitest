@@ -22,7 +22,10 @@ $this->title = $model->title;
             'title',
             'referer',
             'investment',
-            'bank',
+            [
+                'attribute' => 'bank',
+                'value' => $model->bank ? $model->getBankNames()[$model->bank] : ''
+            ],
             'cardname',
             'cardnumber',
             'bankaddress',
