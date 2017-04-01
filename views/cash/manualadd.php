@@ -23,7 +23,9 @@ $this->title = '增减货币';
 
     <div class="cash-_form sm-form">
 
-        <?php $form = ActiveForm::begin(); ?>
+        <?php $form = ActiveForm::begin([
+            'id' => 'cash-form',
+        ]); ?>
 
         <?= $form->field($model, 'user_id')->textInput(['value' => Yii::$app->getRequest()->get('id')]); ?>
         <?= $form->field($model, 'amount', [])->textInput(['class'=>'amountNumber'])->hint("您输入的金额是: <span class='realAmount'></span>") ?>
