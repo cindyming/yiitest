@@ -121,6 +121,7 @@ class Cash extends ActiveRecord
             [['user_id', 'password2'], 'required', 'on' => 'baodan'],
             [['sc_account', 'telephone', 'password2'], 'required', 'on' => 'mallmoney'],
             [['telephone'], 'checkAccount', 'on' => 'mallmoney'],
+            [['user_id'], 'required', 'on' => 'manual'],
             [['user_id', 'note', 'bank', 'status', 'cash_type', 'baodan_id', 'stack_number', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total', 'sc_account'], 'trim'],
             [['type'], 'integer'],
             [['baodan_id'], 'validateBaodan']

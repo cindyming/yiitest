@@ -25,6 +25,7 @@ class System extends ActiveRecord
     public $duichong_audit;
     public $open_cash;
     public $open_mall_transfer;
+    public $mall_audit;
 
     /**
      * @inheritdoc
@@ -58,7 +59,8 @@ class System extends ActiveRecord
             'maintenance' => '系统维护中',
             'duichong_audit' => '对冲转账审核',
             'open_cash' => '允许提现',
-            'open_mall_transfer' => '允许商城币转海币',
+            'open_mall_transfer' => '允许商城转账',
+            'mall_audit' => '商城转账审核',
             'opend_duichong_baodan_fee' => '新会员使用对冲账号是否有报单费',
             'opend_investment_duichong_baodan_fee' => '追加投资使用对冲账号是否有报单费'
             ];

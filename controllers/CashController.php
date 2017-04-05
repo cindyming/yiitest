@@ -316,7 +316,58 @@ class CashController extends Controller
                                     $transaction->rollback();
                                 }
                             } else {
-                                if ($model->save() && $user->save()) {
+                                $pass = false;
+                                if (($model->cash_type == 4) && !System::loadConfig('mall_audit')) {
+                                    $realAmount =  $model->amount;
+                                    if ($model->type == 2) {
+                                        $realAmount = $model->amount * (1 - floatval(3 / 100));
+                                    }
+                                    $data = array('account' => $model->sc_account, 'money' => $realAmount, 'accountType' => 3, 'system' => '昆明旅游:' . $model->user_id, 'mobile' => $model->telephone);
+                                    if ($model->type != 9) {
+                                        $data['accountType'] = 0;
+                                    }
+                                    $service_url = Yii::$app->params['sc_url'] . http_build_query($data);
+
+                                    $curl = curl_init();
+
+                                    curl_setopt_array($curl, array(
+                                        CURLOPT_URL => $service_url,
+                                        CURLOPT_RETURNTRANSFER => true,
+                                        CURLOPT_ENCODING => "",
+                                        CURLOPT_MAXREDIRS => 10,
+                                        CURLOPT_TIMEOUT => 30,
+                                        CURLOPT_CUSTOMREQUEST => "POST",
+                                        CURLOPT_HTTPHEADER => array(
+                                            "authorization: Basic aG5qczpoYmF1dGg=",
+                                        ),
+                                    ));
+                                    $tmpfname = dirname(__FILE__).'/cookie.txt';
+                                    curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfname);
+                                    curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfname);
+
+                                    $response = curl_exec($curl);
+                                    $err = curl_error($curl);
+
+                                    $response = json_decode($response);
+                                    curl_close($curl);
+                                    Log::add('会员(' . $model->user_id . ')' , ' 商城提现' , '返回' , json_encode($response) . ':' . $service_url);
+                                    if (!$err && $response && $response->code) {
+                                        if ( $response->code == 1 && $response->result) {
+                                            $pass = true;
+                                            $model->status = 2;
+                                            $model->total = $total;
+                                            $model->note .= ($model->note ? $model->note . ';' : '') . ' 商城提现成功. ' . $response->result;
+                                        } else {
+                                            Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
+                                        }
+                                    } else {
+                                        Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
+                                    }
+                                } else {
+                                    $pass = true;
+                                }
+
+                                if ($pass && $model->save() && $user->save()) {
                                     $transaction->commit();
                                     Yii::$app->getSession()->set('message', '提现申请提交成功');
                                     return $this->redirect(['index']);
