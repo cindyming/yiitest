@@ -665,6 +665,7 @@ class CashController extends Controller
     public function actionManualadd()
     {
         $model = new Cash();
+        $model->setScenario('manual');
 
         $data = Yii::$app->request->post();
         $data['Cash']['status'] = 2;
