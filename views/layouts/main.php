@@ -210,7 +210,7 @@ outputCharacters += CN_INTEGER;
 return outputCharacters;
 }
 
-$('input.amountNumber').on('keyup',function(){
+$('input.amountNumber').on('input',function(){
 var number = $(this).val();
 if ($(this).hasClass('needBig')) {
 number = number * 10000;

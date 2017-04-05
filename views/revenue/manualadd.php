@@ -25,7 +25,7 @@ $this->title = '增减货币';
         <?php $form = ActiveForm::begin(); ?>
 
         <?= $form->field($model, 'user_id')->textInput(['value' => Yii::$app->getRequest()->get('id')]); ?>
-        <?= $form->field($model, 'amount') ?>
+        <?= $form->field($model, 'amount', [])->textInput(['class'=>'amountNumber'])->hint("您输入的金额是: <span class='realAmount'></span>") ?>
         <?= $form->field($model, 'type')->radioList([1 => '分红', 2=> '绩效', 3=> '服务费', 4=> '商城币', 5 => '对冲帐户']); ?>
         <?= $form->field($model, 'note')->textInput(['value' => '预存金额']) ?>
         <div class="form-group">
