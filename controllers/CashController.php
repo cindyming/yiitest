@@ -320,7 +320,7 @@ class CashController extends Controller
                                 if (($model->cash_type == 4) && !System::loadConfig('mall_audit')) {
                                     $realAmount =  $model->amount;
                                     if ($model->type == 2) {
-                                        $realAmount = $model->amount * (1 - floatval(3 / 100));
+                                        $realAmount = $model->amount * (1 - floatval(System::loadConfig('cash_factorage')  / 100));
                                     }
                                     $data = array('account' => $model->sc_account, 'money' => $realAmount, 'accountType' => 3, 'system' => '昆明旅游:' . $model->user_id, 'mobile' => $model->telephone);
                                     if ($model->type != 9) {
