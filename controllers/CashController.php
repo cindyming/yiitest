@@ -418,6 +418,10 @@ class CashController extends Controller
     {
         $model = $this->findModel($id);
 
+        $key = 'CASHAPPROVE' . $id;
+        $sellLock = new \app\models\JLock($key);
+        $sellLock->start();
+
         try {
             $model->status = 2;
             $user = User::findById($model->user_id);
@@ -553,7 +557,7 @@ class CashController extends Controller
             $transaction->rollback();//回滚函数
         }
 
-
+        $sellLock->end();
         return $this->redirect(['adminindex', 'id' => $model->id]);
 
     }
