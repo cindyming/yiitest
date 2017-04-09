@@ -198,8 +198,9 @@ class InvestmentController extends Controller
                                 $merit->save();
                                 $addedBy->baodan_remain += $meritAmount;
                                 $addedBy->baodan_total += $meritAmount;
-                                $addedBy->save();
+
                             }
+                            $addedBy->save();
                         }
                         $transaction->commit();
                         Yii::$app->getSession()->set('message', '追加投资添加成功');
