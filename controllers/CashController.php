@@ -550,7 +550,7 @@ class CashController extends Controller
                     $transaction->rollback();
                 }
             }
-
+            $sellLock->end();
             $this->redirect(Yii::$app->request->referrer);
             return;
         } catch (Exception $e) {
