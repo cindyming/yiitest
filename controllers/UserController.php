@@ -647,42 +647,38 @@ class UserController extends Controller
     {
         $model = $this->findModel($id);
 
-        if(($model->role_id == 3)  && ($model->merited == 1)) {
-            $child = User::find()->where(['=', 'referer', $model->id])->andWhere(['=', 'role_id', 3])->count();
-            $child += User::find()->where(['=', 'suggest_by', $model->id])->andWhere(['=', 'role_id', 3])->count();
+        $child = User::find()->where(['=', 'referer', $model->id])->andWhere(['=', 'role_id', 3])->count();
+        $child += User::find()->where(['=', 'suggest_by', $model->id])->andWhere(['=', 'role_id', 3])->count();
 
-            $invests = Investment::find()->where(['=', 'user_id', $model->id])->andWhere(['=', 'status', 1])->count();
+        $invests = Investment::find()->where(['=', 'user_id', $model->id])->andWhere(['=', 'status', 1])->count();
 
-            if ($child) {
-                Yii::$app->getSession()->set('danger', '会员撤销失败,  该会员有下线, 请先撤销下线');
-            }  else if ($invests) {
-                Yii::$app->getSession()->set('danger', '会员撤销失败, 该会员有未撤销的追加投资,请先撤销追加投资');
-            } else {
-                $model->role_id = 4;
-                $connection=Yii::$app->db;
-                try {
-                    $transaction = $connection->beginTransaction();
+        if ($child) {
+            Yii::$app->getSession()->set('danger', '会员撤销失败,  该会员有下线, 请先撤销下线');
+        }  else if ($invests) {
+            Yii::$app->getSession()->set('danger', '会员撤销失败, 该会员有未撤销的追加投资,请先撤销追加投资');
+        } else if(($model->role_id == 3)  && ($model->merited == 1)) {
+            $model->role_id = 4;
+            $connection=Yii::$app->db;
+            try {
+                $transaction = $connection->beginTransaction();
 
-                    $amount = $model->investment;
-                    $model->reduceAchivement($amount);
-                    $model->reduceMeritForNewMember($amount);
-                    $model->reduceDuicong();
+                $amount = $model->investment;
+                $model->reduceAchivement($amount);
+                $model->reduceMeritForNewMember($amount);
+                $model->reduceDuicong();
 
-                    if ($model->save()) {
-                        $transaction->commit();
-                        Yii::$app->getSession()->set('big', '新会员撤销成功, 撤单后等级不自动变化，请核对等级');
-                    } else {
-                        throw new Exception('Failed to save user ' . json_encode($model->getErrors()));
-                    }
-
-                } catch (Exception $e) {
-                    $transaction->rollback();//回滚函数
-                    Yii::$app->systemlog->add('Admin', '会员撤销', '失败', $id . ':' . $e->getMessage());
-                    Yii::$app->getSession()->set('danger', '会员撤销失败, 请稍后再试. ' .  $e->getMessage());
+                if ($model->save()) {
+                    $transaction->commit();
+                    Yii::$app->getSession()->set('big', '新会员撤销成功, 撤单后等级不自动变化，请核对等级');
+                } else {
+                    throw new Exception('Failed to save user ' . json_encode($model->getErrors()));
                 }
+
+            } catch (Exception $e) {
+                $transaction->rollback();//回滚函数
+                Yii::$app->systemlog->add('Admin', '会员撤销', '失败', $id . ':' . $e->getMessage());
+                Yii::$app->getSession()->set('danger', '会员撤销失败, 请稍后再试. ' .  $e->getMessage());
             }
-
-
         } else {
             $revenu = Revenue::find()->andFilterWhere(['like', 'note',  $model->id . '的报单奖励'])->one();
             if($revenu && $revenu->baodan) {
