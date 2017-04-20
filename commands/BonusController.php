@@ -76,12 +76,12 @@ class BonusController extends Controller
         $this->_startTime = date("Y-m-d",strtotime("-30 days")) . ' 00:00:00';
         $this->_yearDay = date("Y-m-d",strtotime("-13 months")) . ' 00:00:00';
 
-        $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['=', 'id', 1002253])->andwhere(['=','locked', 0]);
+        $userQuery = User::find()->where(['=','role_id', 3])->andwhere(['=','locked', 0]);
 
         $provider = new ActiveDataProvider([
             'query' => $userQuery,
             'pagination' => [
-                'pageSize' => 1000,
+                'pageSize' => 300,
             ],
         ]);
         $provider->prepare();
@@ -92,7 +92,7 @@ class BonusController extends Controller
                 $provider = new ActiveDataProvider([
                     'query' => $userQuery,
                     'pagination' => [
-                        'pageSize' => 1000,
+                        'pageSize' => 300,
                         'page' => $i-1,
                     ],
                 ]);
