@@ -46,7 +46,7 @@ class Revenue extends ActiveRecord
         return [
             [['user_id'], 'required'],
             [['amount'], 'required' , 'on' => 'manual'],
-            [['bonus', 'merit', 'note', 'total', 'duichong', 'baodan', 'type', 'amount', 'mall'], 'trim'],
+            [['bonus', 'merit', 'note', 'total', 'duichong', 'baodan', 'type', 'amount', 'mall', 'stack', 'free_stack'], 'trim'],
         ];
     }
 
@@ -71,6 +71,7 @@ class Revenue extends ActiveRecord
             'note' => '摘要',
             'created_at' => '结算时间',
             'updated_at' => '发放时间',
+            'stack' => '股票数',
         ];
     }
 

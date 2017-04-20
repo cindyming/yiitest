@@ -119,7 +119,7 @@ class Cash extends ActiveRecord
             [['stack_number', 'password2'], 'required', 'on' => 'transfer'],
             [['user_id', 'password2'], 'required', 'on' => 'baodan'],
             [['sc_account', 'telephone', 'password2'], 'required', 'on' => 'mallmoney'],
-            [['telephone'], 'checkAccount', 'on' => 'mallmoney'],
+            [['user_id'], 'required', 'on' => 'cuohe'],
             [['user_id'], 'required', 'on' => 'manual'],
             [['user_id', 'note', 'bank', 'status', 'cash_type', 'baodan_id', 'stack_number', 'cardname', 'cardnumber', 'bankaddress', 'real_amount', 'total', 'sc_account'], 'trim'],
             [['type'], 'integer'],
@@ -197,7 +197,8 @@ class Cash extends ActiveRecord
             1 => '提现至股票',
             2 => '银行卡提现',
             3 => '提现至报单员',
-            4 => '提现至商城'
+            4 => '提现至商城',
+            5 => '提现至撮合'
         );
 
         return $type ? (isset($data[$type]) ? $data[$type] : '未知类型') : $data;
@@ -251,5 +252,38 @@ class Cash extends ActiveRecord
             }
         }
 
+    }
+
+    public function getCashInfo()
+    {
+        $info = '';
+        switch ($this->cash_type) {
+            case 2:
+                $info = '<ul>';
+                $info .= '<li><label>银行名称: </label>' . (isset($this->getBankNames()[$this->bank]) ? $this->getBankNames()[$this->bank] : '') . '</li>';
+                $info .= '<li><label>开户名: </label>'. $this->cardname .'</li>';
+                $info .= '<li><label>银行卡号: </label>'. $this->cardnumber .'</li>';
+                $info .= '<li><label>开户行: </label>'. $this->bankaddress .'</li>';
+                $info .= '</ul>';
+                break;
+            case 1:
+                $info = '<ul>';
+                $info .= '<li><label>股票会员编号: </label>'. $this->stack_number .'</li>';
+                $info .= '</ul>';
+                break;
+            case 3:
+                $info = '<ul>';
+                $info .= '<li><label>报单员编号: </label>'. $this->baodan_id .'</li>';
+                $info .= '</ul>';
+                break;
+            case 4:
+                $info = '<ul>';
+                $info .= '<li><label>商城登录名: </label>'. $this->sc_account .'</li>';
+                $info .= '</ul>';
+                break;
+            case 5:
+                break;
+        }
+        return $info;
     }
 }
