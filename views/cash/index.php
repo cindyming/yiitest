@@ -34,31 +34,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'attribute' => 'baodan_id',
-            ],
-            [
-                'attribute' => 'stack_number',
-            ],
-            [
-                'attribute' => 'sc_account',
-            ],
-            [
-                'attribute' => 'bank',
-                'label'=>'银行名称',
-                'value' => function($model) {
-                        return $model->bank ? $model->getBankNames()[$model->bank] : '';
-                    }
-            ],
-            'cardname',
-            [
                 'attribute' => 'cardnumber',
+                'label' => '提现信息',
+                'format' => 'raw',
                 'value' => function($model) {
-                    return $model->cardnumber ? $model->cardnumber : '';
+                    return $model->getCashInfo();
                 }
-            ],
-            [
-                'attribute' => 'bankaddress',
-                'label'=>'开户行',
             ],
             [
                 'attribute' => 'type',

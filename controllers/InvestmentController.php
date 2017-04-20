@@ -39,7 +39,7 @@ class InvestmentController extends Controller
                     ],
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view'],
+                        'actions' => ['index', 'view', 'transfer'],
                         'roles' => [User::ROLE_USER],
                     ],
                 ],
@@ -304,5 +304,28 @@ class InvestmentController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+
+    public function actionTransfer($id)
+    {
+        $model = $this->findModel($id);
+
+        if (Yii::$app->user->id == $model->user_id) {
+            $model->status = 2;
+            $user = User::findOne(Yii::$app->user->id);
+            $user->stack -= $model->stack;
+            $cash = new Cash();
+            $cash->cash_tpe = 6;
+            $cash->type = 11;
+            $cash->amount = $model->stack;
+            $cash->total = $user->stack;
+            $cash->status = 2;
+            try {
+
+            } catch (Exception $e) {
+
+            }
+        }
+
     }
 }

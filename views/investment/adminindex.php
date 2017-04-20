@@ -37,6 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => true
             ],
             'amount',
+            'stack',
             'added_by',
             'created_at',
             [

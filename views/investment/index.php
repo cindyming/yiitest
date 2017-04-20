@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'header' => '序号'
             ],
             'amount',
+            'stack',
             [
                 'attribute' => 'status',
                 'header' => '状态',
@@ -35,6 +36,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             'created_at',
+            [
+                'attribute' => 'status',
+                'label' => '操作',
+                'hiddenFromExport' => true,
+                'content' => function($model) {
+                    return ($model->status == 1) ? ( Html::a('兑换自由股', '/investment/transfer?id='.$model->id, ['data-confirm'=>"你确定要兑换成自由股票"  . $model->stack])) : '';
+                }
+            ],
         ],
     ]); ?>
 

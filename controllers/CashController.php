@@ -266,6 +266,10 @@ class CashController extends Controller
                             $model->cash_type = 4;
                         }
 
+                        if ($type == 'cuohe') {
+                            $model->cash_type = 5;
+                        }
+
                         $connection = Yii::$app->db;
                         try {
                             $transaction = $connection->beginTransaction();
@@ -405,6 +409,11 @@ class CashController extends Controller
             ]);
         } else if ($type == 'mallmoney'){
           return $this->render('mallmoney', [
+                'model' => $model,
+                'type' => $type
+            ]);
+        } else if ($type == 'cuohe'){
+            return $this->render('exchange', [
                 'model' => $model,
                 'type' => $type
             ]);
