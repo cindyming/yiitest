@@ -45,6 +45,11 @@ $welcome .= ', 欢迎回来.';
                 对冲帐户余额: <?php echo round(Yii::$app->user->identity->duichong_remain, 2)?>
             </li>
         </ul>
+        <ul>
+            <li>
+                <a target="_blank" href="http://cuohe.cindy.local/user/autologin?token=<?php echo Yii::$app->user->identity->access_token?>" data-method="post">登录撮合</a>
+            </li>
+        </ul>
     </div>
 <?php
 NavBar::begin();
@@ -62,7 +67,8 @@ echo Nav::widget([
                     ['label' => '我的报单', 'url' => ['/user/baodanindex']] : '',
                 Yii::$app->user->identity->openSuggestion() ? ['label' => '我的推荐', 'url' => ['/user/index']] : '',
                 Yii::$app->user->identity->haveTree() ? ['label' => '网络图', 'url' => ['/user/tree']] : '',
-            ]
+            ],
+
         ],
         [
             'label' => '财务管理', 'url' => ['/blank'],

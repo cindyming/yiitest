@@ -18,7 +18,7 @@ class StackController extends Controller
 
     public function loadAddtionalInvestment($user_id)
     {
-        $invertMents = Investment::find()->where(['=', 'user_id', $user_id])->all();
+        $invertMents = Investment::find()->where(['=', 'user_id', $user_id])->orderBy(array('id' => SORT_ASC))->all();
 
         return  $invertMents;
     }
@@ -54,30 +54,7 @@ class StackController extends Controller
                     $total = 0;
                     $investments = $this->loadAddtionalInvestment($user->id);
                     $submit = true;
-                    foreach ($investments as $investment) {
-                        echo $investment->amount .':::' . date('Ymd', strtotime($investment->created_at)) . PHP_EOL;
-                        $stack = User::investToStack($investment->amount, date('Ymd', strtotime($investment->created_at)));
-                        if (($investment->status == 1) && ($investment->merited == 1)) {
-                            $total += $stack;
-                        }
 
-                        $data = array(
-                            'user_id' => $user->id,
-                            'note' => '追加投资折算股票数',
-                            'stack' => $stack,
-                            'type' => 10,
-                            'total' => $stack
-                        );
-                        $investment->stack = $stack;
-                        $investment->save();
-                        $merit = new Revenue();
-                        $merit->load($data, '');
-                        if (!$merit->save()) {
-                            $submit = false;
-                            break;
-                        }
-
-                    }
                     echo $user->init_investment .':::' . date('Ymd', strtotime($user->approved_at)) . PHP_EOL;
                     $stack = User::investToStack($user->init_investment, date('Ymd', strtotime($user->approved_at)));
                     $total += $stack;
@@ -94,8 +71,35 @@ class StackController extends Controller
                     $merit->load($data, '');
                     if (!$merit->save()) {
                         $submit = false;
-                        break;
                     }
+
+                    if ($submit) {
+                        foreach ($investments as $investment) {
+                            echo $investment->amount .':::' . date('Ymd', strtotime($investment->created_at)) . PHP_EOL;
+                            $stack = User::investToStack($investment->amount, date('Ymd', strtotime($investment->created_at)));
+                            if (($investment->status == 1) && ($investment->merited == 1)) {
+                                $total += $stack;
+                            }
+
+                            $data = array(
+                                'user_id' => $user->id,
+                                'note' => '追加投资折算股票数',
+                                'stack' => $stack,
+                                'type' => 10,
+                                'total' => $stack
+                            );
+                            $investment->stack = $stack;
+                            $investment->save();
+                            $merit = new Revenue();
+                            $merit->load($data, '');
+                            if (!$merit->save()) {
+                                $submit = false;
+                                break;
+                            }
+
+                        }
+                    }
+
                     if ($submit) {
                         $user->total_stack = $user->total_stack + $total;
                         $user->stack = $user->stack + $total;
