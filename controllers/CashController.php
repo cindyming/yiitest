@@ -419,146 +419,153 @@ class CashController extends Controller
 
     public function actionAdminapprove($id)
     {
-        $model = $this->findModel($id);
-
         $key = 'CASHAPPROVE' . $id;
         $sellLock = new \app\models\JLock($key);
         $sellLock->start();
-        try {
-            $model->status = 2;
-            $user = User::findById($model->user_id);
-            if ($model->type == 1) {
-                $model->total = $user->bonus_remain;
-            } elseif($model->type == 2) {
-                $model->total = $user->merit_remain;
-            } elseif($model->type == 3) {
-                $model->total = $user->baodan_remain;
-            } elseif($model->type == 9) {
-                $model->total = $user->mall_remain;
-            }
-            $model->note = '提现成功';
 
-            $pass = true;
+        $model = $this->findModel($id);
+        if ($model->status == 1) {
+            try {
+                $model->status = 2;
+                $user = User::findById($model->user_id);
+                if ($model->type == 1) {
+                    $model->total = $user->bonus_remain;
+                } elseif($model->type == 2) {
+                    $model->total = $user->merit_remain;
+                } elseif($model->type == 3) {
+                    $model->total = $user->baodan_remain;
+                } elseif($model->type == 9) {
+                    $model->total = $user->mall_remain;
+                }
+                $model->note = '提现成功';
 
-            if ($model->cash_type == 1) {
-                $service_url = Yii::$app->params['stack_url'] . 'v1/accounts';
-                $curl = curl_init($service_url);
-                curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                curl_setopt($curl, CURLOPT_USERPWD, "admin:lml1314"); //Your credentials goes here
-                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                curl_setopt($curl, CURLOPT_POST, true);
-                curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array('member_id' => $model->stack_number, 'amount' => $model->real_amount, 'refer_id' => $model->user_id)));
-                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                $pass = true;
 
-                $curl_response = curl_exec($curl);
-                $response = json_decode($curl_response);
-                curl_close($curl);
+                if ($model->cash_type == 1) {
+                    $service_url = Yii::$app->params['stack_url'] . 'v1/accounts';
+                    $curl = curl_init($service_url);
+                    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                    curl_setopt($curl, CURLOPT_USERPWD, "admin:lml1314"); //Your credentials goes here
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($curl, CURLOPT_POST, true);
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array('member_id' => $model->stack_number, 'amount' => $model->real_amount, 'refer_id' => $model->user_id)));
+                    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
-                Yii::info('会员(' . $model->user_id . ')' . '提现股票转移' . '返回' .json_encode($response));
-                if (is_array($response) || !$response) {
-                    if (is_array($response)) {
-                        foreach ($response as $r) {
-                            if ($r->field == 'member_id') {
-                                Yii::$app->getSession()->set('message', $r->message);
+                    $curl_response = curl_exec($curl);
+                    $response = json_decode($curl_response);
+                    curl_close($curl);
+
+                    Yii::info('会员(' . $model->user_id . ')' . '提现股票转移' . '返回' .json_encode($response));
+                    if (is_array($response) || !$response) {
+                        if (is_array($response)) {
+                            foreach ($response as $r) {
+                                if ($r->field == 'member_id') {
+                                    Yii::$app->getSession()->set('message', $r->message);
+                                }
                             }
                         }
-                    }
-                    $pass = false;
-                    Log::add('会员(' . $model->user_id . ')', '提现股票转移失败', '失败', json_encode($response));
-                } else {
-                    $model->note .= '; 转移股票账号成功, id' . $response->id;
-                }
-            } else if ($model->cash_type == 4) {
-                //http://10.0.1.51:7001/membercenter/web/memberChongzhi/chongzhi?account=zf09&money=3&accountType=3
-                $data = array('account' => $model->sc_account, 'money' => $model->real_amount, 'accountType' => 3, 'system' => '玫瑰家园:' . $model->user_id, 'mobile' => $model->telephone);
-                if ($model->type != 9) {
-                    $data['accountType'] = 0;
-                }
-                $service_url = Yii::$app->params['sc_url'] . http_build_query($data);
-
-                $curl = curl_init();
-
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => $service_url,
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => "",
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 30,
-                    CURLOPT_CUSTOMREQUEST => "POST",
-                    CURLOPT_HTTPHEADER => array(
-                        "authorization: Basic aG5qczpoYmF1dGg=",
-                    ),
-                ));
-                $tmpfname = dirname(__FILE__).'/cookie.txt';
-                curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfname);
-                curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfname);
-
-                $response = curl_exec($curl);
-                $err = curl_error($curl);
-
-                $response = json_decode($response);
-                curl_close($curl);
-
-                Log::add('会员(' . $model->user_id . ')' , ' 商城提现' , '返回' , json_encode($response) . ':' . $service_url);
-                if (!$err && $response && $response->code) {
-                    if ( $response->code == 1 && $response->result) {
-                        $model->note .= ($model->note ? $model->note . ';' : '') . ' 商城提现成功. ' . $response->result;
-                    } else {
-                        Yii::$app->getSession()->set('message', $response->result ? $response->result : '提现失败请稍后再试.');
                         $pass = false;
+                        Log::add('会员(' . $model->user_id . ')', '提现股票转移失败', '失败', json_encode($response));
+                    } else {
+                        $model->note .= '; 转移股票账号成功, id' . $response->id;
+                    }
+                } else if ($model->cash_type == 4) {
+                    //http://10.0.1.51:7001/membercenter/web/memberChongzhi/chongzhi?account=zf09&money=3&accountType=3
+                    $data = array('account' => $model->sc_account, 'money' => $model->real_amount, 'accountType' => 3, 'system' => '玫瑰家园:' . $model->user_id, 'mobile' => $model->telephone);
+                    if ($model->type != 9) {
+                        $data['accountType'] = 0;
+                    }
+                    $service_url = Yii::$app->params['sc_url'] . http_build_query($data);
+
+                    $curl = curl_init();
+
+                    curl_setopt_array($curl, array(
+                        CURLOPT_URL => $service_url,
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING => "",
+                        CURLOPT_MAXREDIRS => 10,
+                        CURLOPT_TIMEOUT => 30,
+                        CURLOPT_CUSTOMREQUEST => "POST",
+                        CURLOPT_HTTPHEADER => array(
+                            "authorization: Basic aG5qczpoYmF1dGg=",
+                        ),
+                    ));
+                    $tmpfname = dirname(__FILE__).'/cookie.txt';
+                    curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfname);
+                    curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfname);
+
+                    $response = curl_exec($curl);
+                    $err = curl_error($curl);
+
+                    $response = json_decode($response);
+                    curl_close($curl);
+
+                    Log::add('会员(' . $model->user_id . ')' , ' 商城提现' , '返回' , json_encode($response) . ':' . $service_url);
+                    if (!$err && $response && $response->code) {
+                        if ( $response->code == 1 && $response->result) {
+                            $model->note .= ($model->note ? $model->note . ';' : '') . ' 商城提现成功. ' . $response->result;
+                        } else {
+                            Yii::$app->getSession()->set('message', $response->result ? $response->result : '提现失败请稍后再试.');
+                            $pass = false;
+                            Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
+                        }
+                    } else {
+                        $pass = false;
+                        Yii::$app->getSession()->set('danger', '接口返回的失败,请稍后再试');
                         Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
                     }
-                } else {
-                    $pass = false;
-                    Yii::$app->getSession()->set('danger', '接口返回的失败,请稍后再试');
-                    Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
                 }
-            }
 
-            $connection=Yii::$app->db;
-            $transaction = $connection->beginTransaction();
-            if ($model->cash_type == 3) {
-                $baodanUser = User::findById($model->baodan_id);
-                if ($baodanUser) {
-                    $baodanUser->duichong_total += $model->real_amount;
-                    $baodanUser->duichong_remain += $model->real_amount;
-                    $inRecord = array(
-                        'user_id' => $model->baodan_id,
-                        'type' => 3,
-                        'note' => '会员('.$model->user_id . ')对冲转账',
-                        'duichong' => $model->real_amount,
-                        'total' => $baodanUser->duichong_remain,
-                    );
-                    $model->note .= ($model->note ? $model->note . '; ' : '') . '对冲帐户帐号, ' . $baodanUser->id ;
-                    $revenue = new Revenue();
-                    $revenue->load($inRecord, '');
-                    if ($model->save() && $user->save() && $baodanUser->save() && $revenue->save()) {
-                        Yii::$app->getSession()->set('message', '转账发放成功');
-                        $transaction->commit();
+                $connection=Yii::$app->db;
+                $transaction = $connection->beginTransaction();
+                if ($model->cash_type == 3) {
+                    $baodanUser = User::findById($model->baodan_id);
+                    if ($baodanUser) {
+                        $baodanUser->duichong_total += $model->real_amount;
+                        $baodanUser->duichong_remain += $model->real_amount;
+                        $inRecord = array(
+                            'user_id' => $model->baodan_id,
+                            'type' => 3,
+                            'note' => '会员('.$model->user_id . ')对冲转账',
+                            'duichong' => $model->real_amount,
+                            'total' => $baodanUser->duichong_remain,
+                        );
+                        $model->note .= ($model->note ? $model->note . '; ' : '') . '对冲帐户帐号, ' . $baodanUser->id ;
+                        $revenue = new Revenue();
+                        $revenue->load($inRecord, '');
+                        if ($model->save() && $user->save() && $baodanUser->save() && $revenue->save()) {
+                            Yii::$app->getSession()->set('message', '转账发放成功');
+                            $transaction->commit();
+                        } else {
+                            $transaction->rollback();
+                            Yii::$app->getSession()->set('message', '报单员(' . $model->baodan_id . ')转账发放失败');
+                        }
                     } else {
-                        $transaction->rollback();
-                        Yii::$app->getSession()->set('message', '报单员(' . $model->baodan_id . ')转账发放失败');
+                        Yii::$app->getSession()->set('message', '报单员(' . $model->baodan_id . ')不存在,转账发放失败');
                     }
                 } else {
-                    Yii::$app->getSession()->set('message', '报单员(' . $model->baodan_id . ')不存在,转账发放失败');
+                    if ($pass && $model->save() && $user->save()) {
+                        Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放成功');
+                        $transaction->commit();
+                    } else {
+                        Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放失败');
+                        $transaction->rollback();
+                    }
                 }
-            } else {
-                if ($pass && $model->save() && $user->save()) {
-                    Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放成功');
-                    $transaction->commit();
-                } else {
-                    Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放失败');
-                    $transaction->rollback();
-                }
+                $sellLock->end();
+                $this->redirect(Yii::$app->request->referrer);
+                return;
+            } catch (Exception $e) {
+                $transaction->rollback();//回滚函数
             }
-            $sellLock->end();
-            $this->redirect(Yii::$app->request->referrer);
-            return;
-        } catch (Exception $e) {
-            $transaction->rollback();//回滚函数
+
+
+        } else {
+            Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放失败');
         }
 
         $sellLock->end();
+
         return $this->redirect(['adminindex', 'id' => $model->id]);
 
     }
