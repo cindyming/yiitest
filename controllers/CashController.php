@@ -559,7 +559,7 @@ class CashController extends Controller
             }
 
         } else  {
-            Yii::$app->getSession()->set('danger', '会员(' . $model->user_id . ')提现申请发放失败');
+            Yii::$app->getSession()->set('danger', '会员(' . $model->user_id . ')提现申请已处理，不能重复处理');
         }
         $sellLock->end();
         return $this->redirect(['adminindex', 'id' => $model->id]);
