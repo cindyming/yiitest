@@ -501,7 +501,7 @@ class CashController extends Controller
                         if ( $response->code == 1 && $response->result) {
                             $model->note .= ($model->note ? $model->note . ';' : '') . ' 商城提现成功. ' . $response->result;
                         } else {
-                            Yii::$app->getSession()->set('message', $response->result ? $response->result : '提现失败请稍后再试.');
+                            Yii::$app->getSession()->set('danger', $response->result ? $response->result : '提现失败请稍后再试.');
                             $pass = false;
                             Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
                         }
@@ -537,17 +537,17 @@ class CashController extends Controller
                             $transaction->commit();
                         } else {
                             $transaction->rollback();
-                            Yii::$app->getSession()->set('message', '报单员(' . $model->baodan_id . ')转账发放失败');
+                            Yii::$app->getSession()->set('danger', '报单员(' . $model->baodan_id . ')转账发放失败');
                         }
                     } else {
-                        Yii::$app->getSession()->set('message', '报单员(' . $model->baodan_id . ')不存在,转账发放失败');
+                        Yii::$app->getSession()->set('danger', '报单员(' . $model->baodan_id . ')不存在,转账发放失败');
                     }
                 } else {
                     if ($pass && $model->save() && $user->save()) {
                         Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放成功');
                         $transaction->commit();
                     } else {
-                        Yii::$app->getSession()->set('message', '会员(' . $model->user_id . ')提现申请发放失败');
+                        Yii::$app->getSession()->set('danger', '会员(' . $model->user_id . ')提现申请发放失败');
                         $transaction->rollback();
                     }
                 }
@@ -558,6 +558,8 @@ class CashController extends Controller
                 $transaction->rollback();//回滚函数
             }
 
+        } else  {
+            Yii::$app->getSession()->set('danger', '会员(' . $model->user_id . ')提现申请发放失败');
         }
         $sellLock->end();
         return $this->redirect(['adminindex', 'id' => $model->id]);
