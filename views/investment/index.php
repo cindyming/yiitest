@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'status',
                 'header' => '状态',
                 'value' =>  function($model) {
-                    return $model->status ? '正常' : '已撤销';
+                    return ($model->status==2) ?  '已兑换' : ($model->status ? '正常' : '已撤销');
                 },
             ],
             'created_at',
