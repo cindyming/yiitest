@@ -49,11 +49,30 @@ class MeritController extends Controller
             try {
                 $transaction = $connection->beginTransaction();
 
+                $stack = User::investToStack($newInvestment, date('Ymd', strtotime($addtionalInvest->created_at)));
+
                 $addtionalInvest->merited = 1;
+                $addtionalInvest->stack = $stack;
                 $addtionalInvest->save();
 
                 $user->investment += $newInvestment;
                 $user->total_investment += $newInvestment;
+                $user->total_stack = $user->total_stack + $stack;
+                $user->stack = $user->stack + $stack;
+
+                $data = array(
+                    'user_id' => $addtionalInvest->user_id,
+                    'note' => '追加投资折算股票数',
+                    'stack' => $stack,
+                    'type' => 10,
+                    'total' =>  $user->stack
+                );
+
+
+                $stackIncord = new Revenue();
+                $stackIncord->load($data, '');
+                $stackIncord->save();
+
                 if ($user->stop_bonus) {
                     if (($user->bonus_total + $user->merit_total) < ($user->investment * 2 )) {
                         $user->stop_bonus = 0;
@@ -102,6 +121,22 @@ class MeritController extends Controller
                 $transaction = $connection->beginTransaction();
 
                 $user->merited = 1;
+
+                $stack = User::investToStack($user->init_investment, date('Ymd', strtotime($user->approved_at)));
+                $user->init_stack = $stack;
+                $user->total_stack = $stack;
+                $user->stack = $stack;
+
+                $data = array(
+                    'user_id' => $user->id,
+                    'note' => '初始投资折算股票数',
+                    'stack' => $stack,
+                    'type' => 10,
+                    'total' => $stack
+                );
+                $stackIncord = new Revenue();
+                $stackIncord->load($data, '');
+                $stackIncord->save();
 
                 $parents = array();
 

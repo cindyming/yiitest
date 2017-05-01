@@ -29,14 +29,14 @@ class BonusController extends Controller
         return $inverts;
     }
 
-    public function addBonus($inverstiment, $days)
+    public function addBonus($inverstiment, $totalInvestment, $days)
     {
         $rate = 1;
         if ($days < 30) {
             $rate = $days / 30;
         }
 
-        if ($inverstiment >= $this->_diff) {
+        if ($totalInvestment >= $this->_diff) {
             $amount =  $inverstiment * 0.03 * $rate;
         } else {
             $amount =  $inverstiment * 0.02 * $rate;
@@ -83,7 +83,8 @@ class BonusController extends Controller
                     continue;
                 }
 
-                $total = $user->investment;
+                $total = $user->total_investment;
+                $investTotal =$user->investment;
                 $bonusTotal = 0;
                 $lastDate = (int)(strtotime(date('Y-m-d', time())));
                 $invers = $this->lessThan15Investment($user->id);
@@ -91,8 +92,9 @@ class BonusController extends Controller
                     foreach ($invers as $item){
                         if (date('Y-m-d', strtotime($item['created_at']) < date('Y-m-d', strtotime($lastDate)))) {
                             $days = ($lastDate - strtotime(date('Y-m-d', strtotime($item['created_at'])))) / 86400;
-                            $bonusTotal += $this->addBonus($total, $days);
+                            $bonusTotal += $this->addBonus($investTotal, $total, $days);
                             $total -= $item['amount'];
+                            $investTotal -= $item['amount'];
                             $lastDate =strtotime(date('Y-m-d', strtotime($item['created_at'])));
                         }
                     }
@@ -103,7 +105,7 @@ class BonusController extends Controller
                     $days = ($lastDate - strtotime(date('Y-m-d', strtotime($user->approved_at)))) / 86400;
                 }
 
-                $bonusTotal += $this->addBonus($total, $days);
+                $bonusTotal += $this->addBonus($investTotal, $total, $days);
 
                 if ($bonusTotal > 0 ) {
                     $data['bonus'] = round($bonusTotal, 2);
