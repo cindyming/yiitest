@@ -160,8 +160,8 @@ class Cash extends ActiveRecord
 
     public function getTypes($filter = false)
     {
-        return  $filter ? array(''=> '不限', 1 => '分红提现', 2 => '绩效提现', 3 => '服务费', 4 => '分红支出', 5 => '绩效支出', '6' => '服务费支出', '7' => '商城币支出', 8=>'对冲帐户', 9=>'商城币提现')
-            : array(1 => '分红提现', 2 => '绩效提现', 3 => '服务费提现', 4 => '分红支出', 5 => '绩效支出', '6' => '服务费支出', '7' => '商城币支出',  8=>'对冲帐户', 9=>'商城币提现');
+        return  $filter ? array(''=> '不限', 1 => '分红提现', 2 => '绩效提现', 3 => '服务费', 4 => '分红支出', 5 => '绩效支出', '6' => '服务费支出', '7' => '商城币支出', 8=>'对冲帐户', 9=>'商城币提现', 11 => '自由股兑换')
+            : array(1 => '分红提现', 2 => '绩效提现', 3 => '服务费提现', 4 => '分红支出', 5 => '绩效支出', '6' => '服务费支出', '7' => '商城币支出',  8=>'对冲帐户', 9=>'商城币提现', 11 => '自由股兑换');
     }
 
     public function getStatus($filter =false)
@@ -198,7 +198,8 @@ class Cash extends ActiveRecord
             2 => '银行卡提现',
             3 => '提现至报单员',
             4 => '提现至商城',
-            5 => '提现至撮合'
+            5 => '提现至撮合',
+            6 => '自由股兑换'
         );
 
         return $type ? (isset($data[$type]) ? $data[$type] : '未知类型') : $data;
@@ -285,5 +286,34 @@ class Cash extends ActiveRecord
                 break;
         }
         return $info;
+    }
+
+    public function transterToCuohe($user)
+    {
+        $pass = false;
+
+        $service_url = Yii::$app->params['cuohe_url'] . 'api/user/exchange';
+        $curl = curl_init($service_url);
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_USERPWD, $user->access_token); //Your credentials goes here
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array('exchange' => $this->real_amount, 'token' => $user->access_token)));
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); //IMP if the url has https and you don't want to verify source certificate
+
+
+        $curl_response = curl_exec($curl);
+        $response = (array)json_decode($curl_response);
+        curl_close($curl);
+
+        Log::add('会员(' . $this->user_id . ')' , '撮合转账' , '返回' , $curl_response);
+        if (is_array($response) && isset($response['code']) && ($response['code'] == 200)) {
+            $pass = true;
+            $this->note = $this->note . ($this->note ?  ';' : '' ) .  '撮合转账成功, id:' . $response['data'];
+        } else {
+            Log::add('会员(' . $this->user_id . ')', '撮合转账', '失败', $curl_response);
+        }
+
+        return $pass;
     }
 }
