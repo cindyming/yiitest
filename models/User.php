@@ -992,8 +992,8 @@ class User extends ActiveRecord implements IdentityInterface
                 'username' => $this->username,
                 'role_id' => $this->role_id,
                 'locked' => $this->locked,
-                'password' => $this->password,
-                'password2' => $this->password2,
+                'password' => sha1($this->password),
+                'password2' => sha1($this->password2),
                 'locked' => 0,
             );
 
