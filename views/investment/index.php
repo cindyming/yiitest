@@ -14,6 +14,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
+    <div>
+        初始投资 : <?php echo Yii::$app->user->identity->init_investment ?> .
+        <?php
+        if (!Yii::$app->user->identity->redeemed) {
+            echo ( Html::a('兑换自由股', '/investment/transfer?id=all', ['data-confirm'=>"你确定要兑换成自由股票"  . Yii::$app->user->identity->init_investment])) ;
+        }
+        ?>
+    </div>
+
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
        // 'filterModel' => $searchModel,

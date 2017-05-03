@@ -29,10 +29,11 @@ $welcome .= ', 欢迎回来.';
                 总业绩: <?php echo Yii::$app->user->identity->achievements?>
             </li>
             <li>
-                总投资额: 
+                总投资额: <?php echo Yii::$app->user->identity->investment ?>
             </li>
             <li>
                 总股数: <?php echo (Yii::$app->user->identity->total_stack)?>
+                <?php echo (Yii::$app->user->identity->stack)?>)
             </li>
             <br/>
             <li>
@@ -53,7 +54,7 @@ $welcome .= ', 欢迎回来.';
         </ul>
         <ul>
             <li>
-                <a target="_blank" href="http://cuohe.cindy.local/user/autologin?token=<?php echo Yii::$app->user->identity->access_token?>" data-method="post">登录自由股交易大厅</a>
+                <a target="_blank" href="<?php echo Yii::$app->params['cuohe_url'] ?>user/autologin?token=<?php echo Yii::$app->user->identity->access_token?>" data-method="post">登录自由股交易大厅</a>
             </li>
         </ul>
     </div>
