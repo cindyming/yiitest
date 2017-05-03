@@ -272,9 +272,9 @@ li.jstree-node a.gray-icon{ color: #bbb; }
 .pagination{float:left;margin: 0 10px 0 0!important;}
 input#pageNo{width:34px;height:34px;border:1px solid #ddd;padding:5px;margin-right:5px}
 button.goToButon{background-color: #337ab7;border: 1px solid #337ab7;color: #fff;height: 34px;}
-.fail{background-color: #FFD5D5;border: 1px solid #DD7777;line-height: 30px;padding: 2px 15px;margin-bottom: 15px;color: #D81919;}
 .Message{background-color:#EAFAEF;border: 1px solid #42BB76;line-height: 30px;padding: 2px 15px;margin-bottom: 15px;color: #228B27;}
 .notice{background-color: #FAFAEA;border: 1px solid #D0CE00;line-height: 30px;padding: 2px 15px;margin-bottom: 15px;color: #A38800;}
+.fail{background-color: #FFD5D5;border: 1px solid #DD7777;line-height: 30px;padding: 2px 15px;margin-bottom: 15px;color: #D81919;}
 
 #errorMessageContainer{width: 100%;background-color: rgba(0, 0, 0, 0.32);line-height: 18px;color: #D81919;position: absolute;left: 0;height: 118%;top: 0;padding: 0;}
 #errorMessage{text-align:center;position:absolute;background:#fff;width:20%;margin:10% 40%;padding:1%}
