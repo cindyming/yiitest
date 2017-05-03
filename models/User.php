@@ -212,7 +212,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['cardname', 'cardnumber', 'init_investment'], 'trim'],
             [['cardnumber'], 'string', 'max' => 20, "on" => "create"],
             [['cardnumber'], 'number', "on" => "create"],
-            [['qq', 'useBaodan', 'stack', 'init_stack', 'total_stack', 'free_stack', 'total_free_stack', 'total_investment', 'exchange_total', 'exchange_remain'], 'number'],
+            [['qq', 'useBaodan', 'stack', 'init_stack', 'redeemed', 'total_stack', 'free_stack', 'total_free_stack', 'total_investment', 'exchange_total', 'exchange_remain'], 'number'],
             [['duichong_invest'], 'checkBaodanInvest'],
         ];
     }
