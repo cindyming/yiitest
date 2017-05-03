@@ -51,7 +51,7 @@ $welcome .= ', 欢迎回来.';
         </ul>
         <ul>
             <li>
-                <a target="_blank" href="http://cuohe.cindy.local/user/autologin?token=<?php echo Yii::$app->user->identity->access_token?>" data-method="post">登录撮合</a>
+                <a target="_blank" href="<?php echo Yii::$app->params['cuohe_url'] ?>user/autologin?token=<?php echo Yii::$app->user->identity->access_token?>" data-method="post">登录撮合</a>
             </li>
         </ul>
     </div>
