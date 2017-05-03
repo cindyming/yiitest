@@ -27,7 +27,11 @@ $welcome .= ', 欢迎回来.';
             </li>
             <li>
                 总业绩: <?php echo Yii::$app->user->identity->achievements?>
-                (等值股票数: <?php echo (Yii::$app->user->identity->total_stack)?>)
+            </li>
+
+            <li>
+                总投资: <?php echo Yii::$app->user->identity->investment ?>
+                (等值股票数: <?php echo (Yii::$app->user->identity->stack)?>)
             </li>
             <li>
                 分红余额: <?php echo Yii::$app->user->identity->bonus_remain?>
