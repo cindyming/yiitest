@@ -960,7 +960,13 @@ class User extends ActiveRecord implements IdentityInterface
             Log::add('USER' . $this->id, '更新信息', true, $action);
 
             if (isset($to['locked']) || isset($to['role_id']) || isset($to['username']) || isset($to['password2'])) {
+                if (isset($to['password'])) {
+                    $to['password'] = sha1($to['password']);
+                }
 
+                if (isset($to['password2'])) {
+                    $to['password2'] = sha1($to['password2']);
+                }
                 $service_url = Yii::$app->params['cuohe_url'] . 'api/user/update?id=' . $this->access_token;
                 $curl = curl_init($service_url);
                 curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -992,8 +998,8 @@ class User extends ActiveRecord implements IdentityInterface
                 'username' => $this->username,
                 'role_id' => $this->role_id,
                 'locked' => $this->locked,
-                'password' => sha1($this->password),
-                'password2' => sha1($this->password2),
+                'password' => ($this->password),
+                'password2' => ($this->password2),
                 'bank' => $this->bank,
                 'bankaddress' => $this->bankaddress,
                 'cardname' => $this->cardname,
