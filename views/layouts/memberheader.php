@@ -30,10 +30,8 @@ $welcome .= ', 欢迎回来.';
             </li>
             <li>
                 总投资额: <?php echo Yii::$app->user->identity->investment ?>
-            </li>
-            <li>
-                总股数: <?php echo (Yii::$app->user->identity->total_stack)?>
-                <?php echo (Yii::$app->user->identity->stack)?>)
+
+                (等值股票数: <?php echo (Yii::$app->user->identity->stack)?>)
             </li>
             <br/>
             <li>

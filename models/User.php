@@ -994,6 +994,10 @@ class User extends ActiveRecord implements IdentityInterface
                 'locked' => $this->locked,
                 'password' => sha1($this->password),
                 'password2' => sha1($this->password2),
+                'bank' => $this->bank,
+                'bankaddress' => $this->bankaddress,
+                'cardname' => $this->cardname,
+                'cardnumber' => $this->cardnumber,
                 'locked' => 0,
             );
 
