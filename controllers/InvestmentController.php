@@ -318,8 +318,8 @@ class InvestmentController extends Controller
             $cash = new Cash();
             $cash->cash_type = 6;
             $cash->type = 11;
-            $cash->amount = $model->stack;
-            $cash->total = $model->stack;
+            $cash->amount = $model->init_stack;
+            $cash->total = $model->init_stack;
             $cash->status = 2;
         } else {
             $model = $this->findModel($id);
