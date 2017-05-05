@@ -7,21 +7,24 @@ use kartik\grid\GridView;
 /* @var $searchModel app\models\InvestmentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = '追加投资';
+$this->title = '我的投资';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="investment-index">
-
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <div>
-        初始投资 : <?php echo Yii::$app->user->identity->init_investment ?> .
+    <h3>初始投资</h3>
+    <div class="first_investment">
+        初始投资额 : <?php echo Yii::$app->user->identity->init_investment ?> 
+        <span>(等值股票数: )</span>
         <?php
         if (!Yii::$app->user->identity->redeemed) {
             echo ( Html::a('兑换自由股', '/investment/transfer?id=all', ['data-confirm'=>"你确定要兑换成自由股票"  . Yii::$app->user->identity->init_investment])) ;
         }
         ?>
     </div>
+
+    <h3>追加投资</h3>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
