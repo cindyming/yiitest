@@ -16,7 +16,7 @@ body {
 }
 h1{font-size:22px;margin:20px 0}
 .container h1{display:inline-block;}
-
+h3{font-size:16px;}
 .footer {
     height: 60px;
     background-color: #f5f5f5;
@@ -287,11 +287,12 @@ button.goToButon{background-color: #337ab7;border: 1px solid #337ab7;color: #fff
 .container{}
 /*.form-group.field-user-investment{width:auto}
 .form-group.field-user-usebaodan{width:auto;padding-top:32px}*/
+.kv-table-wrap th, .kv-table-wrap td{font-size:14px}
 }
 li.jstree-node a.red-icon {
     color: #ff0000;
 }
 .realAmount{color:#0C00FF}
 .big{font-size: 22px;line-height: 50px;}
-
-
+.first_investment{background:#f9f9f9;border:1px solid #ddd; padding: 8px;line-height: 1.42857143;margin-bottom:50px }
+.first_investment a{margin-left:20px}
