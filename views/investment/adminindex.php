@@ -38,6 +38,13 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'amount',
             'stack',
+            [
+                'attribute' => 'status',
+                'header' => '状态',
+                'value' =>  function($model) {
+                    return ($model->status==2) ?  '已兑换' : ($model->status ? '正常' : '已撤销');
+                },
+            ],
             'added_by',
             'created_at',
             [

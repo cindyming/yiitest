@@ -40,7 +40,12 @@ $stack = Yii::$app->user->identity->init_stack;
                 'header' => '序号'
             ],
             'amount',
-            'stack',
+            [
+                'attribute' => 'stack',
+                'value' =>  function($model) {
+                    return ($model->stack) ?  $model->stack : '股数计算中';
+                },
+            ],
             [
                 'attribute' => 'status',
                 'header' => '状态',
