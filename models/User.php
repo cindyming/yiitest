@@ -114,6 +114,15 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'total_investment',
+                ],
+                'value' => function ($event) {
+                    return $this->investment * 10000;
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'investment',
                 ],
                 'value' => function ($event) {
@@ -638,6 +647,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function reduceAchivement($amount)
     {
         $this->investment = ($this->investment - $amount) ? ($this->investment - $amount) : $this->investment;
+        $this->total_investment = ($this->total_investment - $amount) ? ($this->total_investment - $amount) : $this->total_investment;
+
         $this->achievements = ($this->achievements - $amount) ? ($this->achievements - $amount) : $this->achievements;
         //$this->level = $this->calculateLevel();
 
