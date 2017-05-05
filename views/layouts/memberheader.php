@@ -33,7 +33,7 @@ $welcome .= ', 欢迎回来.';
                 (等值股票数: <?php echo (Yii::$app->user->identity->stack)?>)
             </li>
             <li>
-                总股票数: 
+                总股票数: <?php echo Yii::$app->user->identity->getTotalStack() ?>
             </li>
             <br/>
             <li>

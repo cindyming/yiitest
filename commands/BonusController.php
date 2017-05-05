@@ -49,7 +49,7 @@ class BonusController extends Controller
         echo date('Y-m-d H:i:s', time()) . PHP_EOL;
         $this->_startTime = date("Y-m-d",strtotime("-30 days")) . ' 00:00:00';
 
-        $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['!=','locked', 1]);
+        $userQuery = User::find()->where(['=','role_id', 3])->andWhere(['!=','locked', 1])->andWhere(['>','investment', 0]);
 
         $provider = new ActiveDataProvider([
             'query' => $userQuery,

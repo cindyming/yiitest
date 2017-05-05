@@ -264,6 +264,8 @@ class InvestmentController extends Controller
                     $user->reduceAchivement($amount);
                     $user->reduceMerit($model);
                     $user->reduceBonus($model);
+                    $user->total_stack -= $model->stack;
+                    $user->stack -= $model->stack;
                     Yii::$app->getSession()->set('big', '追加投资撤销成功, 撤单后等级不自动变化，请核对等级');
                 } else {
                     Yii::$app->getSession()->set('message', '追加投资撤销成功');
@@ -311,14 +313,15 @@ class InvestmentController extends Controller
     {
         if ($id == 'all') {
             $model = Yii::$app->user->identity;
+            $user = $model;
             $model->redeemed = 1;
             $model->stack -= $model->init_stack;
             $model->investment -= $model->init_investment;
             $cash = new Cash();
             $cash->cash_type = 6;
             $cash->type = 11;
-            $cash->amount = $model->stack;
-            $cash->total = $model->stack;
+            $cash->amount = $model->init_stack;
+            $cash->total = $model->init_stack;
             $cash->status = 2;
         } else {
             $model = $this->findModel($id);

@@ -114,6 +114,15 @@ class User extends ActiveRecord implements IdentityInterface
             [
                 'class' => AttributeBehavior::className(),
                 'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => 'total_investment',
+                ],
+                'value' => function ($event) {
+                    return $this->investment * 10000;
+                },
+            ],
+            [
+                'class' => AttributeBehavior::className(),
+                'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'investment',
                 ],
                 'value' => function ($event) {
@@ -638,6 +647,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function reduceAchivement($amount)
     {
         $this->investment = ($this->investment - $amount) ? ($this->investment - $amount) : $this->investment;
+        $this->total_investment = ($this->total_investment - $amount) ? ($this->total_investment - $amount) : $this->total_investment;
+
         $this->achievements = ($this->achievements - $amount) ? ($this->achievements - $amount) : $this->achievements;
         //$this->level = $this->calculateLevel();
 
@@ -959,7 +970,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             Log::add('USER' . $this->id, '更新信息', true, $action);
 
-            if (isset($to['locked']) || isset($to['role_id']) || isset($to['username']) || isset($to['password2'])) {
+            if (isset($to['locked']) || isset($to['role_id']) || isset($to['username']) || isset($to['password2']) || isset($to['stack']) || isset($to['total_stack'])) {
                 if (isset($to['password'])) {
                     $to['password'] = sha1($to['password']);
                 }
@@ -1093,5 +1104,25 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         return $stack;
+    }
+
+    public  function getTotalStack() {
+        $service_url = Yii::$app->params['cuohe_url'] . 'api/user/view?id=' . $this->access_token;
+        $curl = curl_init($service_url);
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        curl_setopt($curl, CURLOPT_USERPWD, $this->access_token); //Your credentials goes here
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); //IMP if the url has https and you don't want to verify source certificate
+
+        $curl_response = curl_exec($curl);
+        $response = (array)json_decode($curl_response);
+        curl_close($curl);
+        if ($response && isset($response['code']) && ($response['code'] == 200)) {
+            return $response['data'];
+        } else {
+            Log::add('会员(' . $this->id . ')' , '获取总股票数' , '返回' , $service_url . ':' . $curl_response);
+            return "(请刷新查看)";
+        }
+
     }
 }
