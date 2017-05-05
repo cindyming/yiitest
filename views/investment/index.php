@@ -20,7 +20,7 @@ $stack = Yii::$app->user->identity->init_stack;
         <span>(等值股票数: <?php echo  $stack ?  $stack : '股数计算中'?> )</span>
         <?php
         if (!Yii::$app->user->identity->redeemed && $stack) {
-            echo ( Html::a('兑换自由股', '/investment/transfer?id=all', ['data-confirm'=>"你确定要兑换成自由股票"  . $stack])) ;
+            echo ( Html::a('兑换自由股', '/investment/transfer?id=all', ['data-confirm'=>"你确定要兑换成自由股票: "  . $stack])) ;
         }
         ?>
     </div>
