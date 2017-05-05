@@ -257,9 +257,6 @@ ul.tabswitch li.active{border-bottom:3px solid #27A9E3}
 .form-group.field-user-usebaodan{width:10.7%;padding-top:32px}
 .field-investment-usebaodan #message{color:red;margin-left:10px}
 
-@media (max-width: 1208px){
-.container{}
-}
 
 li.jstree-node a.gray-icon{ color: #bbb; }
 #maintaining{font-size:18px;padding:5px 0;color:red;background:#FFC7C7;text-align: center;margin-bottom:20px }
@@ -282,6 +279,24 @@ button.goToButon{background-color: #337ab7;border: 1px solid #337ab7;color: #fff
 #errorMessage button{background-color: #FF9318;border: 1px solid #337ab7;color: #fff;height: 34px;border:none 0;border-radius: 4px;}
 
 .cash-index table td{word-break:break-all}
+.top-header .container{position:relative;}
+.ch_link{background:rgba(255,255,255,0.4);color:#fff;width:15%;padding:1% 2%;text-align:center;display:block;position:absolute;right:2%;bottom:10%;z-index: 9}
+
+
+li.jstree-node a.red-icon {color: #ff0000;}
+.realAmount{color:#0C00FF}
+.big{font-size: 22px;line-height: 50px;}
+.first_investment{background:#f9f9f9;border:1px solid #ddd; padding: 8px;line-height: 1.42857143;margin-bottom:50px }
+.first_investment a{margin-left:20px}
+
+@media (max-width: 1208px){
+.container{}
+}
+
+@media (max-width: 768px){
+    nav.navbar{margin: 1% 0 3%}
+    .ch_link{right:auto;left:2%;width:40%;font-size:16px;padding:2% }
+}
 
 @media (max-width: 600px){
 .container{}
@@ -289,10 +304,3 @@ button.goToButon{background-color: #337ab7;border: 1px solid #337ab7;color: #fff
 .form-group.field-user-usebaodan{width:auto;padding-top:32px}*/
 .kv-table-wrap th, .kv-table-wrap td{font-size:14px}
 }
-li.jstree-node a.red-icon {
-    color: #ff0000;
-}
-.realAmount{color:#0C00FF}
-.big{font-size: 22px;line-height: 50px;}
-.first_investment{background:#f9f9f9;border:1px solid #ddd; padding: 8px;line-height: 1.42857143;margin-bottom:50px }
-.first_investment a{margin-left:20px}
