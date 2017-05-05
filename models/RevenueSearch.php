@@ -148,7 +148,7 @@ class RevenueSearch extends Revenue
 
     public function searchForHuobi($params)
     {
-        $query = Revenue::find()->where(['in', 'type', array(2, 3)])->orderBy(['id' => SORT_DESC]);
+        $query = Revenue::find()->where(['in', 'type', array(2, 3, 10)])->orderBy(['id' => SORT_DESC]);
 
         // add conditions that should always apply here
 

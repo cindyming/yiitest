@@ -311,6 +311,7 @@ class InvestmentController extends Controller
     {
         if ($id == 'all') {
             $model = Yii::$app->user->identity;
+            $user = $model;
             $model->redeemed = 1;
             $model->stack -= $model->init_stack;
             $model->investment -= $model->init_investment;
