@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h3>初始投资</h3>
     <div class="first_investment">
         初始投资额 : <?php echo Yii::$app->user->identity->init_investment ?> 
-        <span>(等值股票数: )</span>
+        <span>(等值股票数: <?php echo Yii::$app->user->identity->init_stack ?> )</span>
         <?php
         if (!Yii::$app->user->identity->redeemed) {
             echo ( Html::a('兑换自由股', '/investment/transfer?id=all', ['data-confirm'=>"你确定要兑换成自由股票"  . Yii::$app->user->identity->init_investment])) ;

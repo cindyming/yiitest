@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\Column',
                 'header' => '入账金额',
                 'content' => function($model) {
-                    return $model->bonus ? $model->bonus : ($model->baodan ? $model->baodan : ($model->merit ? $model->merit : ($model->duichong ? $model->duichong : $model->mall)));
+                    return $model->bonus ? $model->bonus : ($model->baodan ? $model->baodan : ($model->merit ? $model->merit : ($model->duichong ? $model->duichong : ($model->stack ? $model->stack : $model->mall))));
                 }
             ],
             [

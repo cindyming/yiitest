@@ -86,7 +86,8 @@ class StackController extends Controller
                                 'note' => '追加投资折算股票数',
                                 'stack' => $stack,
                                 'type' => 10,
-                                'total' => $stack
+                                'total' => $total,
+                                'account_type' => 6
                             );
                             $investment->stack = $stack;
                             $investment->save();
