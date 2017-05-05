@@ -87,7 +87,6 @@ class StackController extends Controller
                                 'stack' => $stack,
                                 'type' => 10,
                                 'total' => $total,
-                                'account_type' => 6
                             );
                             $investment->stack = $stack;
                             $investment->save();
