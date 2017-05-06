@@ -11,7 +11,7 @@ use yii\bootstrap\NavBar;
 <h2>管理员界面</h2>
 <div class="m-info">
     <?php echo  '欢迎 (' . Yii::$app->user->identity->username . ')' ?>
-    
+
         <ul>
             <li>
                 <a class="ch_link" target="_blank" href="<?php echo Yii::$app->params['cuohe_url'] ?>user/autologin?token=<?php echo Yii::$app->user->identity->access_token?>" data-method="post">登录自由股交易大厅</a>

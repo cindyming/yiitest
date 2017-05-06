@@ -19,7 +19,7 @@ $stack = Yii::$app->user->identity->init_stack;
         初始投资额 : <?php echo Yii::$app->user->identity->init_investment ?> 
         <span>(等值股票数: <?php echo  $stack ?  $stack : '股数计算中'?> )</span>
         <?php
-        if ((!Yii::$app->user->identity->redeemed) && $stack) {
+        if ((!Yii::$app->user->identity->redeemed) && $stack && \app\models\System::loadConfig('open_stack_transfer')) {
             echo ( Html::a('兑换自由股', '/investment/transfer?id=all', ['data-confirm'=>"你确定要兑换成自由股票: "  . $stack])) ;
         }
         ?>

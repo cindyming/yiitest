@@ -37,7 +37,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'filter' => true
             ],
             'amount',
-            'stack',
+            [
+                'attribute' => 'stack',
+                'value' =>  function($model) {
+                    return ($model->stack) ?  $model->stack : '股数计算中';
+                },
+            ],
             [
                 'attribute' => 'status',
                 'header' => '状态',
