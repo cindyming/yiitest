@@ -12,11 +12,13 @@ use yii\bootstrap\NavBar;
 <div class="m-info">
     <?php echo  '欢迎 (' . Yii::$app->user->identity->username . ')' ?>
 
-    <ul>
-        <li>
-            <a class="ch_link" target="_blank" href="<?php echo Yii::$app->params['cuohe_url'] ?>user/autologin?token=<?php echo Yii::$app->user->identity->access_token?>" data-method="post">登录自由股交易大厅</a>
-        </li>
-    </ul>
+    <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
+        <ul>
+            <li>
+                <a class="ch_link" target="_blank" href="<?php echo Yii::$app->params['cuohe_url'] ?>user/autologin?token=<?php echo Yii::$app->user->identity->access_token?>" data-method="post">登录自由股交易大厅</a>
+            </li>
+        </ul>
+    <?php endif ?>
 </div>
 <?php
 NavBar::begin();
