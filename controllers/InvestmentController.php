@@ -311,67 +311,72 @@ class InvestmentController extends Controller
 
     public function actionTransfer($id)
     {
-        if ($id == 'all') {
-            $model = Yii::$app->user->identity;
-            $user = $model;
-            $model->redeemed = 1;
-            $model->stack -= $model->init_stack;
-            $model->investment -= $model->init_investment;
-            $cash = new Cash();
-            $cash->cash_type = 6;
-            $cash->type = 11;
-            $cash->amount = $model->init_stack;
-            $cash->total = $model->init_stack;
-            $cash->status = 2;
-        } else {
-            $model = $this->findModel($id);
-
-            if ((Yii::$app->user->id == $model->user_id) && $model->status = 1)  {
-                $model->status = 2;
-                $user = User::findOne(Yii::$app->user->id);
-                $user->stack -= $model->stack;
-                $user->investment -= $model->amount;
+        if (\app\models\System::loadConfig('open_stack_transfer')) {
+            if ($id == 'all') {
+                $model = Yii::$app->user->identity;
+                $user = $model;
+                $model->redeemed = 1;
+                $model->stack -= $model->init_stack;
+                $model->investment -= $model->init_investment;
                 $cash = new Cash();
                 $cash->cash_type = 6;
                 $cash->type = 11;
-                $cash->amount = $model->stack;
-                $cash->total = $user->stack;
+                $cash->amount = $model->init_stack;
+                $cash->total = $model->init_stack;
                 $cash->status = 2;
-            }
-
-        }
-
-        try {
-            $service_url = Yii::$app->params['cuohe_url'] . 'api/user/stack';
-            $curl = curl_init($service_url);
-            curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-            curl_setopt($curl, CURLOPT_USERPWD, $user->access_token); //Your credentials goes here
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array('stack' => $cash->amount, 'token' => $user->access_token)));
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); //IMP if the url has https and you don't want to verify source certificate
-
-
-            $curl_response = curl_exec($curl);
-            $response = (array)json_decode($curl_response);
-            curl_close($curl);
-
-            Log::add('会员(' . $user->id . ')' , '自由股兑换' , '返回' , $service_url . $curl_response);
-            if (is_array($response) && isset($response['code']) && ($response['code'] == 200)) {
-                $pass = true;
-                $cash->note = '自由股兑换成功, id:' . $response['data'];
-                $cash->save();
-                $user->save();
-                $model->save();
-                Yii::$app->getSession()->set('message', '自由股兑换成功');
             } else {
-                Yii::$app->getSession()->set('danger', '自由股兑换失败,请稍候再试');
+                $model = $this->findModel($id);
+
+                if ((Yii::$app->user->id == $model->user_id) && $model->status = 1)  {
+                    $model->status = 2;
+                    $user = User::findOne(Yii::$app->user->id);
+                    $user->stack -= $model->stack;
+                    $user->investment -= $model->amount;
+                    $cash = new Cash();
+                    $cash->cash_type = 6;
+                    $cash->type = 11;
+                    $cash->amount = $model->stack;
+                    $cash->total = $user->stack;
+                    $cash->status = 2;
+                }
+
             }
 
-        } catch (Exception $e) {
-            Log::add('会员(' . $user->id . ')' , '自由股兑换' , '失败' , $curl_response);
-            Yii::$app->getSession()->set('danger', '自由股兑换失败,请稍候再试' . $e->getMessage());
+            try {
+                $service_url = Yii::$app->params['cuohe_url'] . 'api/user/stack';
+                $curl = curl_init($service_url);
+                curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                curl_setopt($curl, CURLOPT_USERPWD, $user->access_token); //Your credentials goes here
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($curl, CURLOPT_POST, true);
+                curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(array('stack' => $cash->amount, 'token' => $user->access_token)));
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); //IMP if the url has https and you don't want to verify source certificate
+
+
+                $curl_response = curl_exec($curl);
+                $response = (array)json_decode($curl_response);
+                curl_close($curl);
+
+                Log::add('会员(' . $user->id . ')' , '自由股兑换' , '返回' , $service_url . $curl_response);
+                if (is_array($response) && isset($response['code']) && ($response['code'] == 200)) {
+                    $pass = true;
+                    $cash->note = '自由股兑换成功, id:' . $response['data'];
+                    $cash->save();
+                    $user->save();
+                    $model->save();
+                    Yii::$app->getSession()->set('message', '自由股兑换成功');
+                } else {
+                    Yii::$app->getSession()->set('danger', '自由股兑换失败,请稍候再试');
+                }
+
+            } catch (Exception $e) {
+                Log::add('会员(' . $user->id . ')' , '自由股兑换' , '失败' , $curl_response);
+                Yii::$app->getSession()->set('danger', '自由股兑换失败,请稍候再试' . $e->getMessage());
+            }
+        } else {
+            Yii::$app->getSession()->set('danger', '自由股兑换已关闭,请稍候再试');
         }
+
 
         return $this->redirect(['/investment/index']);
 

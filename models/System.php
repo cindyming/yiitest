@@ -26,6 +26,7 @@ class System extends ActiveRecord
     public $open_mall_transfer;
     public $mall_audit;
     public $open_cuohe_transfer;
+    public $open_stack_transfer;
     public $cuohe_transfer_audit;
 
     /**
@@ -65,7 +66,8 @@ class System extends ActiveRecord
             'opend_duichong_baodan_fee' => '新会员使用对冲账号是否有报单费',
             'opend_investment_duichong_baodan_fee' => '追加投资使用对冲账号是否有报单费',
             'open_cuohe_transfer' => '允许撮合转账',
-            'cuohe_transfer_audit' => '撮合转账审核'
+            'cuohe_transfer_audit' => '撮合转账审核',
+            'open_stack_transfer' => '自由股兑换',
             ];
     }
 

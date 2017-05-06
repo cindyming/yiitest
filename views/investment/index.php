@@ -59,7 +59,7 @@ $stack = Yii::$app->user->identity->init_stack;
                 'label' => '操作',
                 'hiddenFromExport' => true,
                 'content' => function($model) {
-                    return ($model->status == 1) ? ( Html::a('兑换自由股', '/investment/transfer?id='.$model->id, ['data-confirm'=>"你确定要兑换成自由股票"  . $model->stack])) : '';
+                    return (($model->status == 1) && \app\models\System::loadConfig('open_stack_transfer')) ? ( Html::a('兑换自由股', '/investment/transfer?id='.$model->id, ['data-confirm'=>"你确定要兑换成自由股票"  . $model->stack])) : '';
                 }
             ],
         ],
