@@ -311,7 +311,7 @@ class InvestmentController extends Controller
 
     public function actionTransfer($id)
     {
-        if (\app\models\System::loadConfig('open_stack_transfer')) {
+        if (System::loadConfig('open_stack_transfer')) {
             if ($id == 'all') {
                 $model = Yii::$app->user->identity;
                 $user = $model;

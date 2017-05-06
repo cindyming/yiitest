@@ -52,11 +52,13 @@ $welcome .= ', 欢迎回来.';
                 对冲帐户余额: <?php echo round(Yii::$app->user->identity->duichong_remain, 2)?>
             </li>
         </ul>
+        <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
         <ul>
             <li>
                 <a class="ch_link" target="_blank" href="<?php echo Yii::$app->params['cuohe_url'] ?>user/autologin?token=<?php echo Yii::$app->user->identity->access_token?>" data-method="post">登录自由股交易大厅</a>
             </li>
         </ul>
+        <?php endif ?>
     </div>
 <?php
 NavBar::begin();
