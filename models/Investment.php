@@ -71,7 +71,7 @@ class Investment extends ActiveRecord
     {
         return [
             [['user_id', 'amount'], 'required'],
-            [['merited', 'note', 'added_by', 'status', 'duichong_invest', 'useBaodan'], 'trim'],
+            [['merited', 'note', 'added_by', 'status', 'duichong_invest', 'useBaodan', 'stack'], 'trim'],
             [['added_by'], 'validateAddedBy']
         ];
     }
@@ -85,12 +85,13 @@ class Investment extends ActiveRecord
             'id' => '序号',
             'user_id' => '会员编号',
             'amount' => '追加投资额',
+            'note' => '备注',
             'duichong_invest'  => '对冲帐户抵扣金额',
             'useBaodan' => '使用对冲帐户',
-            'note' => '备注',
             'added_by' => '报单人编号',
             'created_at' => '追加时间',
             'updated_at' => '更新时间',
+            'stack' => '等值股票数'
         ];
     }
 

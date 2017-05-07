@@ -82,6 +82,8 @@ class RevenueSearch extends Revenue
                 $query->andFilterWhere(['>', 'baodan', 0]);
             } else if ($this->account_type == 5) {
                 $query->andFilterWhere(['>', 'duichong', 0]);
+            } else if ($this->account_type == 6) {
+                $query->andFilterWhere(['>', 'stack', 0]);
             }
         }
 
@@ -143,6 +145,8 @@ class RevenueSearch extends Revenue
               $query->andFilterWhere(['>', 'mall', 0]);
             } else if ($this->account_type == 5) {
                 $query->andFilterWhere(['>', 'duichong', 0]);
+            } else if ($this->account_type == 6) {
+                $query->andFilterWhere(['>', 'stack', 0]);
             }
         }
 
@@ -154,7 +158,7 @@ class RevenueSearch extends Revenue
 
     public function searchForHuobi($params)
     {
-        $query = Revenue::find()->where(['in', 'type', array(2, 3)])->orderBy(['id' => SORT_DESC]);
+        $query = Revenue::find()->where(['in', 'type', array(2, 3, 10)])->orderBy(['id' => SORT_DESC]);
 ;
 
         // add conditions that should always apply here
@@ -193,6 +197,8 @@ class RevenueSearch extends Revenue
                 $query->andFilterWhere(['>', 'mall', 0]);
             } else if ($this->account_type == 5) {
                  $query->andFilterWhere(['>', 'duichong', 0]);
+            } else if ($this->account_type == 6) {
+                $query->andFilterWhere(['>', 'stack', 0]);
             }
         }
 

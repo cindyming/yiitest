@@ -263,6 +263,11 @@ class CashController extends Controller
                         if ($type == 'mallmoney') {
                             $model->cash_type = 4;
                         }
+
+                        if ($type == 'cuohe') {
+                            $model->cash_type = 5;
+                        }
+
                         $connection = Yii::$app->db;
                         try {
                             $transaction = $connection->beginTransaction();
@@ -363,7 +368,18 @@ class CashController extends Controller
                                     } else {
                                         Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
                                     }
-                                } else {
+                                } else if (($model->cash_type == 5) && !System::loadConfig('cuohe_transfer_audit')) {
+                                    $realAmount = $model->amount;
+                                    if ($model->type == 2) {
+                                        $realAmount = $model->amount * (1 - floatval(System::loadConfig('cash_factorage') / 100));
+                                    }
+                                    $model->real_amount = $realAmount;
+                                    $pass = $model->transterToCuohe($user);
+                                    if ($pass) {
+                                        $model->status = 2;
+                                        $model->total = $total;
+                                    }
+                                }else {
                                     $pass = true;
                                 }
 
@@ -403,6 +419,11 @@ class CashController extends Controller
             ]);
         } else if ($type == 'mallmoney'){
             return $this->render('mallmoney', [
+                'model' => $model,
+                'type' => $type
+            ]);
+        } else if ($type == 'cuohe'){
+            return $this->render('exchange', [
                 'model' => $model,
                 'type' => $type
             ]);
@@ -510,6 +531,8 @@ class CashController extends Controller
                         Yii::$app->getSession()->set('danger', '接口返回的失败,请稍后再试');
                         Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
                     }
+                } else if ($model->cash_type == 5) {
+                    $pass = $model->transterToCuohe($user);
                 } else {
                     $model->note = '会员提现发放成功';
                 }

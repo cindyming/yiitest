@@ -27,7 +27,15 @@ $welcome .= ', 欢迎回来.';
             </li>
             <li>
                 总业绩: <?php echo Yii::$app->user->identity->achievements?>
-            </li></ul><ul>
+            </li>
+            <li>
+                总投资额: <?php echo Yii::$app->user->identity->investment ?>
+                (等值股票数: <?php echo (Yii::$app->user->identity->stack)?>)
+            </li>
+            <li>
+                总股票数: <?php echo Yii::$app->user->identity->getTotalStack() ?>
+            </li>
+            <br/>
             <li>
                 分红余额: <?php echo Yii::$app->user->identity->bonus_remain?>
             </li>
@@ -44,6 +52,13 @@ $welcome .= ', 欢迎回来.';
                 对冲帐户余额: <?php echo round(Yii::$app->user->identity->duichong_remain, 2)?>
             </li>
         </ul>
+        <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
+            <ul>
+                <li>
+                    <a class="ch_link" target="_blank" href="<?php echo Yii::$app->params['cuohe_url'] ?>user/autologin?token=<?php echo Yii::$app->user->identity->access_token?>" data-method="post">登录自由股交易大厅</a>
+                </li>
+            </ul>
+        <?php endif ?>
     </div>
 <?php
 NavBar::begin();
@@ -64,7 +79,7 @@ echo Nav::widget([
         [
             'label' => '财务管理', 'url' => ['/blank'],
             'items' => [
-                ['label' => '我的追加投资', 'url' => ['/investment/index']],
+                ['label' => '我的投资', 'url' => ['/investment/index']],
                 ['label' => '奖金明细', 'url' => ['/revenue/index']],
                 ['label' => '奖金统计', 'url' => ['/revenue/total']],
                 ['label' => '入账明细', 'url' => ['/revenue/in']],

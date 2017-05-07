@@ -52,34 +52,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'attribute' => 'stack_number',
-            ],
-            [
-                'attribute' => 'baodan_id',
-            ],
-            [
-                'attribute' => 'sc_account',
-            ],
-            [
-                'attribute' => 'bank',
-                'label'=>'银行名称',
-                'value' => function($model) {
-                        return isset($model->getBankNames()[$model->bank]) ? $model->getBankNames()[$model->bank] : '';
-                    },
-                'filter'=> true,
-                'filterType'=>GridView::FILTER_SELECT2,
-                'filter'=>$searchModel->getBankNames(true),
-            ],
-            'cardname',
-            [
                 'attribute' => 'cardnumber',
+                'label' => '提现信息',
+                'format' => 'raw',
                 'value' => function($model) {
-                    return $model->cardnumber ? $model->cardnumber : '';
+                    return $model->getCashInfo();
                 }
-            ],
-            [
-                'attribute' => 'bankaddress',
-                'label'=>'开户行',
             ],
             [
                 'attribute' => 'type',

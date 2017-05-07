@@ -20,9 +20,18 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'opend_investment_duichong_baodan_fee')->dropDownList([1 => '是', 0 => '否']) ?>
         <?= $form->field($model, 'maintenance')->dropDownList([1 => '否', 0 => '是']) ?>
         <?= $form->field($model, 'open_suggest_list')->dropDownList([1 => '开放', 0 => '关闭']) ?>
+
+
         <?= $form->field($model, 'mall_audit')->dropDownList([1 => '是', 0 => '否']) ?>
         <?= $form->field($model, 'open_mall_transfer')->dropDownList([1 => '开放', 0 => '关闭']) ?>
+
+        <?= $form->field($model, 'cuohe_transfer_audit')->dropDownList([1 => '是', 0 => '否']) ?>
+        <?= $form->field($model, 'open_cuohe_transfer')->dropDownList([1 => '开放', 0 => '关闭']) ?>
+
         <?= $form->field($model, 'open_cash')->dropDownList([1 => '开放', 0 => '关闭']) ?>
+
+        <?= $form->field($model, 'open_stack_transfer')->dropDownList([1 => '开放', 0 => '关闭']) ?>
+
         <?= $form->field($model, 'lowest_cash_amount',[ 'template' => "{label}\n{input}百，如你输入1就代表1百\n{hint}\n{error}"])->textInput(['value' => ($model->lowest_cash_amount / 100)]) ?>
         <?= $form->field($model, 'cash_factorage', [ 'template' => "{label}\n{input}%\n{hint}\n{error}"])->textInput() ?>
 

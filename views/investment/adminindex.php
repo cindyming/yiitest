@@ -38,6 +38,19 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
 //            'added_by',
             'amount',
+            [
+                'attribute' => 'stack',
+                'value' =>  function($model) {
+                    return ($model->stack) ?  $model->stack : '股数计算中';
+                },
+            ],
+            [
+                'attribute' => 'status',
+                'header' => '状态',
+                'value' =>  function($model) {
+                    return ($model->status==2) ?  '已兑换' : ($model->status ? '正常' : '已撤销');
+                },
+            ],
             'created_at',
             [
                 'class' => 'yii\grid\ActionColumn',

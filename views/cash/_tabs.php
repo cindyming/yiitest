@@ -31,4 +31,12 @@ use \yii\bootstrap\Html;
 			<li><?= HTML::a('提现至商城', ['/cash/create', 'type' => 'mallmoney'])?></li>
 		<?php endif ?>
 	<?php endif ?>
+
+	<?php if(\app\models\System::loadConfig('open_cuohe_transfer')):?>
+		<?php  if ($type == 'cuohe'): ?>
+			<li class="active">提现至撮合</li>
+		<?php else: ?>
+			<li><?= HTML::a('提现至撮合', ['/cash/create', 'type' => 'cuohe'])?></li>
+		<?php endif ?>
+	<?php endif ?>
 </ul>

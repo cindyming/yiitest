@@ -115,7 +115,7 @@ class BonusController extends Controller
                 var_dump('分红开始:' . $user->id);
 
                 $total = $user->investment;
-                $totalInvestment = $user->investment;
+                $totalInvestment = $user->total_investment;
                 $bonusTotal = 0;
 
                 $lastDate = (int)(strtotime(date('Y-m-d', time())));
