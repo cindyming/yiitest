@@ -950,28 +950,28 @@ class User extends ActiveRecord implements IdentityInterface
                 $action .= Yii::$app->request->isConsoleRequest ? "Script: " . json_encode(Yii::$app->request->getParams()) : "URL: " . Yii::$app->request->getAbsoluteUrl();
 
                 Log::add('USER' . $this->id, '更新信息', true, $action);
-                if (isset($to['locked']) || isset($to['role_id']) || isset($to['username']) || isset($to['password2']) || isset($to['stack']) || isset($to['total_stack'])) {
-                    if (isset($to['password'])) {
-                        $to['password'] = sha1($to['password']);
-                    }
-
-                    if (isset($to['password2'])) {
-                        $to['password2'] = sha1($to['password2']);
-                    }
-                    $service_url = Yii::$app->params['cuohe_url'] . 'api/user/update?id=' . $this->access_token;
-                    $curl = curl_init($service_url);
-                    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                    curl_setopt($curl, CURLOPT_USERPWD, $this->access_token); //Your credentials goes here
-                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                    curl_setopt($curl, CURLOPT_POST, true);
-                    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($to));
-                    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); //IMP if the url has https and you don't want to verify source certificate
-
-                    $curl_response = curl_exec($curl);
-                    $response = (array)json_decode($curl_response);
-                    curl_close($curl);
-                    Log::add('会员(' . $this->id . ')', '撮合更新', '返回', $service_url . ':' . $curl_response);
-                }
+//                if (isset($to['locked']) || isset($to['role_id']) || isset($to['username']) || isset($to['password2']) || isset($to['stack']) || isset($to['total_stack'])) {
+//                    if (isset($to['password'])) {
+//                        $to['password'] = sha1($to['password']);
+//                    }
+//
+//                    if (isset($to['password2'])) {
+//                        $to['password2'] = sha1($to['password2']);
+//                    }
+//                    $service_url = Yii::$app->params['cuohe_url'] . 'api/user/update?id=' . $this->access_token;
+//                    $curl = curl_init($service_url);
+//                    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+//                    curl_setopt($curl, CURLOPT_USERPWD, $this->access_token); //Your credentials goes here
+//                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+//                    curl_setopt($curl, CURLOPT_POST, true);
+//                    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($to));
+//                    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); //IMP if the url has https and you don't want to verify source certificate
+//
+//                    $curl_response = curl_exec($curl);
+//                    $response = (array)json_decode($curl_response);
+//                    curl_close($curl);
+//                    Log::add('会员(' . $this->id . ')', '撮合更新', '返回', $service_url . ':' . $curl_response);
+//                }
 
             }
         }
