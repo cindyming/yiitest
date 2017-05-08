@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\RevenueSearch;
+use app\models\System;
 use app\models\UserSearch;
 use Yii;
 use app\models\Revenue;
@@ -183,7 +184,11 @@ class RevenueController extends Controller
         $data = Yii::$app->request->queryParams;
 
         $data['RevenueSearch']['user_id'] = Yii::$app->user->identity->id;
-        $data['RevenueSearch']['type'] = array(2, 3, 10);
+        $types = array(2,3);
+        if (System::loadConfig('open_stack_transfer')) {
+            $types[] = 10;
+        }
+        $data['RevenueSearch']['type'] = $types;
 
         $dataProvider = $searchModel->search($data);
 

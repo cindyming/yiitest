@@ -17,7 +17,7 @@ class TokenController extends Controller
 
 	public function actionIndex($message = 'hello world')
 	{
-		$sql = "UPDATE user SET access_token=md5(concat('hainan', `id`, '" .date('YmD'). "'))";
+		$sql = "UPDATE user SET access_token=md5(concat('kunming', `id`, '" .date('YmD'). "'))";
 		$command = Yii::$app->db->createCommand($sql);
 
 		return $command->execute();
