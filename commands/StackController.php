@@ -62,7 +62,7 @@ class StackController extends Controller
 
                     $data = array(
                         'user_id' => $user->id,
-                        'note' => '初始投资折算股票数',
+                        'note' => '初始投资折算配股数',
                         'stack' => $stack,
                         'type' => 10,
                         'total' => $stack
@@ -83,7 +83,7 @@ class StackController extends Controller
 
                             $data = array(
                                 'user_id' => $user->id,
-                                'note' => '追加投资折算股票数',
+                                'note' => '追加投资折算配股数',
                                 'stack' => $stack,
                                 'type' => 10,
                                 'total' => $total,

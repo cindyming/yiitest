@@ -91,7 +91,7 @@ class Investment extends ActiveRecord
             'added_by' => '报单人编号',
             'created_at' => '追加时间',
             'updated_at' => '更新时间',
-            'stack' => '等值股票数'
+            'stack' => '等值配股数'
         ];
     }
 

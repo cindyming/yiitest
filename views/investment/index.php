@@ -19,10 +19,10 @@ $stack = Yii::$app->user->identity->init_stack;
 
         <?php if (\app\models\System::loadConfig('open_stack_transfer')) :?>
 
-        <span>(等值股票数: <?php echo  $stack ?  $stack : '股数计算中'?> )</span>
+        <span>(等值配股数: <?php echo  $stack ?  $stack : '股数计算中'?> )</span>
         <?php
         if ((!Yii::$app->user->identity->redeemed) && $stack ) {
-            echo ( Html::a('兑换自由股', '/investment/transfer?id=all', ['data-confirm'=>"你确定要兑换成自由股票: "  . $stack])) ;
+            echo ( Html::a('兑换自由股', '/investment/transfer?id=all', ['data-confirm'=>"你确定要兑换成自由配股: "  . $stack])) ;
         }
         ?>
 
@@ -64,7 +64,7 @@ $stack = Yii::$app->user->identity->init_stack;
                 'label' => '操作',
                 'hiddenFromExport' => true,
                 'content' => function($model) {
-                    return (($model->status == 1) && \app\models\System::loadConfig('open_stack_transfer')) ? ( Html::a('兑换自由股', '/investment/transfer?id='.$model->id, ['data-confirm'=>"你确定要兑换成自由股票"  . $model->stack])) : '';
+                    return (($model->status == 1) && \app\models\System::loadConfig('open_stack_transfer')) ? ( Html::a('兑换自由股', '/investment/transfer?id='.$model->id, ['data-confirm'=>"你确定要兑换成自由配股"  . $model->stack])) : '';
                 }
             ],
         ],

@@ -71,7 +71,7 @@ class Revenue extends ActiveRecord
             'note' => '摘要',
             'created_at' => '结算时间',
             'updated_at' => '发放时间',
-            'stack' => '股票数',
+            'stack' => '配股数',
         ];
     }
 

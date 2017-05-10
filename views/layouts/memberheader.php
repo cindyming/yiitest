@@ -31,10 +31,10 @@ $welcome .= ', 欢迎回来.';
             <li>
                 总投资额: <?php echo Yii::$app->user->identity->investment ?>
                <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
-                (等值股票数: <?php echo (Yii::$app->user->identity->stack)?>)
+                (等值配股数: <?php echo (Yii::$app->user->identity->stack)?>)
             </li>
             <li>
-                总股票数: <?php echo Yii::$app->user->identity->getTotalStack() ?>
+                总配股数: <?php echo Yii::$app->user->identity->getTotalStack() ?>
                 <?php endif ?>
             </li>
             <br/>

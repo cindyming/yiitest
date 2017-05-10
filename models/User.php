@@ -297,7 +297,7 @@ class User extends ActiveRecord implements IdentityInterface
             'duichong_total' => '对冲帐户总额',
             'duichong_remain' => '对冲帐户余额',
             'init_investment' => '初始投资额',
-            'init_stack' => '初始股票数'
+            'init_stack' => '初始配股数'
         ];
     }
 
@@ -1090,10 +1090,11 @@ class User extends ActiveRecord implements IdentityInterface
         $stack = 0;
         $mappings = array(
             array('from' => 20170323, 'to' => 21000000, 'price' => 2.04),
-            array('from' => 20170122, 'to' =>  20170323, 'price' => 1.73),
+            array('from' => 20170122, 'to' => 20170323, 'price' => 1.73),
             array('from' => 20161218, 'to' => 20170122 , 'price' => 1.53),
-            array('from' => 20161103, 'to' => 20161218 , 'price' => 1.33),
-            array('from' => 0, 'to' => 20161103 , 'price' => 1),
+            array('from' => 20161101, 'to' => 20161218 , 'price' => 1.33),
+            array('from' => 20160801, 'to' => 20161101 , 'price' => 1),
+            array('from' => 0, 'to' => 20160801 , 'price' => 1.5),
         );
 
         foreach ($mappings as $key => $item) {
@@ -1120,7 +1121,7 @@ class User extends ActiveRecord implements IdentityInterface
         if ($response && isset($response['code']) && ($response['code'] == 200)) {
             return $response['data'];
         } else {
-            Log::add('会员(' . $this->id . ')' , '获取总股票数' , '返回' , $service_url . ':' . $curl_response);
+            Log::add('会员(' . $this->id . ')' , '获取总配股数' , '返回' , $service_url . ':' . $curl_response);
             return "(请刷新查看)";
         }
 
