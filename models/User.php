@@ -1097,10 +1097,11 @@ class User extends ActiveRecord implements IdentityInterface
         $stack = 0;
         $mappings = array(
             array('from' => 20170323, 'to' => 21000000, 'price' => 2.04),
-            array('from' => 20170122, 'to' =>  20170323, 'price' => 1.73),
+            array('from' => 20170122, 'to' => 20170323, 'price' => 1.73),
             array('from' => 20161218, 'to' => 20170122 , 'price' => 1.53),
-            array('from' => 20161103, 'to' => 20161218 , 'price' => 1.33),
-            array('from' => 0, 'to' => 20161103 , 'price' => 1),
+            array('from' => 20161101, 'to' => 20161218 , 'price' => 1.33),
+            array('from' => 20160801, 'to' => 20161101 , 'price' => 1),
+            array('from' => 0, 'to' => 20160801 , 'price' => 1.5),
         );
 
         foreach ($mappings as $key => $item) {
