@@ -992,7 +992,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             $data = array(
                 'user_id' => $this->id,
-                'code' => 'hainan',
+                'code' => 'kunming',
                 'token' => $this->access_token,
                 'username' => $this->username,
                 'role_id' => $this->role_id,
