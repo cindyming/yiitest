@@ -51,14 +51,35 @@ $this->params['breadcrumbs'][] = $this->title;
                     return \app\models\Cash::getCachType($model->cash_type);
                 }
             ],
-
+            [
+                'attribute' => 'stack_number',
+            ],
+            [
+                'attribute' => 'baodan_id',
+            ],
+            [
+                'attribute' => 'sc_account',
+            ],
+            [
+                'attribute' => 'bank',
+                'label'=>'银行名称',
+                'value' => function($model) {
+                        return isset($model->getBankNames()[$model->bank]) ? $model->getBankNames()[$model->bank] : '';
+                    },
+                'filter'=> true,
+                'filterType'=>GridView::FILTER_SELECT2,
+                'filter'=>$searchModel->getBankNames(true),
+            ],
+            'cardname',
             [
                 'attribute' => 'cardnumber',
-                'label' => '提现信息',
-                'format' => 'raw',
                 'value' => function($model) {
-                    return $model->getCashInfo();
+                    return $model->cardnumber ? $model->cardnumber : '';
                 }
+            ],
+            [
+                'attribute' => 'bankaddress',
+                'label'=>'开户行',
             ],
             [
                 'attribute' => 'type',
