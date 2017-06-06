@@ -27,20 +27,24 @@ use yii\debug\panels\ProfilingPanel;
  */
 class InvestmentController extends Controller
 {
-	public function lessThan15Investment($id)
-	{
-		$invertMents = Investment::find()->andWhere(['=', 'user_id', $id])->andWhere(['=', 'status', 1])->andWhere(['=', 'merited', 1])->all();
-		$inverts = 0;
-		foreach ($invertMents as $iv) {
-			$inverts += $iv->amount;
 
+	public function listParentsAddInvestment($user, &$parents )
+	{
+		/**
+		 * 在这里不计算级别和总投资的原因是因为不合适
+		 */
+		$parent = $user->getParennt()->one();
+		if ($parent && $parent->role_id != 1) {
+			if (!in_array($parent->id, $parents)) {
+				$parents[] = $parent->id;
+				$this->listParentsAddInvestment($parent, $parents);
+			}
 		}
-		return $inverts;
 	}
 
 	public function actionIndex()
 	{
-		$userQuery = User::find()->where(['in','role_id', array(2,3)]);
+		$userQuery = User::find()->where(['in','role_id', array(3)])->orderBy(array('id' => SORT_ASC));
 
 		$provider = new ActiveDataProvider([
 			'query' => $userQuery,
@@ -48,8 +52,12 @@ class InvestmentController extends Controller
 				'pageSize' => 300,
 			],
 		]);
+
+		$connection  = \Yii::$app->db;
+
 		$provider->prepare();
 		$count = $provider->getPagination()->getPageCount();
+
 		for($i=1; $i<=$count;$i++) {
 			if ($i != 1) {
 				$provider = new ActiveDataProvider([
@@ -61,17 +69,18 @@ class InvestmentController extends Controller
 				]);
 			}
 			$users = $provider->getModels();
+			$sql = '';
 
 			foreach ($users as $user) {
-				$investment = $this->lessThan15Investment($user->id);
-
-				$allInverstment = $user->investment;
-				if ($allInverstment - $investment) {
-					$user->init_investment = $allInverstment - $investment;
-					$user->save(true, array('init_investment'));
-				}
-
+				$parents = array($user->id);
+				$this->listParentsAddInvestment($user, $parents);
+				$sql = "UPDATE user set achievements=achievements+" . $user->investment . ' WHERE id in (' . implode(',', $parents)  . ');';
+				$command = $connection->createCommand($sql);
+				$res     = $command->execute($sql);
 			}
+
+
+
 		}
 
 	}
