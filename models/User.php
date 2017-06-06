@@ -1096,7 +1096,8 @@ class User extends ActiveRecord implements IdentityInterface
         $date = intval($date);
         $stack = 0;
         $mappings = array(
-            array('from' => 20170326, 'to' => 21000000, 'price' => 2.04),
+            array('from' => 20170603, 'to' => 21000000, 'price' => 2.45),
+            array('from' => 20170326, 'to' => 20170603, 'price' => 2.04),
             array('from' => 20170122, 'to' => 20170326, 'price' => 1.73),
             array('from' => 20161218, 'to' => 20170122 , 'price' => 1.53),
             array('from' => 20161101, 'to' => 20161218 , 'price' => 1.33),
