@@ -74,7 +74,7 @@ class InvestmentController extends Controller
             foreach ($users as $user) {
                 $parents = array($user->id);
                 $this->listParentsAddInvestment($user, $parents);
-                $sql = "UPDATE user set achievements=investment+" . $user->investment . ' WHERE id in (' . implode(',', $parents)  . ');';
+                $sql = "UPDATE user set achievements=achievements+" . $user->investment . ' WHERE id in (' . implode(',', $parents)  . ');';
                 $command = $connection->createCommand($sql);
                 $res     = $command->execute($sql);
             }
