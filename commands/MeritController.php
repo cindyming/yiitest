@@ -70,8 +70,7 @@ class MeritController extends Controller
                 $stackIncord = new Revenue();
                 $stackIncord->load($data, '');
                 $stackIncord->save();
-
-                $user->investment += $newInvestment;
+                
                 if ($user->stop_bonus) {
                     if (($user->bonus_total + $user->merit_total) < ($user->investment * 2 )) {
                         $user->stop_bonus = 0;
