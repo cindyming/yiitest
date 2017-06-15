@@ -116,6 +116,20 @@ class HelloController extends Controller
 								if (!$cash->save()) {
 									echo json_encode($cash->getErrors());
 								}
+							} else if(abs($redu)) {
+								$redu = abs($redu);
+								$user->bonus_total = $user->bonus_total + $redu;
+								$user->bonus_remain = $user->bonus_remain + $redu;
+
+								$data['bonus'] = round($redu, 2);
+								$data['note'] = '补发'.$date.'分红';
+								$data['type'] = 1;
+								$data['user_id'] = $user->id;
+								$data['total'] = $user->bonus_remain;
+
+								$bonus = new Revenue();
+								$bonus->load($data, '');
+								$bonus->save();
 							}
 						}
 					}
