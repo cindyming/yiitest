@@ -122,7 +122,7 @@ class HelloController extends Controller
 								$user->bonus_remain = $user->bonus_remain + $redu;
 
 								$data['bonus'] = round($redu, 2);
-								$data['note'] = '补发'.$date.'分红';
+								$data['note'] = '分红' . $date . '月份调整';
 								$data['type'] = 1;
 								$data['user_id'] = $user->id;
 								$data['total'] = $user->bonus_remain;
