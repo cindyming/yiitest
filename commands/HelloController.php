@@ -76,7 +76,7 @@ class HelloController extends Controller
 				}
 
 
-				$useOldBonusLogic = (int) (($user->approved_at < $this->_diffTime . ' 00:00:00') && ($user->approved_at >= date('Y-m-d H:i:s',strtotime('-13 months', strtotime($date)))));
+				$useOldBonusLogic = (int) (($user->approved_at < $this->_diffTime . ' 00:00:00') && ($user->approved_at >= (date('Y-m-d',strtotime('-13 months', strtotime($date))) . ' 00:00:00')));
 
 				$inversments =  Investment::find()->where(['<', 'created_at', $start])->andWhere(['>', 'created_at', '2016-06-15 00:00'])->andWhere(['=', 'user_id', $user->id])->andWhere(['=', 'status', 1])->andWhere(['=', 'merited', 1])->orderBy(['created_at' => SORT_DESC])->all();
 
@@ -98,24 +98,25 @@ class HelloController extends Controller
 							$total += ($oldTotal -  $mustBe);
 							fputcsv($fp, array($user->id , $mustBe, $oldTotal, $date . ' 分红'));
 	                       $redu = $oldTotal - $mustBe;
-//							if ($redu > 0) {
-//								$user->bonus_remain = $user->bonus_remain - $redu;
-//								$data = array(
-//									'user_id' => $user->id,
-//									'type' => 4,
-//									'amount' => $redu,
-//									'real_amount' => $redu,
-//									'status' => 2,
-//									'total' => $user->bonus_remain,
-//									'note' => '分红扣除' . $date .  '多发的金额'
-//								);
-//
-//								$cash = new Cash();
-//								$cash->load($data, '');
-//								if (!$cash->save()) {
-//									echo json_encode($cash->getErrors());
-//								}
-//							}
+							if ($redu > 0) {
+								$user->bonus_total = $user->bonus_total - $redu;
+								$user->bonus_remain = $user->bonus_remain - $redu;
+								$data = array(
+									'user_id' => $user->id,
+									'type' => 4,
+									'amount' => $redu,
+									'real_amount' => $redu,
+									'status' => 2,
+									'total' => $user->bonus_remain,
+									'note' => '分红扣除' . $date .  '多发的金额'
+								);
+
+								$cash = new Cash();
+								$cash->load($data, '');
+								if (!$cash->save()) {
+									echo json_encode($cash->getErrors());
+								}
+							}
 						}
 					}
 
