@@ -116,6 +116,7 @@ class HelloController extends Controller
 								if (!$cash->save()) {
 									echo json_encode($cash->getErrors());
 								}
+								$user->save();
 							} else if(abs($redu) > 0) {
 								$redu = abs($redu);
 								$user->bonus_total = $user->bonus_total + $redu;
@@ -130,6 +131,7 @@ class HelloController extends Controller
 								$bonus = new Revenue();
 								$bonus->load($data, '');
 								$bonus->save();
+								$user->save();
 							}
 						}
 					}
