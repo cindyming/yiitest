@@ -221,7 +221,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['cardname', 'cardnumber', 'init_investment'], 'trim'],
             [['cardnumber'], 'string', 'max' => 20, "on" => "create"],
             [['cardnumber'], 'number', "on" => "create"],
-            [['qq', 'useBaodan', 'stack', 'init_stack', 'redeemed', 'total_stack', 'free_stack', 'total_free_stack', 'total_investment', 'exchange_total', 'exchange_remain'], 'number'],
+            [['qq', 'useBaodan', 'stack', 'init_stack', 'redeemed', 'total_stack', 'free_stack', 'total_free_stack', 'total_investment', 'exchange_total', 'exchange_remain', 'lowest_level'], 'number'],
             [['duichong_invest'], 'checkBaodanInvest'],
         ];
     }
@@ -297,7 +297,8 @@ class User extends ActiveRecord implements IdentityInterface
             'duichong_total' => '对冲帐户总额',
             'duichong_remain' => '对冲帐户余额',
             'init_investment' => '初始投资额',
-            'init_stack' => '初始配股数'
+            'init_stack' => '初始配股数',
+            'lowest_level' => '最低等级'
         ];
     }
 
@@ -650,7 +651,11 @@ class User extends ActiveRecord implements IdentityInterface
         $this->total_investment = ($this->total_investment - $amount) ? ($this->total_investment - $amount) : $this->total_investment;
 
         $this->achievements = ($this->achievements - $amount) ? ($this->achievements - $amount) : $this->achievements;
-        //$this->level = $this->calculateLevel();
+        $lowestLevel = $this->lowest_level;
+        $calLevel = $this->$this->calculateLevel();
+        if ($calLevel >= $lowestLevel) {
+            $this->level = $calLevel;
+        }
 
         $parents = array();
 
@@ -659,7 +664,12 @@ class User extends ActiveRecord implements IdentityInterface
         foreach ($parents as $parent) {
             if ($parent && $parent->role_id != 1) {
                 $parent->achievements = $parent->achievements - $amount;
-                if (!$parent->save(true, array('achievements'))) {
+                $lowestLevel = $parent->lowest_level;
+                $calLevel = $parent->calculateLevel();
+                if ($calLevel >= $lowestLevel) {
+                    $parent->level = $calLevel;
+                }
+                if (!$parent->save(true, array('achievements', 'level'))) {
                     throw new Exception('Failed to save user ' . json_encode($parent->getErrors()));
                 }
             }
