@@ -652,7 +652,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         $this->achievements = ($this->achievements - $amount) ? ($this->achievements - $amount) : $this->achievements;
         $lowestLevel = $this->lowest_level;
-        $calLevel = $this->$this->calculateLevel();
+        $calLevel = $this->calculateLevel();
         if ($calLevel >= $lowestLevel) {
             $this->level = $calLevel;
         }
