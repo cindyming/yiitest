@@ -327,7 +327,7 @@ class CashController extends Controller
                                     if ($model->type == 2) {
                                         $realAmount = $model->amount * (1 - floatval(System::loadConfig('cash_factorage')  / 100));
                                     }
-                                    $data = array('account' => $model->sc_account, 'money' => floatval($realAmount), 'accountType' => '海币', 'system' => '昆明地产' . $model->user_id, 'mobile' => $model->telephone);
+                                    $data = array('account' => $model->sc_account, 'money' => floatval($realAmount), 'accountType' => '海币', 'system' => '昆明地产' . $user->username, 'mobile' => $model->telephone);
                                     if ($model->type != 9) {
                                         $data['accountType'] = '海宝';
                                     }
@@ -488,7 +488,7 @@ class CashController extends Controller
                     }
                 } else if ($model->cash_type == 4) {
                     //http://10.0.1.51:7001/membercenter/web/memberChongzhi/chongzhi?account=zf09&money=3&accountType=3
-                    $data = array('account' => $model->sc_account, 'money' => floatval($model->real_amount), 'accountType' => '海币', 'system' => '昆明地产' . $model->user_id, 'mobile' => $model->telephone);
+                    $data = array('account' => $model->sc_account, 'money' => floatval($model->real_amount), 'accountType' => '海币', 'system' => '昆明地产' . $user->username, 'mobile' => $model->telephone);
                     if ($model->type != 9) {
                         $data['accountType'] = '海宝';
                     }
