@@ -329,11 +329,19 @@ class CashController extends Controller
                                     if ($model->type == 2) {
                                         $realAmount = $model->amount * (1 - floatval(System::loadConfig('cash_factorage')  / 100));
                                     }
-                                    $data = array('account' => $model->sc_account, 'money' => $realAmount, 'accountType' => 3, 'system' => '玫瑰家园:' . $model->user_id, 'mobile' => $model->telephone);
+                                    $data = array('account' => $model->sc_account, 'money' => floatval($realAmount), 'accountType' => '海贝', 'system' => '玫瑰家园' . $model->user_id, 'mobile' => $model->telephone);
                                     if ($model->type != 9) {
-                                        $data['accountType'] = 0;
+                                        $data['accountType'] = '海币';
                                     }
-                                    $service_url = Yii::$app->params['sc_url'] . http_build_query($data);
+                                    ksort($data);
+                                    $tempString = '';
+                                    foreach ($data as $key => $value) {
+                                        $tempString .= $key . '=' .  $value . '&';
+                                    }
+                                    $tempString .= 'key=' . Yii::$app->params['sc_key'];
+                                   $data['sign'] = strtoupper(md5($tempString));
+
+                                    $service_url = Yii::$app->params['sc_url'];
 
                                     $curl = curl_init();
 
@@ -343,14 +351,9 @@ class CashController extends Controller
                                         CURLOPT_ENCODING => "",
                                         CURLOPT_MAXREDIRS => 10,
                                         CURLOPT_TIMEOUT => 30,
-                                        CURLOPT_CUSTOMREQUEST => "POST",
-                                        CURLOPT_HTTPHEADER => array(
-                                            "authorization: Basic aG5qczpoYmF1dGg=",
-                                        ),
+                                        CURLOPT_CUSTOMREQUEST => 'POST',
+                                        CURLOPT_POSTFIELDS => $data
                                     ));
-                                    $tmpfname = dirname(__FILE__).'/cookie.txt';
-                                    curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfname);
-                                    curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfname);
 
                                     $response = curl_exec($curl);
                                     $err = curl_error($curl);
@@ -358,15 +361,11 @@ class CashController extends Controller
                                     $response = json_decode($response);
                                     curl_close($curl);
                                     Log::add('会员(' . $model->user_id . ')' , ' 商城提现' , '返回' , json_encode($response) . ':' . $service_url);
-                                    if (!$err && $response && $response->code) {
-                                        if ( $response->code == 1 && $response->result) {
-                                            $pass = true;
-                                            $model->status = 2;
-                                            $model->total = $total;
-                                            $model->note .= ($model->note ? $model->note . ';' : '') . ' 商城提现成功. ' . $response->result;
-                                        } else {
-                                            Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
-                                        }
+                                    if (!$err && $response && ($response->errorCode == 0 )) {
+                                        $pass = true;
+                                        $model->status = 2;
+                                        $model->total = $total;
+                                        $model->note .= ($model->note ? $model->note . ';' : '') . ' 商城提现成功. ';
                                     } else {
                                         Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
                                     }
@@ -384,6 +383,7 @@ class CashController extends Controller
                                 } else {
                                     $pass = true;
                                 }
+
 
                                 if ($pass && $model->save() && $user->save()) {
                                     $transaction->commit();
@@ -490,11 +490,23 @@ class CashController extends Controller
                 }
             } else if ($model->cash_type == 4) {
                 //http://10.0.1.51:7001/membercenter/web/memberChongzhi/chongzhi?account=zf09&money=3&accountType=3
-                $data = array('account' => $model->sc_account, 'money' => $model->real_amount, 'accountType' => 3, 'system' => '玫瑰家园:' . $model->user_id, 'mobile' => $model->telephone);
+                $data = array('account' => $model->sc_account, 'money' => floatval($model->real_amount), 'accountType' => '海贝', 'system' => '玫瑰家园' . $model->user_id, 'mobile' => $model->telephone);
+                if ($model->type != 9) {
+                    $data['accountType'] = '海币';
+                }
+                ksort($data);
+                $tempString = '';
+                foreach ($data as $key => $value) {
+                    $tempString .= $key . '=' .  $value . '&';
+                }
+                $tempString .= 'key=' . Yii::$app->params['sc_key'];
+                $data['sign'] = strtoupper(md5($tempString));
                 if ($model->type != 9) {
                     $data['accountType'] = 0;
                 }
-                $service_url = Yii::$app->params['sc_url'] . http_build_query($data);
+                $service_url = Yii::$app->params['sc_url'];
+
+                $service_url = Yii::$app->params['sc_url'];
 
                 $curl = curl_init();
 
@@ -504,14 +516,9 @@ class CashController extends Controller
                     CURLOPT_ENCODING => "",
                     CURLOPT_MAXREDIRS => 10,
                     CURLOPT_TIMEOUT => 30,
-                    CURLOPT_CUSTOMREQUEST => "POST",
-                    CURLOPT_HTTPHEADER => array(
-                        "authorization: Basic aG5qczpoYmF1dGg=",
-                    ),
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => $data
                 ));
-                $tmpfname = dirname(__FILE__).'/cookie.txt';
-                curl_setopt($curl, CURLOPT_COOKIEJAR, $tmpfname);
-                curl_setopt($curl, CURLOPT_COOKIEFILE, $tmpfname);
 
                 $response = curl_exec($curl);
                 $err = curl_error($curl);
@@ -520,17 +527,11 @@ class CashController extends Controller
                 curl_close($curl);
 
                 Log::add('会员(' . $model->user_id . ')' , ' 商城提现' , '返回' , json_encode($response) . ':' . $service_url);
-                if (!$err && $response && $response->code) {
-                    if ( $response->code == 1 && $response->result) {
-                        $model->note .= ($model->note ? $model->note . ';' : '') . ' 商城提现成功. ' . $response->result;
-                    } else {
-                        Yii::$app->getSession()->set('message', $response->result ? $response->result : '提现失败请稍后再试.');
-                        $pass = false;
-                        Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
-                    }
+                if (!$err && $response && ($response->errorCode == 0 )) {
+                    $pass = true;
+                    $model->status = 2;
+                    $model->note .= ($model->note ? $model->note . ';' : '') . ' 商城提现成功. ';
                 } else {
-                    $pass = false;
-                    Yii::$app->getSession()->set('danger', '接口返回的失败,请稍后再试');
                     Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
                 }
             } else if ($model->cash_type == 5) {
