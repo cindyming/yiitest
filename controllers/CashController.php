@@ -360,7 +360,7 @@ class CashController extends Controller
 
                                     $response = json_decode($response);
                                     curl_close($curl);
-                                    Log::add('会员(' . $model->user_id . ')' , ' 商城提现' , '返回' , json_encode($response) . ':' . $service_url);
+                                    Log::add('会员(' . $model->user_id . ')' , ' 商城提现' , '返回' , json_encode($response) . ':' . $service_url . ' : ' . json_encode($data));
                                     if (!$err && $response && ($response->errorCode == 0 )) {
                                         $pass = true;
                                         $model->status = 2;
@@ -501,10 +501,6 @@ class CashController extends Controller
                 }
                 $tempString .= 'key=' . Yii::$app->params['sc_key'];
                 $data['sign'] = strtoupper(md5($tempString));
-                if ($model->type != 9) {
-                    $data['accountType'] = 0;
-                }
-                $service_url = Yii::$app->params['sc_url'];
 
                 $service_url = Yii::$app->params['sc_url'];
 
@@ -526,7 +522,7 @@ class CashController extends Controller
                 $response = json_decode($response);
                 curl_close($curl);
 
-                Log::add('会员(' . $model->user_id . ')' , ' 商城提现' , '返回' , json_encode($response) . ':' . $service_url);
+                Log::add('会员(' . $model->user_id . ')' , ' 商城提现' , '返回' , json_encode($response) . ':' . $service_url . ' : ' . json_encode($data));
                 if (!$err && $response && ($response->errorCode == 0 )) {
                     $pass = true;
                     $model->status = 2;
