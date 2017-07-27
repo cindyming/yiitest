@@ -209,8 +209,9 @@ class Cash extends ActiveRecord
 
     public function validaccount()
     {
-        $service_url = Yii::$app->params['valid_account_url'] . http_build_query(array('account' => $this->sc_account, 'mobile' => $this->telephone));
-
+        $service_url = Yii::$app->params['valid_account_url'];
+        $data = array('account='.$this->sc_account, 'mobile='. $this->telephone, 'key=' . Yii::$app->params['sc_key']);
+        $sign = strtoupper(md5(implode('&', $data)));
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -219,7 +220,9 @@ class Cash extends ActiveRecord
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
             CURLOPT_TIMEOUT => 30,
-            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_POST => true,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => array('account' => $this->sc_account, 'mobile' => $this->telephone, 'sign' => $sign)
         ));
 
         $response = curl_exec($curl);
@@ -237,26 +240,12 @@ class Cash extends ActiveRecord
 
         if ($this->sc_account && $this->telephone && $this->isNewRecord) {
             $response = $this->validaccount();
-            if ($response && $response->code) {
-                if ( $response->code == 1) {
-                    if (!$response->result) {
-                        $response = $this->validaccount();
-                    }
-                    if ($response->code == 1 && $response->result) {
-
-                    } else {
-                        $this->addError('telephone', '商城用户名和手机号码不匹配请确认后输入');
-                    }
-                } else {
-                    $this->addError('telephone', '商城用户名和手机号码不匹配请确认后输入');
-                }
-            } else {
+            if ($response && $response->errorCode) {
                 $this->addError('telephone', '商城用户名和手机号码不匹配请确认后输入');
             }
         }
 
     }
-
     public function getCashInfo()
     {
         $info = '';
