@@ -367,6 +367,7 @@ class CashController extends Controller
                                         $model->total = $total;
                                         $model->note .= ($model->note ? $model->note . ';' : '') . ' 商城提现成功. ';
                                     } else {
+                                        Yii::$app->getSession()->set('danger', '接口返回的失败,请稍后再试');
                                         Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
                                     }
                                 } else if (($model->cash_type == 5) && !System::loadConfig('cuohe_transfer_audit')){
@@ -528,6 +529,7 @@ class CashController extends Controller
                     $model->status = 2;
                     $model->note .= ($model->note ? $model->note . ';' : '') . ' 商城提现成功. ';
                 } else {
+                    Yii::$app->getSession()->set('danger', '接口返回的失败,请稍后再试');
                     Log::add('会员(' . $model->user_id . ')', '商城提现失败', '失败', json_encode($response));
                 }
             } else if ($model->cash_type == 5) {
