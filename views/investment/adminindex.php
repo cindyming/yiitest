@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'created_at',
             [
-                'class' => 'yii\grid\ActionColumn',
+                'class' => 'kartik\grid\ActionColumn',
                 'header' => '撤单',
                 'template' => '{cancel}',
                 'hiddenFromExport' => true,
