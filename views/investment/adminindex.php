@@ -71,6 +71,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'yii\grid\ActionColumn',
                 'header' => '撤单',
                 'template' => '{cancel}',
+                'hiddenFromExport' => true,
                 'buttons' => [
                     'cancel' => function ($url, $model, $key) {
                         $options = [
