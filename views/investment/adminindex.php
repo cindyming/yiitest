@@ -67,7 +67,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     return ($model->status==2) ?  '已兑换' : ($model->status ? '正常' : '已撤销');
                 },
             ],
-            'created_at',
+            [
+                'attribute' => 'created_at',
+                'filter' => true,
+                'filterType'=>GridView::FILTER_DATE_RANGE,
+            ],
             [
                 'class' => 'kartik\grid\ActionColumn',
                 'header' => '撤单',
