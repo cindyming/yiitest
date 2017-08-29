@@ -63,10 +63,16 @@ class InvestmentSearch extends Investment
             'id' => $this->id,
             'user_id' => $this->user_id,
             'amount' => $this->amount,
-            'merited' => $this->merited,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'merited' => $this->merited
         ]);
+
+        if ($this->created_at) {
+            $date = explode(' - ', $this->created_at);
+            if (count($date)  == 2) {
+                $query->andFilterWhere(['>=', 'created_at', $date[0]]);
+                $query->andFilterWhere(['<=', 'created_at', $date[1]]);
+            }
+        }
 
         $query->andFilterWhere(['like', 'note', $this->note])
               ->orderBy(['id' => SORT_DESC]);
