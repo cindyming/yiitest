@@ -66,7 +66,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             'added_by',
-            'created_at',
+            [
+                'attribute' => 'created_at',
+                'filter' => true,
+                'filterType'=>GridView::FILTER_DATE_RANGE,
+            ],
             [
                 'class' => 'kartik\grid\ActionColumn',
                 'header' => '撤单',
