@@ -37,7 +37,6 @@ $welcome .= ', 欢迎回来.';
                 总配股数: <?php echo Yii::$app->user->identity->getTotalStack() ?>
                 <?php endif ?>
             </li>
-            <br/>
             <li class="hidden">
                 分红余额: <?php echo Yii::$app->user->identity->bonus_remain?>
             </li>
