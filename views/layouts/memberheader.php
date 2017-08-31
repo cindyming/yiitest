@@ -33,7 +33,7 @@ $welcome .= ', 欢迎回来.';
                <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
                 (等值配股数: <?php echo (Yii::$app->user->identity->stack)?>)
             </li>
-            <!-- <li class="hidden">
+            <li class="hidden">
                 总配股数: <?php echo Yii::$app->user->identity->getTotalStack() ?>
                 <?php endif ?>
             </li>
@@ -51,7 +51,7 @@ $welcome .= ', 欢迎回来.';
             </li>
             <li class="hidden">
                 对冲帐户余额: <?php echo round(Yii::$app->user->identity->duichong_remain, 2)?>
-            </li> -->
+            </li>
         </ul>
         <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
         <ul>
@@ -85,7 +85,6 @@ echo Nav::widget([
             'items' => [
                 ['label' => '我的投资', 'url' => ['/investment/index']],
                 ['label' => '奖金明细', 'url' => ['/revenue/index']],
-                ['label' => '奖金统计', 'url' => ['/revenue/total']],
                 ['label' => '入账明细', 'url' => ['/revenue/in']],
                 ['label' => '出账明细', 'url' => ['/cash/out']],
                 [

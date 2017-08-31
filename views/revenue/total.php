@@ -9,7 +9,7 @@ use kartik\grid\GridView;
 $this->title = '奖金统计';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="revenue-index">
+<div class="revenue-index member">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
