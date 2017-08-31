@@ -25,7 +25,7 @@ $welcome .= ', 欢迎回来.';
             <li>
                 网络昵称: <?php echo Yii::$app->user->identity->username?>
             </li>
-            <li class="hidden">
+            <li>
                 总投资额: <?php echo Yii::$app->user->identity->investment ?>
                 <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
                 (等值股票数: <?php echo (Yii::$app->user->identity->stack)?>)
