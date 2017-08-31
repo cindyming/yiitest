@@ -25,15 +25,15 @@ $welcome .= ', 欢迎回来.';
             <li>
                 网络昵称: <?php echo Yii::$app->user->identity->username?>
             </li>
-            <li>
+            <!-- <li>
                 总业绩: <?php echo Yii::$app->user->identity->achievements?>
-            </li>
+            </li> -->
             <li>
                 总投资额: <?php echo Yii::$app->user->identity->investment ?>
                 <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
                 (等值股票数: <?php echo (Yii::$app->user->identity->stack)?>)
             </li>
-            <li>
+            <!-- <li>
                 总股票数: <?php echo Yii::$app->user->identity->getTotalStack() ?>
                 <?php endif ?>
             </li>
@@ -52,7 +52,7 @@ $welcome .= ', 欢迎回来.';
             </li>
             <li>
                 对冲帐户余额: <?php echo round(Yii::$app->user->identity->duichong_remain, 2)?>
-            </li>
+            </li> -->
         </ul>
         <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
             <ul>
