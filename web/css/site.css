@@ -289,7 +289,7 @@ li.jstree-node a.red-icon {color: #ff0000;}
 .big{font-size: 22px;line-height: 50px;}
 .first_investment{background:#f9f9f9;border:1px solid #ddd; padding: 8px;line-height: 1.42857143;margin-bottom:50px }
 .first_investment a{margin-left:20px}
-.revenue-index.member table{display:none;}
+
 @media (max-width: 1208px){
     .container{}
 }
@@ -306,5 +306,5 @@ li.jstree-node a.red-icon {color: #ff0000;}
     .kv-table-wrap th, .kv-table-wrap td{font-size:14px}
 }
 
-
+.revenue-index.member table{display:none;}
 
