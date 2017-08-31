@@ -218,6 +218,7 @@ nav.navbar .container{padding:0}
 .top-header .m-info{color:#E2E2E2;margin:10px 0;text-align: right;font-size:12px;}
 .top-header .m-info li{display:inline-block;line-height:13px;border-right:1px solid #ccc;padding:0 9px;*display:inline;}
 .top-header .m-info li:last-child{border-right:none 0;padding-right:0}
+.m-info li.hidden{display:none;}
 .qk-links{}
 .qk-links nav{float:right;background:transparent;border:none 0}
 
