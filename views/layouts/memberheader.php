@@ -82,7 +82,6 @@ echo Nav::widget([
             'items' => [
                 ['label' => '我的投资', 'url' => ['/investment/index']],
                 ['label' => '奖金明细', 'url' => ['/revenue/index']],
-                ['label' => '奖金统计', 'url' => ['/revenue/total']],
                 ['label' => '入账明细', 'url' => ['/revenue/in']],
                 ['label' => '出账明细', 'url' => ['/cash/out']],
                 [
