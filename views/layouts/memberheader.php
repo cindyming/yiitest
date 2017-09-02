@@ -25,11 +25,12 @@ $welcome .= ', 欢迎回来.';
             <li>
                 网络昵称: <?php echo Yii::$app->user->identity->username?>
             </li>
-            <?php if(\app\models\System::loadConfig('show_total')):?>
+
                 <li class="">
                 总业绩: <?php echo Yii::$app->user->identity->achievements?>
             </li>
 
+            <?php if(\app\models\System::loadConfig('show_total')):?>
             <li>
                 总投资额: <?php echo Yii::$app->user->identity->investment ?>
                <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
