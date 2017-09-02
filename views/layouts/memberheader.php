@@ -26,34 +26,35 @@ $welcome .= ', 欢迎回来.';
                 网络昵称: <?php echo Yii::$app->user->identity->username?>
             </li>
             <?php if(\app\models\System::loadConfig('show_total')):?>
-                <li class="hidden">
+                <li class="">
                 总业绩: <?php echo Yii::$app->user->identity->achievements?>
             </li>
-            <?php endif ?>
+
             <li>
                 总投资额: <?php echo Yii::$app->user->identity->investment ?>
                <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
                 (等值配股数: <?php echo (Yii::$app->user->identity->stack)?>)
             </li>
-            <li class="hidden">
+            <li class="">
                 总配股数: <?php echo Yii::$app->user->identity->getTotalStack() ?>
                 <?php endif ?>
             </li>
-            <li class="hidden">
+            <li class="">
                 分红余额: <?php echo Yii::$app->user->identity->bonus_remain?>
             </li>
-            <li class="hidden">
+            <li class="">
                 服务费余额: <?php echo round(Yii::$app->user->identity->baodan_remain, 2)?>
             </li>
-            <li class="hidden">
+            <li class="">
                 可提现绩效工资余额: <?php echo Yii::$app->user->identity->merit_remain?>
             </li>
-            <li class="hidden">
+            <li class="">
                 商城币余额: <?php echo round(Yii::$app->user->identity->mall_remain, 2)?>
             </li>
-            <li class="hidden">
+            <li class="">
                 对冲帐户余额: <?php echo round(Yii::$app->user->identity->duichong_remain, 2)?>
             </li>
+            <?php endif ?>
         </ul>
         <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
         <ul>

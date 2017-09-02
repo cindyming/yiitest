@@ -27,10 +27,12 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'open_cuohe_transfer')->dropDownList([1 => '开放', 0 => '关闭']) ?>
         <?= $form->field($model, 'open_cash')->dropDownList([1 => '开放', 0 => '关闭']) ?>
 
+
         <?= $form->field($model, 'open_stack_transfer')->dropDownList([1 => '开放', 0 => '关闭']) ?>
         <?= $form->field($model, 'lowest_cash_amount',[ 'template' => "{label}\n{input}百，如你输入1就代表1百\n{hint}\n{error}"])->textInput(['value' => ($model->lowest_cash_amount / 100)]) ?>
         <?= $form->field($model, 'cash_factorage', [ 'template' => "{label}\n{input}%\n{hint}\n{error}"])->textInput() ?>
 
+        <?= $form->field($model, 'show_total')->dropDownList([1 => '开放', 0 => '关闭']) ?>
         <div class="form-group">
             <?= Html::submitButton($model->isNewRecord ? '保存' : '保存', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
         </div>
