@@ -25,16 +25,18 @@ $welcome .= ', 欢迎回来.';
             <li>
                 网络昵称: <?php echo Yii::$app->user->identity->username?>
             </li>
-
-                <li class="">
-                总业绩: <?php echo Yii::$app->user->identity->achievements?>
-            </li>
-
-            <?php if(\app\models\System::loadConfig('show_total')):?>
             <li>
                 总投资额: <?php echo Yii::$app->user->identity->investment ?>
-               <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
+                <?php if(\app\models\System::loadConfig('show_total')):?>
+                <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
                 (等值配股数: <?php echo (Yii::$app->user->identity->stack)?>)
+            </li>
+
+
+
+
+            <li class="">
+                总业绩: <?php echo Yii::$app->user->identity->achievements?>
             </li>
             <li class="">
                 总配股数: <?php echo Yii::$app->user->identity->getTotalStack() ?>
