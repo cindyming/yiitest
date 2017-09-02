@@ -102,7 +102,7 @@ class InvestmentSearch extends Investment
             }
         }
 
-        $sql = ($query->createCommand()->getRawSql());
+        $sql = ($query->createCommand()->getRawSql()) . ' LIMIT 5000';
 
         $connection = Yii::$app->db;
 

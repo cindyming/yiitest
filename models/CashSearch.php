@@ -267,7 +267,7 @@ class CashSearch extends Cash
             ->andFilterWhere(['like', 'bankaddress', $this->bankaddress])
             ->orderBy(['id' => SORT_DESC]);
 
-        $sql = ($query->createCommand()->getRawSql());
+        $sql = ($query->createCommand()->getRawSql()) . ' LIMIT 5000';
 
         $connection = Yii::$app->db;
 

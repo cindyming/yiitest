@@ -16,6 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="b_download">
         <?= Html::a('下载最近一周', '/user/export?week=1') ?>
         <?= Html::a('下载筛选数据', '/user/export', array('onClick' =>"$(this).attr('href', $(this).attr('href') + window.location.search);", "target"=>'_blank')) ?>
+        一次性下载最多5000条数据
     </div>
 
     <?= GridView::widget([
