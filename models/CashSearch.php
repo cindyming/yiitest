@@ -203,6 +203,7 @@ class CashSearch extends Cash
 
     public function export($data) {
         $query = Cash::find()
+            ->where(['in', 'type', array(1,2,3, 9)])
             ->select(array(
                 'id',
                 'user_id',
