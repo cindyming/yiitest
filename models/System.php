@@ -28,6 +28,7 @@ class System extends ActiveRecord
     public $open_cuohe_transfer;
     public $open_stack_transfer;
     public $cuohe_transfer_audit;
+    public $showTotal;
 
     /**
      * @inheritdoc
@@ -68,6 +69,7 @@ class System extends ActiveRecord
             'open_cuohe_transfer' => '允许撮合转账',
             'cuohe_transfer_audit' => '撮合转账审核',
             'open_stack_transfer' => '自由股兑换',
+            'show_total' => '显示总额'
             ];
     }
 

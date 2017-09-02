@@ -668,9 +668,11 @@ class User extends ActiveRecord implements IdentityInterface
 
     public function reduceMerit($investment)
     {
-        $revenus = Revenue::find()->andFilterWhere(['like', 'note', '追加投资 - ' . $investment->id . ''])->all();
+        $revenus = Revenue::find()->andFilterWhere(['like', 'note', '追加投资 - ' . $investment->id . ' - '])->all();
+
+        echo '追加投资 - ' . $investment->id . '' . PHP_EOL;
         foreach ($revenus as $re) {
-            $merit_amount = $re->merit;
+            $merit_amount = $re->merit;var_dump($re->user_id);
             $user = User::findById($re->user_id);
             if($merit_amount) {
                 $merit_amount = round($merit_amount, 2);

@@ -35,7 +35,7 @@ class InvestmentController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['showduichong', 'adminindex', 'cancel', 'admincreate', 'admindelete', 'adminupdate',  'adminview'],
+                        'actions' => ['showduichong', 'export', 'adminindex', 'cancel', 'admincreate', 'admindelete', 'adminupdate',  'adminview'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -261,8 +261,8 @@ class InvestmentController extends Controller
                 $amount = $model->amount;
                 $user = User::findById($model->user_id);
                 if ($model->merited == 1) {
-                    $user->reduceAchivement($amount);
-                    $user->reduceMerit($model);
+                    $user->reduceAchivement($amount);var_dump('reduce achivement');
+                    $user->reduceMerit($model);var_dump('reduce merit');
                     $user->reduceBonus($model);
                     $user->total_stack -= $model->stack;
                     $user->stack -= $model->stack;
@@ -281,7 +281,7 @@ class InvestmentController extends Controller
 
                 $model->status = 1;
                 $model->save();
-
+echo $e->getMessage();
                 Yii::$app->systemlog->add('Admin', '撤销投资', '失败', $e->getMessage());
                 Yii::$app->getSession()->set('danger', '追加投资撤销失败, 请稍后再试. ' .  $e->getMessage());
             }
@@ -289,7 +289,7 @@ class InvestmentController extends Controller
 
         }
 
-        $sellLock->end();
+        $sellLock->end();die('end');
         return $this->redirect(Yii::$app->request->referrer);
     }
 
@@ -380,5 +380,18 @@ class InvestmentController extends Controller
 
         return $this->redirect(['/investment/index']);
 
+    }
+
+    public function actionExport()
+    {
+        $searchModel = new InvestmentSearch();
+        $data = Yii::$app->request->queryParams;
+        if (Yii::$app->request->get('week', 0)) {
+            $data['InvestmentSearch']['created_at'] = date('Y-m-d', strtotime('-7 days')) . ' - ' .date('Y-m-d', time());
+        } else if ((!isset($data["InvestmentSearch"])) && (!isset($data["InvestmentSearch"]['created_at']))) {
+            $data['InvestmentSearch']['approved_at'] = date('Y-m-d', strtotime('-7 days')) . ' - ' .date('Y-m-d', time());
+        }
+        $searchModel->export($data);
+        return $this->redirect(['/assets/Investment.xls']);
     }
 }
