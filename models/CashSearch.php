@@ -240,10 +240,8 @@ class CashSearch extends Cash
 
             'amount' => '提现金额',
             'real_amount' => '实际金额',
-
-            'created_at' => '日期',
             'status' => '状态',
-
+            'created_at' => '日期',
 
         );
 
@@ -287,6 +285,8 @@ class CashSearch extends Cash
             $row['type'] = isset($row['type']) ? $this->getTypes()[$row['type']] : '';
             $row['bank'] =  (isset($row['bank']) && isset($this->getBankNames()[$row['bank']] )) ? $this->getBankNames()[$row['bank']] : '';
             $row['cash_type'] = \app\models\Cash::getCachType($row['cash_type']);
+            $row['cardnumber'] = ' ' .  $row['cardnumber'];
+            $row['status'] = isset($row['status']) ? $this->getStatus()[$row['status']] : '';
             $data[] = $row;
         }
 
