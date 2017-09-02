@@ -28,7 +28,7 @@ class System extends ActiveRecord
     public $open_cuohe_transfer;
     public $open_stack_transfer;
     public $cuohe_transfer_audit;
-    public $showTotal;
+    public $show_total;
 
     /**
      * @inheritdoc
