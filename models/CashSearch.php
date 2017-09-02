@@ -229,20 +229,14 @@ class CashSearch extends Cash
             'baodan_id' => '报单员编号',
             'sc_account' => '商城登录名',
             'bank' => '开户银行',
-
-
             'cardname' => '开户名',
             'cardnumber' => '银行卡号',
             'bankaddress' => '开户支行',
             'type'  => '出账账户',
-
             'amount' => '提现金额',
             'real_amount' => '实际金额',
-
-            'created_at' => '日期',
             'status' => '状态',
-
-
+            'created_at' => '日期',
         );
 
 
@@ -282,6 +276,7 @@ class CashSearch extends Cash
 
         $data = array($header);
         foreach ($result as $row) {
+            $row['status'] = isset($row['status']) ? $this->getStatus()[$row['status']] : '';
             $row['type'] = isset($row['type']) ? $this->getTypes()[$row['type']] : '';
             $row['bank'] =  (isset($row['bank']) && isset($this->getBankNames()[$row['bank']] )) ? $this->getBankNames()[$row['bank']] : '';
             $row['cash_type'] = \app\models\Cash::getCachType($row['cash_type']);
