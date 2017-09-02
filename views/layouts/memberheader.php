@@ -27,17 +27,15 @@ $welcome .= ', 欢迎回来.';
             </li>
             <li>
                 总投资额: <?php echo Yii::$app->user->identity->investment ?>
+                <?php if(\app\models\System::loadConfig('show_total')):?>
+
                 <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
                 (等值股票数: <?php echo (Yii::$app->user->identity->stack)?>)
             </li>
-            <?php if(\app\models\System::loadConfig('show_total')):?>
+
                 <li class="">
                     总业绩: <?php echo Yii::$app->user->identity->achievements?>
-                </li>
-
-            <li class="">
-                总业绩: <?php echo Yii::$app->user->identity->achievements?>
-            </li>
+                </li>   
             <li class="">
                 总股票数: <?php echo Yii::$app->user->identity->getTotalStack() ?>
                 <?php endif ?>
