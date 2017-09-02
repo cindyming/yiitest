@@ -35,7 +35,7 @@ $welcome .= ', 欢迎回来.';
 
                 <li class="">
                     总业绩: <?php echo Yii::$app->user->identity->achievements?>
-                </li>   
+                </li>
             <li class="">
                 总股票数: <?php echo Yii::$app->user->identity->getTotalStack() ?>
                 <?php endif ?>
