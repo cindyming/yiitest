@@ -238,6 +238,8 @@ class UserSearch extends User
             $row['level'] = $row['level'] ? $this->getLevelOptions()[$row['level']] : '';
             $row['add_member'] =  $row['add_member'] == 2 ? '是' : '否';
             $row['locked'] = $this->getLockedOptions()[$row['locked']];
+            $row['identity'] = ' ' . $row['identity'];
+            $row['phone'] = ' ' . $row['phone'];
             $data[] = $row;
         }
 

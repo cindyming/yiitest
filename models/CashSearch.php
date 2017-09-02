@@ -281,6 +281,7 @@ class CashSearch extends Cash
             $row['type'] = isset($row['type']) ? $this->getTypes()[$row['type']] : '';
             $row['bank'] =  (isset($row['bank']) && isset($this->getBankNames()[$row['bank']] )) ? $this->getBankNames()[$row['bank']] : '';
             $row['cash_type'] = \app\models\Cash::getCachType($row['cash_type']);
+            $row['cardnumber'] = ' ' .  $row['cardnumber'];
             $data[] = $row;
         }
 
