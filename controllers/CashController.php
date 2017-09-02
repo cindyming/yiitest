@@ -35,7 +35,7 @@ class CashController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['adminindex', 'adminreject', 'adminapprove', 'adminupdate',  'adminview', 'adminout', 'manualadd'],
+                        'actions' => ['adminindex', 'export', 'adminreject', 'adminapprove', 'adminupdate',  'adminview', 'adminout', 'manualadd'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -803,5 +803,18 @@ class CashController extends Controller
             }
         }
 
+    }
+
+    public function actionExport()
+    {
+        $searchModel = new CashSearch();
+        $data = Yii::$app->request->queryParams;
+        if (Yii::$app->request->get('week', 0)) {
+            $data['CashSearch']['created_at'] = date('Y-m-d', strtotime('-7 days')) . ' - ' .date('Y-m-d', time());
+        } else if ((!isset($data["CashSearch"])) && (!isset($data["CashSearch"]['created_at']))) {
+            $data['CashSearch']['created_at'] = date('Y-m-d', strtotime('-7 days')) . ' - ' .date('Y-m-d', time());
+        }
+        $searchModel->export($data);
+        return $this->redirect(['/assets/Cash.xls']);
     }
 }

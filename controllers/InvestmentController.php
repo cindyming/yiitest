@@ -36,7 +36,7 @@ class InvestmentController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['showduichong', 'adminindex', 'cancel', 'admincreate', 'admindelete', 'adminupdate',  'adminview'],
+                        'actions' => ['showduichong', 'export', 'adminindex', 'cancel', 'admincreate', 'admindelete', 'adminupdate',  'adminview'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -386,5 +386,18 @@ class InvestmentController extends Controller
 
         return $this->redirect(['/investment/index']);
 
+    }
+
+    public function actionExport()
+    {
+        $searchModel = new InvestmentSearch();
+        $data = Yii::$app->request->queryParams;
+        if (Yii::$app->request->get('week', 0)) {
+            $data['InvestmentSearch']['created_at'] = date('Y-m-d', strtotime('-7 days')) . ' - ' .date('Y-m-d', time());
+        } else if ((!isset($data["InvestmentSearch"])) && (!isset($data["InvestmentSearch"]['created_at']))) {
+            $data['InvestmentSearch']['approved_at'] = date('Y-m-d', strtotime('-7 days')) . ' - ' .date('Y-m-d', time());
+        }
+        $searchModel->export($data);
+        return $this->redirect(['/assets/Investment.xls']);
     }
 }

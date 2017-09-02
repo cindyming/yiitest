@@ -81,4 +81,52 @@ class InvestmentSearch extends Investment
 
         return $dataProvider;
     }
+    public function export($data) {
+        $query = Investment::find()
+            ->select(array(
+                'user_id', 'amount', 'status', 'created_at'
+            ))
+            ->orderBy(['created_at' => SORT_DESC]);
+
+
+        $this->load($data);
+        if ($this->user_id) {
+            $query->andFilterWhere(['like', 'user_id', $this->user_id]);
+        }
+
+        if ($this->created_at) {
+            $date = explode(' - ', $this->created_at);
+            if (count($date)  == 2) {
+                $query->andFilterWhere(['>=', 'created_at', $date[0]]);
+                $query->andFilterWhere(['<=', 'created_at', $date[1]]);
+            }
+        }
+
+        $sql = ($query->createCommand()->getRawSql());
+
+        $connection = Yii::$app->db;
+
+        $command = $connection->createCommand($sql);
+
+        $result = $command->queryAll();
+
+        $header = array(
+            'user_id' => '会员编号',
+            'amount' => '追加金额',
+            'status' => '状态',
+            'created_at' => '追加时间',
+        );
+
+        $data = array($header);
+        foreach ($result as $row) {
+            $row['status'] = ($row['status']) ? '正常' : '撤销';
+            $data[] = $row;
+        }
+
+        CSVExport::Export([
+            'dirName' => Yii::getAlias('@webroot') . '/assets/',
+            'fileName' => 'Investment.xls',
+            'data' => $data
+        ], 'member');
+    }
 }
