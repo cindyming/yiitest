@@ -363,7 +363,7 @@ class UserController extends Controller
                 $result[] = array(
                     "id" => $user['id'],
                     "parent" => '#',
-                    "text" => $user['id']. "(昵称: " . $user['username']  . ", 投资额 : " . ($user['investment'] / 10000) . "万, 总业绩 : "  . ($user['achievements']/10000) . "万)"
+                    "text" => $user['id']. "(昵称: " . $user['username']  . ", 投资额 : " . ($user['investment'] / 10000) . "万, " .(System::loadConfig('show_total') ? " 总业绩 : "  . ($user['achievements']/10000) . "万)" : ")")
                 );
             } elseif ($user['referer'] && in_array($user['referer'], $ids)) {
                 $ids[] = $user['id'];
@@ -372,7 +372,7 @@ class UserController extends Controller
                         "id" => $user['id'],
                         "parent" => (($user['referer'] == '#') || ($user['referer'] == 0)) ? '#' : $user['referer'],
                         'a_attr' => (($user['role_id'] == 2) ? array('class'=>"gray-icon") : array()),
-                        "text" => $user['id']. "(昵称: " . $user['username']  . ", 投资额 : " . ($user['investment'] / 10000) . "万, 总业绩 : "  . ($user['achievements']/10000) . "万)" . (($user['role_id'] == 2) ? ' - 待审核' : ''),
+                        "text" => $user['id']. "(昵称: " . $user['username']  . ", 投资额 : " . ($user['investment'] / 10000) . "万," .(System::loadConfig('show_total') ? " 总业绩 : "  . ($user['achievements']/10000) . "万)" : ")") . (($user['role_id'] == 2) ? ' - 待审核' : ''),
                         "state" => array(
                             "opened" => true,
                             "selected" => true
@@ -383,7 +383,7 @@ class UserController extends Controller
                         "id" => $user['id'],
                         "parent" => (($user['referer'] == '#') || ($user['referer'] == 0)) ? '#' : $user['referer'],
                         'a_attr' => (($user['role_id'] == 2 || $user['locked']) ? array('class'=>"gray-icon") : array()),
-                        "text" => $user['id'] . "(昵称: " . $user['username']  . ", 投资额 : " . ($user['investment'] / 10000) . "万, 总业绩 : "  . ($user['achievements']/10000) . "万)" . (($user['role_id'] == 2) ? ' - 待审核' : ($user['locked'] ? ' - 已锁定' : ''))
+                        "text" => $user['id'] . "(昵称: " . $user['username']  . ", 投资额 : " . ($user['investment'] / 10000) . "万, " .(System::loadConfig('show_total') ? " 总业绩 : "  . ($user['achievements']/10000) . "万)" : ")") . (($user['role_id'] == 2) ? ' - 待审核' : ($user['locked'] ? ' - 已锁定' : ''))
                     );
                 }
             }
