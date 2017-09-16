@@ -118,6 +118,7 @@ class Cash extends ActiveRecord
             [['cardnumber', 'cardname', 'bank', 'bankaddress', 'password2'], 'required', 'on' => 'create'],
             [['stack_number', 'password2'], 'required', 'on' => 'transfer'],
             [['user_id', 'password2'], 'required', 'on' => 'baodan'],
+            [['user_id', 'password2', 'baodan_id'], 'required', 'on' => 'investment'],
             [['sc_account', 'telephone', 'password2'], 'required', 'on' => 'mallmoney'],
             [['sc_account', 'telephone'], 'checkAccount', 'on' => 'mallmoney'],
             [['user_id'], 'required', 'on' => 'cuohe'],
@@ -179,11 +180,13 @@ class Cash extends ActiveRecord
 
     public function validateBaodan($attribute, $params) {
 
-        if ($this->baodan_id && $this->isNewRecord) {
+        if ($this->baodan_id && $this->isNewRecord && (in_array($this->cash_type, array(3, 7)))) {
             $this->baodan_id = trim($this->baodan_id);
             $user = User::findById(trim($this->baodan_id));
 
-            if ($user && $user->add_member) {
+            if ($user && $user->add_member && ($this->cash_type == 3)) {
+                $this->baodan_id = $user->id;
+            } else if ($user && ($this->cash_type == 7)) {
                 $this->baodan_id = $user->id;
             } else {
                 $this->addError('baodan_id', '报单员不存在,请确认后输入');
@@ -200,7 +203,8 @@ class Cash extends ActiveRecord
             3 => '提现至报单员',
             4 => '提现至商城',
             5 => '提现至撮合',
-            6 => '自由股兑换'
+            6 => '自由股兑换',
+            7 => '提现到追加投资'
         );
 
         return $type ? (isset($data[$type]) ? $data[$type] : '未知类型') : $data;
@@ -275,6 +279,11 @@ class Cash extends ActiveRecord
                 break;
             case 5:
                 break;
+            case 7:
+                $info = '<ul>';
+                $info .= '<li><label>会员编号: </label>'. $this->baodan_id .'</li>';
+                $info .= '</ul>';
+                break;
         }
         return $info;
     }
@@ -303,6 +312,34 @@ class Cash extends ActiveRecord
             $this->note = $this->note . ($this->note ?  ';' : '' ) .  '撮合转账成功, id:' . $response['data'];
         } else {
             Log::add('会员(' . $this->user_id . ')', '撮合转账', '失败', $curl_response);
+        }
+
+        return $pass;
+    }
+
+    public function transterToInvestment($user)
+    {
+        $pass = false;
+        if ($this->baodan_id != $user->id) {
+            $user = User::findById($this->baodan_id);
+        }
+
+        if ($user) {
+            $data = array(
+                'user_id' => $this->baodan_id,
+                'added_by' => 10000001,
+                'note' => '会员('.$this->user_id . ')分红转追加投资',
+                'amount' => ($this->real_amount/10000),
+                'duichong_invest' => 0,
+                'useBaodan' => 0
+            );
+            $investment = new Investment();
+            $investment->load($data, '');
+            if ($investment->save()) {
+                $pass = true;
+            } else {
+                var_dump($investment->getErrors());die;
+            }
         }
 
         return $pass;
