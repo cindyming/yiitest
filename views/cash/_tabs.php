@@ -39,4 +39,12 @@ use \yii\bootstrap\Html;
 			<li><?= HTML::a('提现至撮合', ['/cash/create', 'type' => 'cuohe'])?></li>
 		<?php endif ?>
 	<?php endif ?>
+
+	<?php if(\app\models\System::loadConfig('open_investment_transfer')):?>
+		<?php  if ($type == 'investment'): ?>
+			<li class="active">提现至追加投资</li>
+		<?php else: ?>
+			<li><?= HTML::a('提现至追加投资', ['/cash/create', 'type' => 'investment'])?></li>
+		<?php endif ?>
+	<?php endif ?>
 </ul>

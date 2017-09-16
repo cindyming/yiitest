@@ -31,6 +31,7 @@ use yii\widgets\ActiveForm;
         <?= $form->field($model, 'open_cash')->dropDownList([1 => '开放', 0 => '关闭']) ?>
 
         <?= $form->field($model, 'open_stack_transfer')->dropDownList([1 => '开放', 0 => '关闭']) ?>
+        <?= $form->field($model, 'open_investment_transfer')->dropDownList([1 => '开放', 0 => '关闭']) ?>
 
         <?= $form->field($model, 'lowest_cash_amount',[ 'template' => "{label}\n{input}百，如你输入1就代表1百\n{hint}\n{error}"])->textInput(['value' => ($model->lowest_cash_amount / 100)]) ?>
         <?= $form->field($model, 'cash_factorage', [ 'template' => "{label}\n{input}%\n{hint}\n{error}"])->textInput() ?>

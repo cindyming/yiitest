@@ -30,6 +30,7 @@ class System extends ActiveRecord
     public $open_stack_transfer;
     public $cuohe_transfer_audit;
     public $show_total;
+    public $open_investment_transfer;
 
 
     /**
@@ -71,7 +72,8 @@ class System extends ActiveRecord
             'open_cuohe_transfer' => '允许撮合转账',
             'cuohe_transfer_audit' => '撮合转账审核',
             'open_stack_transfer' => '自由股兑换',
-            'show_total' => '显示总额'
+            'show_total' => '显示总额',
+            'open_investment_transfer' => '允许追加投资转账'
             ];
     }
 

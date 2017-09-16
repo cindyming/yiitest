@@ -120,6 +120,7 @@ class Cash extends ActiveRecord
             [['stack_number', 'password2'], 'required', 'on' => 'transfer'],
             [['user_id', 'password2'], 'required', 'on' => 'baodan'],
             [['sc_account', 'telephone', 'password2'], 'required', 'on' => 'mallmoney'],
+            [['user_id', 'password2', 'baodan_id'], 'required', 'on' => 'investment'],
             [['telephone'], 'checkAccount', 'on' => 'mallmoney'],
             [['user_id'], 'required', 'on' => 'manual'],
             [['user_id'], 'required', 'on' => 'cuohe'],
@@ -303,6 +304,34 @@ class Cash extends ActiveRecord
             $this->note = $this->note . ($this->note ?  ';' : '' ) .  '撮合转账成功, id:' . $response['data'];
         } else {
             Log::add('会员(' . $this->user_id . ')', '撮合转账', '失败', $curl_response);
+        }
+
+        return $pass;
+    }
+
+    public function transterToInvestment($user)
+    {
+        $pass = false;
+        if ($this->baodan_id != $user->id) {
+            $user = User::findById($this->baodan_id);
+        }
+
+        if ($user) {
+            $data = array(
+                'user_id' => $this->baodan_id,
+                'added_by' => 10000001,
+                'note' => '会员('.$this->user_id . ')分红转追加投资',
+                'amount' => ($this->real_amount/10000),
+                'duichong_invest' => 0,
+                'useBaodan' => 0
+            );
+            $investment = new Investment();
+            $investment->load($data, '');
+            if ($investment->save()) {
+                $pass = true;
+            } else {
+                var_dump($investment->getErrors());die;
+            }
         }
 
         return $pass;

@@ -159,7 +159,9 @@ class CashController extends Controller
             if ($model->baodan_id) {
                 $user = User::findById(trim($model->baodan_id));
 
-                if ($user && $user->add_member) {
+                if ($user && $user->add_member && ($type == 'baodan')) {
+                    $model->baodan_id = $user->id;
+                } else if ($user &&  ($type == 'investment')) {
                     $model->baodan_id = $user->id;
                 } else {
                     $model->addError('baodan_id', '报单员不存在,请确认后输入');
@@ -235,7 +237,9 @@ class CashController extends Controller
                 if ($model->baodan_id) {
                     $user = User::findById(trim($model->baodan_id));
 
-                    if ($user && $user->add_member) {
+                    if ($user && $user->add_member && ($type == 'baodan')) {
+                        $model->baodan_id = $user->id;
+                    } else if ($user &&  ($type == 'investment')) {
                         $model->baodan_id = $user->id;
                     } else {
                         $model->addError('baodan_id', '报单员不存在,请确认后输入');
@@ -266,6 +270,10 @@ class CashController extends Controller
 
                         if ($type == 'cuohe') {
                             $model->cash_type = 5;
+                        }
+
+                        if ($type == 'investment') {
+                            $model->cash_type = 7;
                         }
 
                         $connection = Yii::$app->db;
@@ -379,7 +387,15 @@ class CashController extends Controller
                                         $model->status = 2;
                                         $model->total = $total;
                                     }
-                                }else {
+                                } else if (($model->cash_type == 7) && System::loadConfig('open_investment_transfer')) {
+                                    $realAmount =  $model->amount;
+                                    $model->real_amount = $realAmount;
+                                    $pass = $model->transterToInvestment($user);
+                                    if ($pass) {
+                                        $model->status = 2;
+                                        $model->total = $total;
+                                    }
+                                } else {
                                     $pass = true;
                                 }
 
