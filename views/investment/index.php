@@ -60,6 +60,9 @@ $stack = Yii::$app->user->identity->init_stack;
             ],
             'created_at',
             [
+                'attribute' => 'note',
+            ],
+            [
                 'attribute' => 'status',
                 'label' => '操作',
                 'hiddenFromExport' => true,
