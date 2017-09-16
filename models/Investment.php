@@ -97,7 +97,7 @@ class Investment extends ActiveRecord
 
     public function validateAddedBy($attribute, $params) {
 
-        if ($this->added_by && $this->isNewRecord) {
+        if ($this->added_by && $this->isNewRecord && ($this->added_by != '00000')) {
             $this->added_by = trim($this->added_by);
             $user = User::findById(trim($this->added_by));
 

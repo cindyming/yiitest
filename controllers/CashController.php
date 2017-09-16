@@ -443,6 +443,11 @@ class CashController extends Controller
                 'model' => $model,
                 'type' => $type
             ]);
+        }  else if ($type == 'investment'){
+            return $this->render('investment', [
+                'model' => $model,
+                'type' => $type
+            ]);
         } else {
             return $this->render('create', [
                 'model' => $model,

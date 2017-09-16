@@ -181,11 +181,13 @@ class Cash extends ActiveRecord
 
     public function validateBaodan($attribute, $params) {
 
-        if ($this->baodan_id && $this->isNewRecord) {
+        if ($this->baodan_id && $this->isNewRecord && (in_array($this->cash_type, array(3, 7)))) {
             $this->baodan_id = trim($this->baodan_id);
             $user = User::findById(trim($this->baodan_id));
 
-            if ($user && $user->add_member) {
+            if ($user && $user->add_member && ($this->cash_type == 3)) {
+                $this->baodan_id = $user->id;
+            } else if ($user && ($this->cash_type == 7)) {
                 $this->baodan_id = $user->id;
             } else {
                 $this->addError('baodan_id', '报单员不存在,请确认后输入');
@@ -202,7 +204,8 @@ class Cash extends ActiveRecord
             3 => '提现至报单员',
             4 => '提现至商城',
             5 => '提现至撮合',
-            6 => '自由股兑换'
+            6 => '自由股兑换',
+            7 => '提现到追加投资'
         );
 
         return $type ? (isset($data[$type]) ? $data[$type] : '未知类型') : $data;
@@ -319,7 +322,7 @@ class Cash extends ActiveRecord
         if ($user) {
             $data = array(
                 'user_id' => $this->baodan_id,
-                'added_by' => 10000001,
+                'added_by' => '00000',
                 'note' => '会员('.$this->user_id . ')分红转追加投资',
                 'amount' => ($this->real_amount/10000),
                 'duichong_invest' => 0,

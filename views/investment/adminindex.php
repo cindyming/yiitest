@@ -57,6 +57,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             [
+                'attribute' => 'note',
+                'filter' => true,
+            ],
+            [
                 'attribute' => 'created_at',
                 'filter' => true,
                 'filterType'=>GridView::FILTER_DATE_RANGE,
