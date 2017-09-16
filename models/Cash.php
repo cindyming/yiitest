@@ -327,7 +327,7 @@ class Cash extends ActiveRecord
         if ($user) {
             $data = array(
                 'user_id' => $this->baodan_id,
-                'added_by' => 10000001,
+                'added_by' => '00000',
                 'note' => '会员('.$this->user_id . ')分红转追加投资',
                 'amount' => ($this->real_amount/10000),
                 'duichong_invest' => 0,
