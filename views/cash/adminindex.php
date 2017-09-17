@@ -48,6 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             [
                 'attribute' => 'baodan_id',
+                'label' => '报单员/会员编号'
             ],
             [
                 'attribute' => 'sc_account',
