@@ -164,7 +164,7 @@ class CashController extends Controller
                 } else if ($user &&  ($type == 'investment')) {
                     $model->baodan_id = $user->id;
                 } else if (($type == 'investment')) {
-                    $model->addError('baodan_id', '会员不存在,请确认后输入');
+                        $model->addError('baodan_id', '会员不存在,请确认后输入');
                 } else {
                     $model->addError('baodan_id', '报单员不存在,请确认后输入');
                 }
