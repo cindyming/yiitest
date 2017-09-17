@@ -261,8 +261,8 @@ class InvestmentController extends Controller
                 $amount = $model->amount;
                 $user = User::findById($model->user_id);
                 if ($model->merited == 1) {
-                    $user->reduceAchivement($amount);var_dump('reduce achivement');
-                    $user->reduceMerit($model);var_dump('reduce merit');
+                    $user->reduceAchivement($amount);
+                    $user->reduceMerit($model);
                     $user->reduceBonus($model);
                     $user->total_stack -= $model->stack;
                     $user->stack -= $model->stack;
@@ -281,7 +281,7 @@ class InvestmentController extends Controller
 
                 $model->status = 1;
                 $model->save();
-echo $e->getMessage();
+
                 Yii::$app->systemlog->add('Admin', '撤销投资', '失败', $e->getMessage());
                 Yii::$app->getSession()->set('danger', '追加投资撤销失败, 请稍后再试. ' .  $e->getMessage());
             }
@@ -289,7 +289,7 @@ echo $e->getMessage();
 
         }
 
-        $sellLock->end();die('end');
+        $sellLock->end();
         return $this->redirect(Yii::$app->request->referrer);
     }
 
