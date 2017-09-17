@@ -400,7 +400,7 @@ class CashController extends Controller
                                         $model->status = 2;
                                         $model->total = $total;
                                     }
-                                    $model->note = '分红转追加投资, 转出账号:' . $model->baodan_id;
+                                    $model->note = '分红转追加投资, 传出至账号:' . $model->baodan_id;
                                 } else {
                                     $pass = true;
                                 }
