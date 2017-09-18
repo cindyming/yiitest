@@ -276,6 +276,40 @@ class InvestmentController extends Controller
                     Yii::$app->getSession()->set('message', '追加投资撤销成功');
                 }
                 $user->reduceBaodan($model);
+
+                if(strpos($model->note, '分红转追加投资')) {
+                    $inUserId = str_replace(array('会员(',')分红转追加投资'), array('', ''), $model->note);
+                    if ($inUserId == $model->user_id) {
+                        $user->bonus_remain = $user->bonus_remain + $model->amount;
+                        $inrecordData = array(
+                            'user_id' => $inUserId,
+                            'type' => 2,
+                            'note' => '转出至:' . $user->id . '的追加投资撤销,货币返还.',
+                            'bonus' =>  $model->amount,
+                            'total' =>  $user->bonus_remain);
+                    } else {
+                        $inUser  = User::findById($inUserId);
+                        if ($inUser) {
+                            $inUser->bonus_remain = $inUser->bonus_remain + $model->amount;
+                            $inrecordData = array(
+                                'user_id' => $inUserId,
+                                'type' => 2,
+                                'note' => '转出至:' . $inUser->id . '的追加投资撤销,货币返还.',
+                                'bonus' =>  $model->amount,
+                                'total' =>  $inUser->bonus_remain);
+                            $inUser->save();
+                        } else {
+                            throw new Exception('对应的转出账户编号没有找到 ' . $inUserId);
+                        }
+
+                    }
+                    if (isset($inrecordData) && is_array($inrecordData)) {
+                        $revenue = new Revenue();
+                        $revenue->load($inrecordData, '');
+                        $revenue->save();
+                    }
+                }
+
                 if ($user->save()) {
                     $transaction->commit();
 
