@@ -1129,4 +1129,18 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
     }
+
+
+    public function showTotal()
+    {
+        if (System::loadConfig('show_total')) {
+            return true;
+        }
+
+        if (System::loadConfig('show_total_for_baodan')  &&  (Yii::$app->user->identity->add_member == 2 )) {
+            return true;
+        }
+
+        return false;
+    }
 }

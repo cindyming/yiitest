@@ -9,7 +9,7 @@ use kartik\grid\GridView;
 $this->title = '奖金统计';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="revenue-index    <?php if(!\app\models\System::loadConfig('show_total')):?> member<?php endif ?>">
+<div class="revenue-index    <?php if(!Yii::$app->user->identity->showTotal()):?> member<?php endif ?>">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

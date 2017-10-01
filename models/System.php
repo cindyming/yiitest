@@ -89,7 +89,6 @@ class System extends ActiveRecord
 
     static function loadConfig($name = '')
     {
-
         $configs = unserialize(Yii::$app->cache->get('SYSTEM_CONFIG'));
         if (!count($configs) || true) {
             $configs = array();
