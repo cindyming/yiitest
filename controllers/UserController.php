@@ -345,7 +345,7 @@ class UserController extends Controller
 
     public function actionTree()
     {
-        if (!System::loadConfig('open_member_tree')) {
+        if (!Yii::$app->user->identity->haveTree()) {
             Yii::$app->getSession()->set('danger', '网络图功能已关闭,请联系管理员.');
             return $this->redirect(['/news/index']);
         }

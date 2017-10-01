@@ -30,6 +30,7 @@ class System extends ActiveRecord
     public $cuohe_transfer_audit;
     public $show_total;
     public $open_investment_transfer;
+    public $show_total_for_baodan;
 
     /**
      * @inheritdoc
@@ -71,7 +72,8 @@ class System extends ActiveRecord
             'cuohe_transfer_audit' => '撮合转账审核',
             'open_stack_transfer' => '自由股兑换',
             'show_total' => '显示总额',
-            'open_investment_transfer' => '允许追加投资转账'
+            'open_investment_transfer' => '允许追加投资转账',
+            'show_total_for_baodan' => '对报单员显示总额'
             ];
     }
 
