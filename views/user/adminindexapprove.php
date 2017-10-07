@@ -90,7 +90,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'kartik\grid\ActionColumn',
                 'header' => '修改',
                 'hiddenFromExport' => true,
-                'template' => '{update} {cancel} {resetpassword}',
+                'template' => '{update} {cancel} {resetpassword} {be_stack}',
                 'buttons' => [
                     'resetpassword' => function ($url, $model, $key) {
                         $options = [
@@ -108,6 +108,14 @@ $this->params['breadcrumbs'][] = $this->title;
                         ];
                         return Html::a('撤销', $url, $options);
                     },
+
+                    'be_stack' => function ($url, $model, $key) {
+                        $options = [
+                            'title' => Yii::t('yii', '转换股票'),
+                            'aria-label' => Yii::t('yii', '转换股票')
+                        ];
+                        return Html::a('转换股票', $url, $options);
+                    },
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
                     if ($action === 'update') {
@@ -120,6 +128,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                     if ($action === 'resetpassword') {
                         $url ='/user/adminresetpassword?id='.$model->id;
+                        return $url;
+                    }
+                    if ($action === 'be_stack') {
+                        $url ='/investment/freelist?id='.$model->id;
                         return $url;
                     }
                 }

@@ -71,6 +71,7 @@ class Investment extends ActiveRecord
     {
         return [
             [['user_id', 'amount', 'added_by'], 'required'],
+            [['be_stack'], 'number'],
             [['merited', 'note', 'added_by', 'status', 'duichong_invest', 'useBaodan', 'stack'], 'trim'],
             [['added_by'], 'validateAddedBy']
         ];
@@ -108,5 +109,21 @@ class Investment extends ActiveRecord
             }
         }
 
+    }
+
+    public function  getStatus()
+    {
+        $status = '正常';
+        if  ($this->status == 2) {
+            $status = '已兑换';
+        } else if ($this->be_stack) {
+            $status = '可兑换';
+        } else if ($this->status == 1) {
+            $status = '锁定中';
+        } else if (!$this->status) {
+            $status = '已取消';
+        }
+
+        return $status;
     }
 }

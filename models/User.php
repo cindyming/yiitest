@@ -211,7 +211,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['password3', 'password', 'password1', 'password2'], 'string', 'min' => 6],
             [['approved_at'], 'string'],
             [['referer', 'added_by', 'achievements', 'suggest_by', 'locked', 'show_tree'], 'trim'],
-            [['role_id', 'merited', 'level', 'add_member', 'stop_bonus'], 'number'],
+            [['role_id', 'merited', 'level', 'add_member', 'stop_bonus', 'be_stack'], 'number'],
             [['bonus_total', 'merit_total', 'duichong_invest', 'baodan_total', 'duichong_total', 'duichong_remain'], 'double'],
             [['bonus_remain', 'baodan_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '分工余额不足', 'on' => 'cancel'],
             [['merit_remain'], 'number', 'min' => 0, 'tooSmall' => '会员' . $this->id . '绩效余额不足', 'on' => 'cancel'],
@@ -221,7 +221,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['cardname', 'cardnumber', 'init_investment'], 'trim'],
             [['cardnumber'], 'string', 'max' => 20, "on" => "create"],
             [['cardnumber'], 'number', "on" => "create"],
-            [['qq', 'useBaodan', 'stack', 'init_stack', 'redeemed', 'total_stack', 'free_stack', 'total_free_stack', 'total_investment', 'exchange_total', 'exchange_remain'], 'number'],
+            [['qq', 'useBaodan', 'stack', 'init_stack', 'redeemed', 'total_stack', 'free_stack', 'total_free_stack', 'total_investment', 'exchange_total', 'exchange_remain', 'be_stack'], 'number'],
             [['duichong_invest'], 'checkBaodanInvest'],
         ];
     }
@@ -1091,8 +1091,9 @@ class User extends ActiveRecord implements IdentityInterface
         $date = intval($date);
         $stack = 0;
         $mappings = array(
-            array('from' => 20170603, 'to' => 21000000, 'price' => 2.45),
-            array('from' => 20170326, 'to' => 20170603, 'price' => 2.04),
+            array('from' => 20170831, 'to' => 21000000, 'price' => 2.69),
+            array('from' => 20170601, 'to' => 20170831, 'price' => 2.45),
+            array('from' => 20170326, 'to' => 20170601, 'price' => 2.04),
             array('from' => 20170122, 'to' => 20170326, 'price' => 1.73),
             array('from' => 20161218, 'to' => 20170122 , 'price' => 1.53),
             array('from' => 20161101, 'to' => 20161218 , 'price' => 1.33),

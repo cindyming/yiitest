@@ -12,6 +12,7 @@ $h=date('G');
 $welcome = ($h<11) ? '早上好' : (($h<13) ? '中午好' : (($h<17) ? '下午好' : '晚上好'));
 $welcome .= ', ' . Yii::$app->user->identity->username;
 $welcome .= ', 欢迎回来.';
+
 ?>
     <h2>在线办公平台</h2>
     <div class="m-info">
@@ -27,9 +28,9 @@ $welcome .= ', 欢迎回来.';
             </li>
             <li>
                 总投资额: <?php echo Yii::$app->user->identity->investment ?>
-                <?php if(Yii::$app->user->identity->showTotal()):?>
+                <?php if(Yii::$app->user->identity->showTotal() || true):?>
                 <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
-                (等值配股数: <?php echo (Yii::$app->user->identity->stack)?>)
+                (可兑换股数: <?php echo (Yii::$app->user->identity->stack)?>)
             </li>
 
             <li class="">
