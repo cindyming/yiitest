@@ -27,6 +27,8 @@ $stack = $model->init_stack;
             echo ( Html::a('转成股票', '/investment/free?id=' . $model->id . '&type=all' , ['data-confirm'=>"你确定要转换成股票: "  . $stack])) ;
         } else if($stack && !$model->be_stack) {
             echo "锁定中";
+        } else if ($stack && $model->be_stack){
+            echo "已转换";
         }
         ?>
 
