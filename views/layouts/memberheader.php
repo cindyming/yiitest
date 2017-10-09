@@ -28,7 +28,7 @@ $welcome .= ', 欢迎回来.';
             </li>
             <li>
                 总投资额: <?php echo Yii::$app->user->identity->investment ?>
-                <?php if(Yii::$app->user->identity->showTotal() || true):?>
+                <?php if(Yii::$app->user->identity->showTotal()):?>
                 <?php if (\app\models\System::loadConfig('open_stack_transfer')): ?>
                 (可兑换股数: <?php echo (Yii::$app->user->identity->stack)?>)
             </li>
