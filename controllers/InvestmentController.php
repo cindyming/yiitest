@@ -457,7 +457,6 @@ class InvestmentController extends Controller
                 if ($stack) {
                     $user = null;
                     $model->be_stack =1;
-                    $model->stack = $stack;
                     $data = array();
                     if ($type == 'all') {
                         $model->total_stack += $stack;
