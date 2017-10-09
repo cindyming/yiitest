@@ -446,7 +446,7 @@ class InvestmentController extends Controller
                 $model = User::findOne($id);
                 $model->investment -= $model->init_investment;
                 $userId = $id;
-                $stack = User::investToStack($model->investment, date('Ymd', strtotime($model->approved_at)));
+                $stack = User::investToStack($model->init_investment, date('Ymd', strtotime($model->approved_at)));
             } else {
                 $model = Investment::findOne($id);
                 $userId = $model->user_id;
@@ -458,14 +458,35 @@ class InvestmentController extends Controller
                     $user = null;
                     $model->be_stack =1;
                     $model->stack = $stack;
+                    $data = array();
                     if ($type == 'all') {
                         $model->total_stack += $stack;
                         $model->stack += $stack;
+                        $data = array(
+                            'user_id' => $model->id,
+                            'note' => '初始投资折算配股数',
+                            'stack' => $stack,
+                            'type' => 10,
+                            'total' => $model->stack
+                        );
                     } else {
                         $user = User::findOne($model->user_id);
                         $user->total_stack += $stack;
                         $user->stack += $stack;
                         $user->investment -= $model->amount;
+
+                        $data = array(
+                            'user_id' => $user->id,
+                            'note' => '追加投资折算配股数:' . $model->id,
+                            'stack' => $stack,
+                            'type' => 10,
+                            'total' => $user->stack,
+                        );
+                    }
+
+                    if (count($data)) {
+                        $revenue = new Revenue();
+                        $revenue->load($data, '');
                     }
 
                     $connection = Yii::$app->db;
