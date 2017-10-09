@@ -18,7 +18,7 @@ class BonusController extends Controller
     public function lessThan15Investment($user_id)
     {
 
-        $invertMents = Investment::find()->where(['>', 'created_at', $this->_startTime])->andWhere(['=', 'status', 1])->andWhere(['=', 'user_id', $user_id])->andWhere(['=', 'merited', 1])->orderBy(['created_at' => SORT_DESC])->all();
+        $invertMents = Investment::find()->where(['>', 'created_at', $this->_startTime])->andWhere(['=', 'status', 1])->andWhere(['=', 'be_stack', 0])->andWhere(['=', 'user_id', $user_id])->andWhere(['=', 'merited', 1])->orderBy(['created_at' => SORT_DESC])->all();
         $inverts = array();
         foreach ($invertMents as $iv) {
             $id = $iv->id;
