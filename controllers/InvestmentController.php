@@ -372,7 +372,6 @@ class InvestmentController extends Controller
                 $user = $model;
                 $model->redeemed = 1;
                 $model->stack -= $model->init_stack;
-                $model->investment -= $model->init_investment;
                 $cash = new Cash();
                 $cash->cash_type = 6;
                 $cash->type = 11;
@@ -385,7 +384,6 @@ class InvestmentController extends Controller
                     $model->status = 2;
                     $user = User::findOne(Yii::$app->user->id);
                     $user->stack -= $model->stack;
-                    $user->investment -= $model->amount;
                     $cash = new Cash();
                     $cash->cash_type = 6;
                     $cash->type = 11;
@@ -446,6 +444,7 @@ class InvestmentController extends Controller
 
             if ($type == 'all') {
                 $model = User::findOne($id);
+                $model->investment -= $model->init_investment;
                 $userId = $id;
                 $stack = User::investToStack($model->investment, date('Ymd', strtotime($model->approved_at)));
             } else {
@@ -466,6 +465,7 @@ class InvestmentController extends Controller
                         $user = User::findOne($model->user_id);
                         $user->total_stack += $stack;
                         $user->stack += $stack;
+                        $user->investment -= $model->amount;
                     }
 
                     $connection = Yii::$app->db;
