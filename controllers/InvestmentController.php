@@ -487,21 +487,21 @@ class InvestmentController extends Controller
                     if (count($data)) {
                         $revenue = new Revenue();
                         $revenue->load($data, '');
-                    }
 
-                    $connection = Yii::$app->db;
-                    try {
-                        $transaction = $connection->beginTransaction();
-                        if (($user && $user->save() && $model->save()) || (!$user && $model->save())) {
-                            $transaction->commit();
-                            Yii::$app->getSession()->set('message', '股票转换成功');
-                        } else {
+                        $connection = Yii::$app->db;
+                        try {
+                            $transaction = $connection->beginTransaction();
+                            if (($user && $user->save() && $model->save() && $revenue->save()) || (!$user && $model->save() && $revenue->save())) {
+                                $transaction->commit();
+                                Yii::$app->getSession()->set('message', '股票转换成功');
+                            } else {
+                                Yii::$app->getSession()->set('message', '股票转换失败');
+                                $transaction->rollBack();
+                            }
+                        } catch (Exception $e) {
                             Yii::$app->getSession()->set('message', '股票转换失败');
                             $transaction->rollBack();
                         }
-                    } catch (Exception $e) {
-                        Yii::$app->getSession()->set('message', '股票转换失败');
-                        $transaction->rollBack();
                     }
 
                 } else {
