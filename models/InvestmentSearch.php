@@ -84,7 +84,7 @@ class InvestmentSearch extends Investment
     public function export($data) {
         $query = Investment::find()
             ->select(array(
-                'user_id', 'amount', 'status', 'created_at'
+                'user_id', 'amount', 'status', 'created_at', 'note'
             ))
             ->orderBy(['created_at' => SORT_DESC]);
 
@@ -115,6 +115,7 @@ class InvestmentSearch extends Investment
             'amount' => '追加金额',
             'status' => '状态',
             'created_at' => '追加时间',
+            'note' => '备注'
         );
 
         $data = array($header);

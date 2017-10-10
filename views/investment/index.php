@@ -21,9 +21,14 @@ $stack = Yii::$app->user->identity->init_stack;
 
             <span>(等值股票数: <?php echo  $stack ?  $stack : '股数计算中'?> )</span>
             <?php
-            if ((!Yii::$app->user->identity->redeemed) && $stack ) {
-                echo ( Html::a('兑换自由股', '/investment/transfer?id=all', ['data-confirm'=>"你确定要兑换成自由股票: "  . $stack])) ;
+            if ((!Yii::$app->user->identity->redeemed) && $stack && Yii::$app->user->identity->be_stack ) {
+                echo ( Html::a('兑换自由股', '/investment/transfer?id=all', ['data-confirm'=>"你确定要兑换成自由配股: "  . $stack])) ;
+            } else if($stack && !Yii::$app->user->identity->be_stack) {
+                echo "锁定中";
+            } else if ($stack && Yii::$app->user->identity->be_stack) {
+                echo "已兑换";
             }
+
             ?>
 
         <?php endif ?>
@@ -55,7 +60,7 @@ $stack = Yii::$app->user->identity->init_stack;
                 'attribute' => 'status',
                 'header' => '状态',
                 'value' =>  function($model) {
-                    return ($model->status==2) ?  '已兑换' : ($model->status ? '正常' : '已撤销');
+                    return $model->getStatus();
                 },
             ],
             'created_at',
@@ -65,10 +70,9 @@ $stack = Yii::$app->user->identity->init_stack;
             [
                 'attribute' => 'status',
                 'label' => '操作',
-                'hidden' => (\app\models\System::loadConfig('open_stack_transfer')) ? false : true,
                 'hiddenFromExport' => true,
                 'content' => function($model) {
-                    return (($model->status == 1) && \app\models\System::loadConfig('open_stack_transfer')) ? ( Html::a('兑换自由股', '/investment/transfer?id='.$model->id, ['data-confirm'=>"你确定要兑换成自由股票"  . $model->stack])) : '';
+                    return (($model->status == 1) && ($model->be_stack == 1) && \app\models\System::loadConfig('open_stack_transfer')) ? ( Html::a('兑换自由股', '/investment/transfer?id='.$model->id, ['data-confirm'=>"你确定要兑换成自由配股"  . $model->stack])) : '';
                 }
             ],
         ],

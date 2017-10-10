@@ -25,7 +25,7 @@ class BonusController extends Controller
         if ($lessThanStart) {
             $startTime = $this->_diffTime . ' 00:00:00';
         }
-        $invertMents = Investment::find()->where(['>', 'created_at', $startTime])->andWhere(['=', 'user_id', $id])->andWhere(['=', 'status', 1])->andWhere(['=', 'merited', 1])->orderBy(['created_at' => SORT_DESC])->all();
+        $invertMents = Investment::find()->where(['>', 'created_at', $startTime])->andWhere(['=', 'be_stack', 0])->andWhere(['=', 'user_id', $id])->andWhere(['=', 'status', 1])->andWhere(['=', 'merited', 1])->orderBy(['created_at' => SORT_DESC])->all();
         $inverts = array();
         foreach ($invertMents as $iv) {
             $id = $iv->id;

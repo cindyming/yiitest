@@ -36,7 +36,7 @@ class InvestmentController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['showduichong', 'export', 'adminindex', 'cancel', 'admincreate', 'admindelete', 'adminupdate',  'adminview'],
+                        'actions' => ['showduichong', 'free', 'export', 'freelist', 'adminindex', 'cancel', 'admincreate', 'admindelete', 'adminupdate',  'adminview'],
                         'roles' => [User::ROLE_ADMIN]
                     ],
                     [
@@ -433,5 +433,111 @@ class InvestmentController extends Controller
         }
         $searchModel->export($data);
         return $this->redirect(['/assets/Investment.xls']);
+    }
+
+    public function actionFreelist()
+    {
+        $searchModel = new InvestmentSearch();
+        $data = Yii::$app->request->queryParams;
+
+        $data['InvestmentSearch']['user_id'] = $data['id'];
+
+        $dataProvider = $searchModel->search($data);
+        $dataProvider->pagination = [
+            'pageSize' => 10
+        ];
+
+        $model = User::findOne($data['id']);
+
+        return $this->render('freelist', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'model' => $model
+        ]);
+    }
+
+    public function actionFree($id)
+    {
+        if (System::loadConfig('open_stack_transfer')) {
+            $type =  Yii::$app->getRequest()->get('type', 'investment');
+
+            $model = null;
+            $stack = 0;
+            $userId = null;
+
+            if ($type == 'all') {
+                $model = User::findOne($id);
+                $model->investment -= $model->init_investment;
+                $userId = $id;
+                $stack = User::investToStack($model->init_investment, date('Ymd', strtotime($model->approved_at)));
+            } else {
+                $model = Investment::findOne($id);
+                $userId = $model->user_id;
+                $stack = User::investToStack($model->amount, date('Ymd', strtotime($model->created_at)));
+            }
+
+            if ($model && $model->id && ! $model->be_stack) {
+                if ($stack) {
+                    $user = null;
+                    $model->be_stack =1;
+                    $data = array();
+                    if ($type == 'all') {
+                        $model->total_stack += $stack;
+                        $model->stack += $stack;
+                        $data = array(
+                            'user_id' => $model->id,
+                            'note' => '初始投资折算配股数',
+                            'stack' => $stack,
+                            'type' => 10,
+                            'total' => $model->stack
+                        );
+                    } else {
+                        $user = User::findOne($model->user_id);
+                        $user->total_stack += $stack;
+                        $user->stack += $stack;
+                        $user->investment -= $model->amount;
+
+                        $data = array(
+                            'user_id' => $user->id,
+                            'note' => '追加投资折算配股数:' . $model->id,
+                            'stack' => $stack,
+                            'type' => 10,
+                            'total' => $user->stack,
+                        );
+                    }
+
+                    if (count($data)) {
+                        $revenue = new Revenue();
+                        $revenue->load($data, '');
+
+                        $connection = Yii::$app->db;
+                        try {
+                            $transaction = $connection->beginTransaction();
+                            if (($user && $user->save() && $model->save() && $revenue->save()) || (!$user && $model->save() && $revenue->save())) {
+                                $transaction->commit();
+                                Yii::$app->getSession()->set('message', '股票转换成功');
+                            } else {
+                                Yii::$app->getSession()->set('message', '股票转换失败');
+                                $transaction->rollBack();
+                            }
+                        } catch (Exception $e) {
+                            Yii::$app->getSession()->set('message', '股票转换失败');
+                            $transaction->rollBack();
+                        }
+                    }
+
+                } else {
+                    Yii::$app->getSession()->set('danger', '股票转换失败,请稍候再试');
+                }
+
+            } else {
+                Yii::$app->getSession()->set('danger', '原始模型没有找到,请稍候再试');
+            }
+        } else {
+            Yii::$app->getSession()->set('danger', '股票转换失败已关闭,请稍候再试');
+        }
+
+
+        return $this->redirect(['/investment/freelist?id=' . $userId]);
     }
 }

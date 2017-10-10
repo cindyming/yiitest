@@ -89,16 +89,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => 'kartik\grid\ActionColumn',
                 'header' => '修改',
                 'hiddenFromExport' => true,
-                'template' => '{update} {cancel} {resetpassword}',
+                'template' => '{update}<br> {cancel}<br> {resetpassword} <br> {be_stack}',
                 'buttons' => [
                     'resetpassword' => function ($url, $model, $key) {
-                            $options = [
-                                'title' => Yii::t('yii', '重置密码'),
-                                'aria-label' => Yii::t('yii', '重置密码'),
-                                'data-confirm' => Yii::t('yii', '你确定要为会员[' . $model->id . ']重置密码?密码将被设置为123456'),
-                            ];
-                            return Html::a('重置密码', $url, $options);
-                        },
+                        $options = [
+                            'title' => Yii::t('yii', '重置密码'),
+                            'aria-label' => Yii::t('yii', '重置密码'),
+                            'data-confirm' => Yii::t('yii', '你确定要为会员[' . $model->id . ']重置密码?密码将被设置为123456'),
+                        ];
+                        return Html::a('重置密码', $url, $options);
+                    },
                     'cancel' => function ($url, $model, $key) {
                         $options = [
                             'title' => Yii::t('yii', '撤销'),
@@ -106,6 +106,14 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-confirm' => Yii::t('yii', '你确定要撤销会员[' . $model->id . ']'),
                         ];
                         return Html::a('撤销', $url, $options);
+                    },
+
+                    'be_stack' => function ($url, $model, $key) {
+                        $options = [
+                            'title' => Yii::t('yii', '转换股票'),
+                            'aria-label' => Yii::t('yii', '转换股票')
+                        ];
+                        return Html::a('转换股票', $url, $options);
                     },
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
@@ -119,6 +127,10 @@ $this->params['breadcrumbs'][] = $this->title;
                         }
                         if ($action === 'resetpassword') {
                             $url ='/user/adminresetpassword?id='.$model->id;
+                            return $url;
+                        }
+                        if ($action === 'be_stack') {
+                            $url ='/investment/freelist?id='.$model->id;
                             return $url;
                         }
                     }
