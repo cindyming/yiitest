@@ -56,7 +56,7 @@ class MeritController extends Controller
                 $user->investment += $newInvestment;
                 $user->total_investment += $newInvestment;
 //                $user->total_stack = $user->total_stack + $stack;
-                $user->stack = $user->stack + $stack;
+//                $user->stack = $user->stack + $stack;
 
 //                $data = array(
 //                    'user_id' => $addtionalInvest->user_id,
