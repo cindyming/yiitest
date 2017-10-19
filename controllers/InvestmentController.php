@@ -361,7 +361,6 @@ class InvestmentController extends Controller
                     $user = $model;
                     $model->redeemed = 1;
                     $model->stack -= $model->init_stack;
-                    $model->investment -= $model->init_investment;
                     $cash = new Cash();
                     $cash->cash_type = 6;
                     $cash->type = 11;
@@ -376,7 +375,6 @@ class InvestmentController extends Controller
                     $model->status = 2;
                     $user = User::findOne(Yii::$app->user->id);
                     $user->stack -= $model->stack;
-                    $user->investment -= $model->amount;
                     $cash = new Cash();
                     $cash->cash_type = 6;
                     $cash->type = 11;
