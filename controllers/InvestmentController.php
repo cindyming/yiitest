@@ -367,6 +367,11 @@ class InvestmentController extends Controller
     public function actionTransfer($id)
     {
         if (System::loadConfig('open_stack_transfer')) {
+
+            $key = 'INVESTIMENT_STACK_TRANSFER_' . Yii::$app->user->identity->id;
+            $sellLock = new \app\models\JLock($key);
+            $sellLock->start();
+
             if ($id == 'all') {
                 $model = Yii::$app->user->identity;
                 if ($model->redeemed) {
@@ -430,6 +435,8 @@ class InvestmentController extends Controller
                     Log::add('会员(' . $user->id . ')' , '自由股兑换' , '失败' , $curl_response);
                     Yii::$app->getSession()->set('danger', '自由股兑换失败,请稍候再试' . $e->getMessage());
                 }
+
+                $sellLock->end();
             } else {
                 Yii::$app->getSession()->set('danger', '自由股兑换失败,请稍候再试');
             }
@@ -445,6 +452,11 @@ class InvestmentController extends Controller
     public function actionFree($id)
     {
         if (System::loadConfig('open_stack_transfer')) {
+
+            $key = 'INVESTIMENT_STACK_FREE_' . $id;
+            $sellLock = new \app\models\JLock($key);
+            $sellLock->start();
+
             $type =  Yii::$app->getRequest()->get('type', 'investment');
 
             $model = null;
@@ -519,6 +531,8 @@ class InvestmentController extends Controller
             } else {
                 Yii::$app->getSession()->set('danger', '原始模型没有找到,请稍候再试');
             }
+
+            $sellLock->end();
         } else {
             Yii::$app->getSession()->set('danger', '股票转换失败已关闭,请稍候再试');
         }
