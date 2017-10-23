@@ -271,6 +271,10 @@ class InvestmentController extends Controller
                     $user->reduceAchivement($amount);
                     $user->reduceMerit($model);
                     $user->reduceBonus($model);
+                    if ($model->be_stack) {
+                        $user->total_stack -= $model->stack;
+                        $user->stack -= $model->stack;
+                    }
                     Yii::$app->getSession()->set('big', '追加投资撤销成功, 撤单后等级不自动变化，请核对等级');
                 } else {
                     Yii::$app->getSession()->set('message', '追加投资撤销成功');
