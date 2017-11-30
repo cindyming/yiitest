@@ -58,10 +58,8 @@ class StackController extends Controller
                     echo $user->init_investment .':::' . date('Ymd', strtotime($user->approved_at)) . PHP_EOL;
                     $stack = User::investToStack($user->init_investment, date('Ymd', strtotime($user->approved_at)));
 
-                    if (date('Ymd', strtotime($user->approved_at)) < 20161218) {
-                        $total += $stack;
-                        $user->be_stack = 1;
-                    }
+                    $total += $stack;
+                    $user->be_stack = 1;
                     $user->init_stack = $stack;
 
 
@@ -81,7 +79,7 @@ class StackController extends Controller
                         foreach ($investments as $investment) {
                             echo $investment->amount .':::' . date('Ymd', strtotime($investment->created_at)) . PHP_EOL;
                             $stack = User::investToStack($investment->amount, date('Ymd', strtotime($investment->created_at)));
-                            if (($investment->status == 1) && ($investment->merited == 1) && (date('Ymd', strtotime($investment->created_at)) < 20161218)) {
+                            if (($investment->status == 1) && ($investment->merited == 1)) {
                                 $total += $stack;
                                 $investment->be_stack = 1;
                             }
