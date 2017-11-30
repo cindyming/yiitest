@@ -108,7 +108,7 @@ class User extends ActiveRecord implements IdentityInterface
                     ActiveRecord::EVENT_BEFORE_INSERT => 'init_investment',
                 ],
                 'value' => function ($event) {
-                    return $this->investment * 10000;
+                    return intval(strval($this->investment * 10000));
                 },
             ],
             [
@@ -117,7 +117,7 @@ class User extends ActiveRecord implements IdentityInterface
                     ActiveRecord::EVENT_BEFORE_INSERT => 'total_investment',
                 ],
                 'value' => function ($event) {
-                    return $this->investment * 10000;
+                    return intval(strval($this->investment * 10000));
                 },
             ],
             [
@@ -126,7 +126,7 @@ class User extends ActiveRecord implements IdentityInterface
                     ActiveRecord::EVENT_BEFORE_INSERT => 'investment',
                 ],
                 'value' => function ($event) {
-                        return $this->investment * 10000;
+                        return intval(strval($this->investment * 10000));
                     },
             ],
             [

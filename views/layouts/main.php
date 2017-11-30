@@ -213,7 +213,7 @@ return outputCharacters;
 $('input.amountNumber').on('input',function(){
 var number = $(this).val();
 if ($(this).hasClass('needBig')) {
-number = number * 10000;
+number = parseFloat(number*10000).toFixed(2)
 }
 number = convertCurrency(number);
 $(this).parent('div.form-group').find('.hint-block span.realAmount').text(number);
