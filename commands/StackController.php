@@ -59,19 +59,20 @@ class StackController extends Controller
 					$stack = User::investToStack($user->init_investment, date('Ymd', strtotime($user->approved_at)));
 					$total += $stack;
 					$user->init_stack = $stack;
+					$user->be_stack = 1;
 
-//					$data = array(
-//						'user_id' => $user->id,
-//						'note' => '初始投资折算股票数',
-//						'stack' => $stack,
-//						'type' => 10,
-//						'total' => $stack
-//					);
-//					$merit = new Revenue();
-//					$merit->load($data, '');
-//					if (!$merit->save()) {
-//						$submit = false;
-//					}
+					$data = array(
+						'user_id' => $user->id,
+						'note' => '初始投资折算股票数',
+						'stack' => $stack,
+						'type' => 10,
+						'total' => $stack
+					);
+					$merit = new Revenue();
+					$merit->load($data, '');
+					if (!$merit->save()) {
+						$submit = false;
+					}
 
 					if ($submit) {
 						foreach ($investments as $investment) {
@@ -79,30 +80,31 @@ class StackController extends Controller
 							$stack = User::investToStack($investment->amount, date('Ymd', strtotime($investment->created_at)));
 							if (($investment->status == 1) && ($investment->merited == 1)) {
 								$total += $stack;
+								$user->be_stack = 1;
 							}
-//
-//							$data = array(
-//								'user_id' => $user->id,
-//								'note' => '追加投资折算股票数',
-//								'stack' => $stack,
-//								'type' => 10,
-//								'total' => $total,
-//							);
+
+							$data = array(
+								'user_id' => $user->id,
+								'note' => '追加投资折算股票数',
+								'stack' => $stack,
+								'type' => 10,
+								'total' => $total,
+							);
 							$investment->stack = $stack;
 							$investment->save();
-//							$merit = new Revenue();
-//							$merit->load($data, '');
-//							if (!$merit->save()) {
-//								$submit = false;
-//								break;
-//							}
+							$merit = new Revenue();
+							$merit->load($data, '');
+							if (!$merit->save()) {
+								$submit = false;
+								break;
+							}
 
 						}
 					}
 
 					if ($submit) {
-//						$user->total_stack = $user->total_stack + $total;
-//						$user->stack = $user->stack + $total;
+						$user->total_stack = $user->total_stack + $total;
+						$user->stack = $user->stack + $total;
 						if (!$user->save()) {
 							$submit = false;
 						}
