@@ -87,7 +87,16 @@ class StackController extends Controller
                     if ($submit) {
                         foreach ($investments as $investment) {
                             echo $investment->amount .':::' . date('Ymd', strtotime($investment->created_at)) . PHP_EOL;
-                            $stack = User::investToStack($investment->amount, date('Ymd', strtotime($investment->created_at)));
+                            $investmentAmount = $investment->amount;
+                            if  (date('Ymd', strtotime($investment->created_at)) < 20151201) {
+                                $investmentAmount = $investmentAmount * 1.2;
+                            }
+
+
+                            if  ((date('Ymd', strtotime($investment->created_at)) < 20160915) && (date('Ymd', strtotime($investment->created_at)) < 20160915)) {
+                                $investmentAmount = $investmentAmount * 1.1;
+                            }
+                            $stack = User::investToStack($investmentAmount, date('Ymd', strtotime($investment->created_at)));
                             if (($investment->status == 1) && ($investment->merited == 1)) {
                                 $total += $stack;
                                 $investment->be_stack = 1;
