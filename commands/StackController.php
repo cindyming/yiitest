@@ -56,7 +56,17 @@ class StackController extends Controller
 					$submit = true;
 
 					echo $user->init_investment .':::' . date('Ymd', strtotime($user->approved_at)) . PHP_EOL;
-					$stack = User::investToStack($user->init_investment, date('Ymd', strtotime($user->approved_at)));
+					$investmentAmount = $user->init_investment;
+					if  (date('Ymd', strtotime($user->approved_at)) < 20151201) {
+						$investmentAmount = $investmentAmount * 1.2;
+					}
+
+
+					if  ((date('Ymd', strtotime($user->approved_at)) < 20160915) && (date('Ymd', strtotime($user->approved_at)) < 20160915)) {
+						$investmentAmount = $investmentAmount * 1.1;
+					}
+
+					$stack = User::investToStack($investmentAmount, date('Ymd', strtotime($user->approved_at)));
 					$total += $stack;
 					$user->init_stack = $stack;
 					$user->be_stack = 1;
@@ -77,7 +87,19 @@ class StackController extends Controller
 					if ($submit) {
 						foreach ($investments as $investment) {
 							echo $investment->amount .':::' . date('Ymd', strtotime($investment->created_at)) . PHP_EOL;
-							$stack = User::investToStack($investment->amount, date('Ymd', strtotime($investment->created_at)));
+
+
+							$investmentAmount = $user->amount;
+							if  (date('Ymd', strtotime($user->approved_at)) < 20151201) {
+								$investmentAmount = $investmentAmount * 1.2;
+							}
+
+
+							if  ((date('Ymd', strtotime($user->approved_at)) < 20160915) && (date('Ymd', strtotime($user->approved_at)) < 20160915)) {
+								$investmentAmount = $investmentAmount * 1.1;
+							}
+
+							$stack = User::investToStack($investmentAmount, date('Ymd', strtotime($investment->created_at)));
 							if (($investment->status == 1) && ($investment->merited == 1)) {
 								$total += $stack;
 								$user->be_stack = 1;
