@@ -75,7 +75,7 @@ echo Nav::widget([
             'label' => '业务中心', 'url' => ['/user/create'],
             'items' => [
                 Yii::$app->user->identity->add_member == 2 ?
-                    ['label' => '会员注册', 'url' => ['/user/create']]:
+                    '':
                     ['label' => '申请成为报单员', 'url' => ['/user/applyaddmember']],
                 ( Yii::$app->user->identity->openSuggestion()) ?
                     ['label' => '我的报单', 'url' => ['/user/baodanindex']] : '',

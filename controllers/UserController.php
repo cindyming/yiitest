@@ -554,6 +554,8 @@ class UserController extends Controller
         $model = new User();
 
         if (Yii::$app->user->identity->add_member == 2) {
+            Yii::$app->getSession()->set('danger', '报单中心已关闭,请联系管理员.');
+            return $this->redirect(['news/index']);
             if ($model->load(Yii::$app->request->post())) {
                 $validate = $this->validateUserData($model);
                 if ($validate && $model->save()) {
