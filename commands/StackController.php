@@ -89,13 +89,13 @@ class StackController extends Controller
 							echo $investment->amount .':::' . date('Ymd', strtotime($investment->created_at)) . PHP_EOL;
 
 
-							$investmentAmount = $user->amount;
-							if  (date('Ymd', strtotime($user->approved_at)) < 20151201) {
+							$investmentAmount = $investment->amount;
+							if  (date('Ymd', strtotime($investment->created_at)) < 20151201) {
 								$investmentAmount = $investmentAmount * 1.2;
 							}
 
 
-							if  ((date('Ymd', strtotime($user->approved_at)) < 20160915) && (date('Ymd', strtotime($user->approved_at)) < 20160915)) {
+							if  ((date('Ymd', strtotime($investment->created_at)) < 20160915) && (date('Ymd', strtotime($investment->created_at)) < 20160915)) {
 								$investmentAmount = $investmentAmount * 1.1;
 							}
 
