@@ -17,9 +17,10 @@ $stack = Yii::$app->user->identity->init_stack;
     <h3>初始投资</h3>
     <div class="first_investment">
         初始投资额 : <?php echo Yii::$app->user->identity->init_investment ?>
+        <span>(等值股票数: <?php echo  $stack ?  $stack : '股数计算中'?> )</span>
         <?php if (\app\models\System::loadConfig('open_stack_transfer')) :?>
 
-            <span>(等值股票数: <?php echo  $stack ?  $stack : '股数计算中'?> )</span>
+
             <?php
             if ((!Yii::$app->user->identity->redeemed) && $stack && Yii::$app->user->identity->be_stack ) {
                 echo ( Html::a('兑换自由股', '/investment/transfer?id=all', ['data-confirm'=>"你确定要兑换成自由配股: "  . $stack])) ;
@@ -51,7 +52,6 @@ $stack = Yii::$app->user->identity->init_stack;
             'amount',
             [
                 'attribute' => 'stack',
-                'hidden' => (\app\models\System::loadConfig('open_stack_transfer')) ? false : true,
                 'value' =>  function($model) {
                     return ($model->stack) ?  $model->stack : '股数计算中';
                 },
