@@ -61,19 +61,20 @@ class StackController extends Controller
 						$investmentAmount = $investmentAmount * 1.2;
 					}
 
-
-					if  ((date('Ymd', strtotime($user->approved_at)) < 20160915) && (date('Ymd', strtotime($user->approved_at)) < 20160915)) {
+					if  ((date('Ymd', strtotime($user->approved_at)) >= 20160801) && (date('Ymd', strtotime($user->approved_at)) < 20160915)) {
 						$investmentAmount = $investmentAmount * 1.1;
 					}
 
 					$stack = User::investToStack($investmentAmount, date('Ymd', strtotime($user->approved_at)));
+
 					$total += $stack;
-					$user->init_stack = $stack;
 					$user->be_stack = 1;
+					$user->init_stack = $stack;
+
 
 					$data = array(
 						'user_id' => $user->id,
-						'note' => '初始投资折算股票数',
+						'note' => '初始投资折算配股数',
 						'stack' => $stack,
 						'type' => 10,
 						'total' => $stack
@@ -83,33 +84,29 @@ class StackController extends Controller
 					if (!$merit->save()) {
 						$submit = false;
 					}
-
 					if ($submit) {
 						foreach ($investments as $investment) {
 							echo $investment->amount .':::' . date('Ymd', strtotime($investment->created_at)) . PHP_EOL;
-
-
 							$investmentAmount = $investment->amount;
 							if  (date('Ymd', strtotime($investment->created_at)) < 20151201) {
 								$investmentAmount = $investmentAmount * 1.2;
 							}
 
-
-							if  ((date('Ymd', strtotime($investment->created_at)) < 20160915) && (date('Ymd', strtotime($investment->created_at)) < 20160915)) {
+							if  ((date('Ymd', strtotime($investment->created_at)) >= 20160801) && (date('Ymd', strtotime($investment->created_at)) < 20160915)) {
 								$investmentAmount = $investmentAmount * 1.1;
 							}
-
 							$stack = User::investToStack($investmentAmount, date('Ymd', strtotime($investment->created_at)));
 							if (($investment->status == 1) && ($investment->merited == 1)) {
 								$total += $stack;
-								$user->be_stack = 1;
+								$investment->be_stack = 1;
 							}
 
 							$data = array(
 								'user_id' => $user->id,
-								'note' => '追加投资折算股票数',
+								'note' => '追加投资折算配股数:' . $investment->id,
 								'stack' => $stack,
 								'type' => 10,
+
 								'total' => $total,
 							);
 							$investment->stack = $stack;
@@ -120,17 +117,16 @@ class StackController extends Controller
 								$submit = false;
 								break;
 							}
-
 						}
 					}
 
 					if ($submit) {
-						$user->total_stack = $user->total_stack + $total;
-						$user->stack = $user->stack + $total;
+						$user->total_stack =  $total;
+						$user->stack = $total;
 						if (!$user->save()) {
-							$submit = false;
+							$submit = false;var_dump($user->getErrors());
 						}
-					}
+					}var_dump($submit);
 					if ($submit) {
 						$transaction->commit();
 					} else {
