@@ -1095,7 +1095,6 @@ class User extends ActiveRecord implements IdentityInterface
     {
         /*
          * 每股合投资额（元）
-2016年8月1日早0点前=1.5
 2016年8月1日~2016年11月2日早0点=1
 2016年11月2日~2016年12月18日早0点=1.33
 2016年12月18日~2017年1月22日早0点=1.53
@@ -1115,8 +1114,7 @@ class User extends ActiveRecord implements IdentityInterface
             array('from' => 20170122, 'to' => 20170326, 'price' => 1.73),
             array('from' => 20161218, 'to' => 20170122 , 'price' => 1.53),
             array('from' => 20161102, 'to' => 20161218 , 'price' => 1.33),
-            array('from' => 20160801, 'to' => 20161102 , 'price' => 1),
-            array('from' => 0, 'to' => 20160801 , 'price' => 1.5),
+            array('from' => 0, 'to' => 20161102 , 'price' => 1),
         );
 
         foreach ($mappings as $key => $item) {
