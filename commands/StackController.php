@@ -61,7 +61,7 @@ class StackController extends Controller
                         $investmentAmount = $investmentAmount * 1.2;
                     }
 
-                    if  ((date('Ymd', strtotime($user->approved_at)) >= 20160801) && (date('Ymd', strtotime($user->approved_at)) < 20160916)) {
+                    if  ((date('Ymd', strtotime($user->approved_at)) >= 20160801) && (date('Ymd', strtotime($user->approved_at)) < 20160918)) {
                         $investmentAmount = $investmentAmount * 1.1;
                     }
 
@@ -93,7 +93,7 @@ class StackController extends Controller
                             }
 
 
-                            if  ((date('Ymd', strtotime($investment->created_at)) >= 20160801) && (date('Ymd', strtotime($investment->created_at)) < 20160916)) {
+                            if  ((date('Ymd', strtotime($investment->created_at)) >= 20160801) && (date('Ymd', strtotime($investment->created_at)) < 20160918)) {
                                 $investmentAmount = $investmentAmount * 1.1;
                             }
                             $stack = User::investToStack($investmentAmount, date('Ymd', strtotime($investment->created_at)));
@@ -124,7 +124,7 @@ class StackController extends Controller
                     if ($submit) {
                         $user->total_stack =  $total;
                         $user->stack = $total;
-                        if (!$user->save()) {
+                        if (!$user->save(false, array('total_stack', 'stack'))) {
                             $submit = false;var_dump($user->getErrors());
                         }
                     }var_dump($submit);
