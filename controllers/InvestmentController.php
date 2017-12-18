@@ -361,7 +361,7 @@ class InvestmentController extends Controller
             $sellLock->start();
             if ($id == 'all') {
                 $model = Yii::$app->user->identity;
-                if (!$model->redeemed && ($model->be_stack == 1)) {
+                if ((!$model->redeemed) && ($model->be_stack == 1)) {
                     $user = $model;
                     $model->redeemed = 1;
                     $model->stack -= $model->init_stack;
