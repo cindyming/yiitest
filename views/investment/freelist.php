@@ -14,7 +14,7 @@ $stack = $model->init_stack;
 ?>
 <div class="investment-index">
     <h1><?= Html::encode($this->title) ?></h1>
-    <h3>目前对兑换的总股数: <?php echo $model->stack?> </h3>
+    <h3>目前可兑换的总股数: <?php echo $model->stack?> </h3>
     <h3>初始投资</h3>
     <div class="first_investment">
         初始投资额 : <?php echo $model->init_investment ?>
