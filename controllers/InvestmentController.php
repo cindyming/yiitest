@@ -377,7 +377,7 @@ class InvestmentController extends Controller
 
             if ($id == 'all') {
                 $model = Yii::$app->user->identity;
-                if ($model->redeemed) {
+                if ((!$model->redeemed) && ($model->be_stack == 1)) {
                     $user = $model;
                     $model->redeemed = 1;
                     $model->stack -= $model->init_stack;
@@ -385,13 +385,13 @@ class InvestmentController extends Controller
                     $cash->cash_type = 6;
                     $cash->type = 11;
                     $cash->amount = $model->init_stack;
-                    $cash->total = $model->stack;
+                    $cash->total = $model->init_stack;
                     $cash->status = 2;
                 }
-
             } else {
                 $model = $this->findModel($id);
-                if ((Yii::$app->user->id == $model->user_id) && $model->status = 1)  {
+
+                if ((Yii::$app->user->id == $model->user_id) && ($model->status = 1) && ($model->be_stack == 1))  {
                     $model->status = 2;
                     $user = User::findOne(Yii::$app->user->id);
                     $user->stack -= $model->stack;
@@ -404,7 +404,7 @@ class InvestmentController extends Controller
                 }
 
             }
-
+            
             if (isset($cash) && $cash && $cash->amount) {
                 try {
 
