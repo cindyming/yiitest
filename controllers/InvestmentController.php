@@ -391,7 +391,7 @@ class InvestmentController extends Controller
             } else {
                 $model = $this->findModel($id);
 
-                if ((Yii::$app->user->id == $model->user_id) && ($model->status = 1) && ($model->be_stack == 1))  {
+                if ((Yii::$app->user->id == $model->user_id) && ($model->status == 1) && ($model->be_stack == 1))  {
                     $model->status = 2;
                     $user = User::findOne(Yii::$app->user->id);
                     $user->stack -= $model->stack;
@@ -428,16 +428,13 @@ class InvestmentController extends Controller
                     if (is_array($response) && isset($response['code']) && ($response['code'] == 200)) {
                         $pass = true;
                         $cash->note = '自由股兑换成功, id:' . $response['data'];
-                        if($cash->save() && $user->save() && $model->save()) {
-                            Yii::$app->getSession()->set('message', '自由股兑换成功');
-                            $transaction->commit();
-                        }
-
-
+                        $cash->save(false);
+                        $user->save(false);
+                        $model->save(false);
+                        Yii::$app->getSession()->set('message', '自由股兑换成功');
                     } else {
                         Yii::$app->getSession()->set('danger', '自由股兑换失败,请稍候再试');
                     }
-
                 } catch (Exception $e) {
                     Log::add('会员(' . $user->id . ')' , '自由股兑换' , '失败' , $curl_response);
                     Yii::$app->getSession()->set('danger', '自由股兑换失败,请稍候再试' . $e->getMessage());
