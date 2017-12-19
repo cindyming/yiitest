@@ -406,7 +406,9 @@ class InvestmentController extends Controller
             }
             
             if (isset($cash) && $cash && $cash->amount) {
+                $connection = Yii::$app->db;
                 try {
+                    $transaction = $connection->beginTransaction();
 
                     $service_url = Yii::$app->params['cuohe_url'] . 'api/user/stack';
                     $curl = curl_init($service_url);
@@ -426,10 +428,12 @@ class InvestmentController extends Controller
                     if (is_array($response) && isset($response['code']) && ($response['code'] == 200)) {
                         $pass = true;
                         $cash->note = '自由股兑换成功, id:' . $response['data'];
-                        $cash->save();
-                        $user->save();
-                        $model->save();
-                        Yii::$app->getSession()->set('message', '自由股兑换成功');
+                        if($cash->save() && $user->save() && $model->save()) {
+                            Yii::$app->getSession()->set('message', '自由股兑换成功');
+                            $transaction->commit();
+                        }
+
+
                     } else {
                         Yii::$app->getSession()->set('danger', '自由股兑换失败,请稍候再试');
                     }
@@ -438,12 +442,10 @@ class InvestmentController extends Controller
                     Log::add('会员(' . $user->id . ')' , '自由股兑换' , '失败' , $curl_response);
                     Yii::$app->getSession()->set('danger', '自由股兑换失败,请稍候再试' . $e->getMessage());
                 }
-
-                $sellLock->end();
             } else {
                 Yii::$app->getSession()->set('danger', '自由股兑换失败,请稍候再试');
             }
-
+            $sellLock->end();
         } else {
             Yii::$app->getSession()->set('danger', '自由股兑换已关闭,请稍候再试');
         }
