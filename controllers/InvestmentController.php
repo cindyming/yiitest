@@ -430,7 +430,9 @@ class InvestmentController extends Controller
                         $cash->note = '自由股兑换成功, id:' . $response['data'];
                         $cash->save(false);
                         $user->save(false);
-                        $model->save(false);
+                        if ($user->id != $model->id) {
+                            $model->save(false);
+                        }
                         Yii::$app->getSession()->set('message', '自由股兑换成功');
                     } else {
                         Yii::$app->getSession()->set('danger', '自由股兑换失败,请稍候再试');
