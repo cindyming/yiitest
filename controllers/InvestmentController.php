@@ -375,7 +375,7 @@ class InvestmentController extends Controller
             } else {
                 $model = $this->findModel($id);
 
-                if ((Yii::$app->user->id == $model->user_id) && ($model->status = 1) && ($model->be_stack == 1))  {
+                if ((Yii::$app->user->id == $model->user_id) && ($model->status == 1) && ($model->be_stack == 1))  {
                     $model->status = 2;
                     $user = User::findOne(Yii::$app->user->id);
                     $user->stack -= $model->stack;
