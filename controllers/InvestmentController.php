@@ -406,10 +406,7 @@ class InvestmentController extends Controller
             }
             
             if (isset($cash) && $cash && $cash->amount) {
-                $connection = Yii::$app->db;
                 try {
-                    $transaction = $connection->beginTransaction();
-
                     $service_url = Yii::$app->params['cuohe_url'] . 'api/user/stack';
                     $curl = curl_init($service_url);
                     curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
