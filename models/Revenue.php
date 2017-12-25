@@ -82,4 +82,21 @@ class Revenue extends ActiveRecord
             1 => '已发放',
         ];
     }
+
+
+    public static function prepareIutRecordForCashTransfer($id, $data)
+    {
+        $model = null;
+
+        if (isset($data['amount']) && ($data['amount'])) {
+            $model = new Revenue();
+            $model->duichong = $data['amount'];
+            $model->user_id = $id;
+            $model->type = 2;
+            $model->note = '撮合用户:' . $data['user_id'] . '转账, 股数:. 在' . date('Y-m-d H:i:s', time());
+
+        }
+
+        return $model;
+    }
 }
