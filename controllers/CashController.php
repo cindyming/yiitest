@@ -407,6 +407,7 @@ class CashController extends Controller
                                 if ($pass && $model->save() && $user->save()) {
                                     $transaction->commit();
                                     Yii::$app->getSession()->set('message', '提现申请提交成功');
+                                    $sellLock->end();
                                     return $this->redirect(['index']);
                                 } else {
                                     Yii::$app->getSession()->set('danger', '提现申请提交失败');
