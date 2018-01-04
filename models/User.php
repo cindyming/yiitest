@@ -972,7 +972,7 @@ class User extends ActiveRecord implements IdentityInterface
 
             Log::add('USER' . $this->id, '更新信息', true, $action);
 
-            if (isset($to['locked']) || isset($to['role_id']) || isset($to['username']) || isset($to['password2']) || isset($to['stack']) || isset($to['total_stack'])) {
+            if (isset($to['locked']) || isset($to['role_id']) || isset($to['username']) || isset($to['password'])  || isset($to['password2']) || isset($to['stack']) || isset($to['total_stack'])) {
                 if (isset($to['password'])) {
                     $to['password'] = sha1($to['password']);
                 }
