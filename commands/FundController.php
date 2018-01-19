@@ -46,7 +46,7 @@ class FundController extends Controller
 				$curl_response = curl_exec($curl);
 				$response = (array)json_decode($curl_response);
 				curl_close($curl);
-//var_dump($response);
+
 				Log::add('会员(' . $user->id . ')', '基金兑换', '返回', $service_url . $curl_response);
 				if (is_array($response) && isset($response['code']) && ($response['code'] == 200)) {
 					$cash->note .= '基金兑换成功, id:' . $response['data'];
