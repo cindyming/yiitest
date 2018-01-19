@@ -79,7 +79,7 @@ $this->params['breadcrumbs'][] = $this->title;
                             'data-confirm' => Yii::t('yii', '你确定要撤销会员[' . $model->user_id . ']的追加投资[' . $model->amount . ']吗?'),
                             'data-method' => 'post',
                         ];
-                        return ($model->status == 1) ? Html::a('撤单', $url, $options) : '已经撤销';
+                        return (($model->status == 1) && (!$model->redeemed)) ? Html::a('撤单', $url, $options) : '已经撤销';
                     },
                 ],
                 'urlCreator' => function ($action, $model, $key, $index) {
