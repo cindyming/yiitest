@@ -51,7 +51,7 @@ class FixInvestmentController extends Controller
 
 			foreach ($users as $user) {
 				$reduceInvestment = 0;
-				if (!$user->redeemed) {
+				if ($user->redeemed == 1) {
 					$reduceInvestment = $user->init_investment;
 				}
 				$addtions = $this->loadAddtionalInvestment($user->id);
@@ -59,10 +59,10 @@ class FixInvestmentController extends Controller
 					$reduceInvestment += $model->amount;
 
 				}
-
-				if ($reduceInvestment < 0) {
+var_dump($reduceInvestment);
+				if ($reduceInvestment) {
 					$user->investment -= $reduceInvestment;
-					if ($user->investment) {
+					if ($user->investment >= 0) {
 						$user->save(false, array('investment'));
 					} else {
 						echo "ERROR " . $user->id . '  ' . $user->investment . PHP_EOL;
