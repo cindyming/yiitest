@@ -60,7 +60,7 @@ class FixInvestmentController extends Controller
 
 				}
 
-				if ($reduceInvestment) {
+				if ($reduceInvestment < 0) {
 					$user->investment -= $reduceInvestment;
 					if ($user->investment) {
 						$user->save(false, array('investment'));
