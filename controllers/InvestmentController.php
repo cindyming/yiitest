@@ -557,4 +557,98 @@ class InvestmentController extends Controller
 
         return $this->redirect(['/investment/freelist?id=' . $userId]);
     }
+
+    public function actionFund($id)
+    {
+        $userId = null;
+        if (System::loadConfig('open_fund_transfer')) {
+            $key = 'INVESTIMENT_FUND_' . Yii::$app->user->identity->id;
+            $sellLock = new \app\models\JLock($key);
+            $sellLock->start();
+            $created_at = null;
+            $note = '';
+            if ($id == 'all') {
+                $model = Yii::$app->user->identity;
+                $userId = $model->id;
+                if ((!$model->redeemed) && ($model->be_stack == 1)) {
+                    $user = $model;
+                    $model->redeemed = 5;
+                    $model->investment -= $model->init_investment;
+                    $cash = new Cash();
+                    $cash->cash_type = 8;
+                    $cash->type = 12;
+                    $cash->amount = $model->init_investment;
+                    $cash->total = $model->investment;
+                    $cash->status = 2;
+                    $created_at = $user->approved_at;
+                    $note = '初始投资转换';
+                }
+            } else {
+                $model = $this->findModel($id);
+                $userId = $model->user_id;
+
+                if ((Yii::$app->user->id == $model->user_id) && ($model->status == 1) && ($model->be_stack == 1))  {
+                    $model->status = 5;
+                    $user = User::findOne(Yii::$app->user->id);
+                    $user->investment -= $model->amout;
+                    $cash = new Cash();
+                    $cash->cash_type = 8;
+                    $cash->type = 12;
+                    $cash->amount = $model->amout;
+                    $cash->total = $user->investment;
+                    $cash->status = 2;
+                    $created_at = $model->created_at;
+                    $note = '追加投资投资转换, 追加时间:' .  $created_at;
+                }
+
+            }
+
+            if (isset($cash) && $cash && $cash->amount) {
+
+                try {
+                    $service_url = Yii::$app->params['cuohe_url'] . 'api/user/fund';
+                    $curl = curl_init($service_url);
+                    curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                    curl_setopt($curl, CURLOPT_USERPWD, $user->access_token); //Your credentials goes here
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($curl, CURLOPT_POST, true);
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(
+                        array(
+                            'fund' => $cash->amount,
+                            'token' => $user->access_token,
+                            'id' => $model->id,
+                            'created_at' => $created_at,
+                            'note' => $note,
+                        )));
+                    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false); //IMP if the url has https and you don't want to verify source certificate
+
+
+                    $curl_response = curl_exec($curl);
+                    $response = (array)json_decode($curl_response);
+                    curl_close($curl);
+
+                    Log::add('会员(' . $user->id . ')', '基金兑换', '返回', $service_url . $curl_response);
+                    if (is_array($response) && isset($response['code']) && ($response['code'] == 200)) {
+                        $pass = true;
+                        $cash->note = '基金兑换成功, id:' . $response['data'];
+                        $cash->save(false);
+                        $user->save(false);
+                        $model->save(false);
+                        Yii::$app->getSession()->set('message', '基金兑换成功');
+                    } else {
+                        Yii::$app->getSession()->set('danger', '基金兑换失败,请稍候再试');
+                    }
+
+                } catch (Exception $e) {
+                    Log::add('会员(' . $user->id . ')', '基金兑换', '失败', $curl_response);
+                    Yii::$app->getSession()->set('danger', '基金兑换失败,请稍候再试' . $e->getMessage());
+                }
+            }
+            $sellLock->end();
+        } else {
+            Yii::$app->getSession()->set('danger', '自由股兑换已关闭,请稍候再试');
+        }
+
+        return $this->redirect(['/investment/freelist?id=' . $userId]);
+    }
 }
