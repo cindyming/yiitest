@@ -17,7 +17,7 @@ class FundController extends Controller
 {
 	public function loadAddtionalInvestment($user_id)
 	{
-		$invertMents = Investment::find()->where(['=', 'user_id', $user_id])->andWhere(['=', 'status', 1])->orderBy(array('id' => SORT_ASC))->all();
+		$invertMents = Investment::find()->where(['=', 'user_id', $user_id])->andWhere(['=', 'status', 1])->andWhere(['=', 'merited', 1])->orderBy(array('id' => SORT_ASC))->all();
 
 		return  $invertMents;
 	}
