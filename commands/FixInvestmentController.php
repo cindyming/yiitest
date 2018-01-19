@@ -13,7 +13,7 @@ use app\models\Revenue;
 use yii\data\ActiveDataProvider;
 
 
-class FundController extends Controller
+class FixInvestmentController extends Controller
 {
 	public function loadAddtionalInvestment($user_id)
 	{
