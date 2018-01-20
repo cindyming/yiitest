@@ -26,7 +26,9 @@ class FixInvestmentController extends Controller
 
 	public function actionIndex($message = 'hello world')
 	{
-		$userQuery = User::find()->where(['=','role_id', 3])->andwhere(['=','locked', 0])->andWhere(['>', 'investment', 0]);
+		$userQuery = User::find()
+			->where(['=','role_id', 3])
+			->andwhere(['=','locked', 0]);
 
 		$provider = new ActiveDataProvider([
 			'query' => $userQuery,
@@ -50,25 +52,28 @@ class FixInvestmentController extends Controller
 			$users = $provider->getModels();
 
 			foreach ($users as $user) {
-				$reduceInvestment = 0;
-				if ($user->redeemed == 1) {
-					$reduceInvestment = $user->init_investment;
-				}
-				$addtions = $this->loadAddtionalInvestment($user->id);
-				foreach ($addtions as $model) {
-					$reduceInvestment += $model->amount;
-
-				}
-var_dump($reduceInvestment);
-				if ($reduceInvestment) {
-					$user->investment -= $reduceInvestment;
-					if ($user->investment >= 0) {
-						$user->save(false, array('investment'));
-					} else {
-						echo "ERROR " . $user->id . '  ' . $user->investment . PHP_EOL;
+				if ($user->investment > 0) {
+					$reduceInvestment = 0;
+					if ($user->redeemed == 1) {
+						$reduceInvestment = $user->init_investment;
 					}
+					$addtions = $this->loadAddtionalInvestment($user->id);
 
+					foreach ($addtions as $model) {
+						$reduceInvestment += $model->amount;
+
+					}
+					if ($reduceInvestment) {
+						$user->investment -= $reduceInvestment;
+						if ($user->investment >= 0) {
+							$user->save(false, array('investment'));
+						} else {
+							echo "ERROR " . $user->id . '  ' . $user->investment . PHP_EOL;
+						}
+
+					}
 				}
+
 
 			}
 		}
