@@ -60,7 +60,7 @@ $stack = Yii::$app->user->identity->init_stack;
                 'attribute' => 'status',
                 'header' => '状态',
                 'value' =>  function($model) {
-                    return $model->getStatus();
+                    return ($model->status==5) ?  '已兑换基金' : (($model->status == 2) ? '已兑换股票' : ($model->status ? '正常' : '已撤销'));
                 },
             ],
             'created_at',
