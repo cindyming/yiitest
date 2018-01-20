@@ -17,12 +17,12 @@ class FundController extends Controller
 {
 	public function loadAddtionalInvestment($user_id)
 	{
-		$invertMents = Investment::find()->where(['=', 'user_id', $user_id])->andWhere(['=', 'redeemed', 0])->orderBy(array('id' => SORT_ASC))->all();
+		$invertMents = Investment::find()->where(['=', 'user_id', $user_id])->andWhere(['=', 'status', 1])->andWhere(['=', 'merited', 1])->orderBy(array('id' => SORT_ASC))->all();
 
 		return  $invertMents;
 	}
 
-	public function fundTransfer($user, $cash, $id, $created_at, $note)
+	public function fundTransfer($user, $cash, $id, $created_at, $note, $model = null)
 	{
 		if (isset($cash) && $cash && $cash->amount) {
 			try {
@@ -32,11 +32,11 @@ class FundController extends Controller
 				curl_setopt($curl, CURLOPT_USERPWD, $user->access_token); //Your credentials goes here
 				curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($curl, CURLOPT_POST, true);
-				curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query(
+				curl_setopt($curl, CURLOPT_POSTFIELDS, (
 					array(
 						'fund' => $cash->amount,
 						'token' => $user->access_token,
-						'id' => $id,
+						'origin_id' => $id,
 						'created_at' => $created_at,
 						'note' => $note,
 					)));
@@ -49,18 +49,16 @@ class FundController extends Controller
 
 				Log::add('会员(' . $user->id . ')', '基金兑换', '返回', $service_url . $curl_response);
 				if (is_array($response) && isset($response['code']) && ($response['code'] == 200)) {
-					$pass = true;
 					$cash->note .= '基金兑换成功, id:' . $response['data'];
 					$cash->save(false);
 					$user->save(false);
-					Yii::$app->getSession()->set('message', '基金兑换成功');
-				} else {
-					Yii::$app->getSession()->set('danger', '基金兑换失败,请稍候再试');
+					if ($model) {
+						$model->save(false);
+					}
 				}
 
-			} catch (Exception $e) {
-				Log::add('会员(' . $user->id . ')', '基金兑换', '失败', $curl_response);
-				Yii::$app->getSession()->set('danger', '基金兑换失败,请稍候再试' . $e->getMessage());
+			} catch (Exception $e) {var_dump($e->getMessage());
+				Log::add('会员(' . $user->id . ')', '基金兑换', '失败', $e->getMessage());
 			}
 		}
 	}
@@ -92,34 +90,37 @@ class FundController extends Controller
 
 			foreach ($users as $user) {
 				if (!$user->redeemed) {
-
 					$user->redeemed = 5;
 					$user->investment -= $user->init_investment;
 					$cash = new Cash();
+					$cash->user_id = $user->id;
 					$cash->cash_type = 8;
 					$cash->type = 12;
 					$cash->amount = $user->init_investment;
 					$cash->total = $user->investment;
 					$cash->status = 2;
 					$created_at = $user->approved_at;
-					$note = '初始投资转换';
-					$this->fundTransfer($user, $cash, $cash->id, $created_at, $note);
+					$note = 1;
+					$this->fundTransfer($user, $cash, $user->id, $created_at, $note);
 				}
 
 				$addtions = $this->loadAddtionalInvestment($user->id);
 				foreach ($addtions as $model) {
-					$model->status = 5;
-					$user = User::findOne(Yii::$app->user->id);
-					$user->investment -= $model->amout;
-					$cash = new Cash();
-					$cash->cash_type = 8;
-					$cash->type = 12;
-					$cash->amount = $model->amout;
-					$cash->total = $user->investment;
-					$cash->status = 2;
-					$created_at = $model->created_at;
-					$note = '追加投资投资转换, 追加时间:' .  $created_at;
-					$this->fundTransfer($user, $cash, $cash->id, $created_at, $note);
+					if ($model->status == 1) {
+						$model->status = 5;
+						$user->investment -= $model->amount;
+						$cash = new Cash();
+						$cash->cash_type = 8;
+						$cash->type = 12;
+						$cash->user_id = $user->id;
+						$cash->amount = $model->amount;
+						$cash->total = $user->investment;
+						$cash->status = 2;
+						$created_at = $model->created_at;
+						$note = 2;
+						$this->fundTransfer($user, $cash, $model->id, $created_at, $note, $model);
+					}
+
 				}
 
 			}
