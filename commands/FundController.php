@@ -65,7 +65,9 @@ class FundController extends Controller
 
 	public function actionIndex($message = 'hello world')
 	{
-		$userQuery = User::find()->where(['=','role_id', 3])->andwhere(['=','locked', 0])->andWhere(['>', 'investment', 0]);
+		$userQuery = User::find()->where(['=','role_id', 3])
+			->andwhere(['=','locked', 0])
+			->andWhere(['>', 'investment', 0]);
 
 		$provider = new ActiveDataProvider([
 			'query' => $userQuery,

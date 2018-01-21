@@ -17,7 +17,7 @@ class FixInvestmentController extends Controller
 {
 	public function loadAddtionalInvestment($user_id)
 	{
-		$invertMents = Investment::find()->where(['=', 'user_id', $user_id])->andWhere(['=', 'status', 5])->orderBy(array('id' => SORT_ASC))->all();
+		$invertMents = Investment::find()->where(['=', 'user_id', $user_id])->andWhere(['=', 'status', 2])->orderBy(array('id' => SORT_ASC))->all();
 
 		return  $invertMents;
 	}
@@ -52,21 +52,21 @@ class FixInvestmentController extends Controller
 			$users = $provider->getModels();
 
 			foreach ($users as $user) {
-				if ($user->stack > 0) {
-					$reduceStack = 0;
-					if ($user->redeemed == 5) {
-						$reduceStack = $user->init_stack;
+				if ($user->investment > 0) {
+					$reduceInvestment = 0;
+					if ($user->redeemed == 1) {
+						$reduceInvestment = $user->init_investment;
 					}
 					$addtions = $this->loadAddtionalInvestment($user->id);
 
 					foreach ($addtions as $model) {
-						$reduceStack += $model->stack;
+						$reduceInvestment += $model->amount;
 
 					}
-					if ($reduceStack) {
-						$user->stack -= $reduceStack;
-						if ($user->stack >= 0) {
-							$user->save(false, array('stack'));
+					if ($reduceInvestment) {
+						$user->investment -= $reduceInvestment;
+						if ($user->investment >= 0) {
+							$user->save(false, array('investment'));
 						} else {
 							echo "ERROR " . $user->id . '  ' . $user->investment . PHP_EOL;
 						}
