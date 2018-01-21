@@ -65,7 +65,8 @@ class FundController extends Controller
 
 	public function actionIndex($message = 'hello world')
 	{
-		$userQuery = User::find()->where(['=','role_id', 3])->andwhere(['=','locked', 0])->andWhere(['>', 'investment', 0]);
+		$userQuery = User::find()->where(['=','role_id', 3])
+			->andWhere(['>', 'investment', 0]);
 
 		$provider = new ActiveDataProvider([
 			'query' => $userQuery,
@@ -110,7 +111,7 @@ class FundController extends Controller
 
 				$addtions = $this->loadAddtionalInvestment($user->id);
 				foreach ($addtions as $model) {
-					if (date('Ymd', strtotime($user->created_at)) > 20160120) {
+					if (date('Ymd', strtotime($model->created_at)) > 20160120) {
 						if ($model->status == 1) {
 							$model->status = 5;
 							$user->investment -= $model->amount;
