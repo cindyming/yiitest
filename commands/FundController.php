@@ -65,9 +65,7 @@ class FundController extends Controller
 
 	public function actionIndex($message = 'hello world')
 	{
-		$userQuery = User::find()->where(['=','role_id', 3])
-			->andWhere(['=', 'locked', 0])
-			->andWhere(['>', 'investment', 0]);
+		$userQuery = User::find()->where(['=','role_id', 3]);
 
 		$provider = new ActiveDataProvider([
 			'query' => $userQuery,
@@ -91,46 +89,49 @@ class FundController extends Controller
 			$users = $provider->getModels();
 
 			foreach ($users as $user) {
-				if (date('Ymd', strtotime($user->approved_at)) > 20160120) {
-					if (!$user->redeemed) {
-						$user->redeemed = 5;
-						$user->investment -= $user->init_investment;
-						$user->stack -= $user->init_stack;
-						$cash = new Cash();
-						$cash->user_id = $user->id;
-						$cash->cash_type = 8;
-						$cash->type = 12;
-						$cash->amount = $user->init_investment;
-						$cash->total = $user->investment;
-						$cash->status = 2;
-						$created_at = $user->approved_at;
-						$note = 1;
-						$this->fundTransfer($user, $cash, $user->id, $created_at, $note);
-					}
-				}
-
-
-				$addtions = $this->loadAddtionalInvestment($user->id);
-				foreach ($addtions as $model) {
-					if (date('Ymd', strtotime($model->created_at)) > 20160120) {
-						if ($model->status == 1) {
-							$model->status = 5;
-							$user->investment -= $model->amount;
+				if ($user->investment) {
+					if (true) {
+						if (!$user->redeemed) {
+							$user->redeemed = 5;
+							$user->investment -= $user->init_investment;
+							$user->stack -= $user->init_stack;
 							$cash = new Cash();
+							$cash->user_id = $user->id;
 							$cash->cash_type = 8;
 							$cash->type = 12;
-							$user->stack -= $user->stack;
-							$cash->user_id = $user->id;
-							$cash->amount = $model->amount;
+							$cash->amount = $user->init_investment;
 							$cash->total = $user->investment;
 							$cash->status = 2;
-							$created_at = $model->created_at;
-							$note = 2;
-							$this->fundTransfer($user, $cash, $model->id, $created_at, $note, $model);
+							$created_at = $user->approved_at;
+							$note = 1;
+							$this->fundTransfer($user, $cash, $user->id, $created_at, $note);
 						}
 					}
 
+
+					$addtions = $this->loadAddtionalInvestment($user->id);
+					foreach ($addtions as $model) {
+						if (true) {
+							if ($model->status == 1) {
+								$model->status = 5;
+								$user->investment -= $model->amount;
+								$cash = new Cash();
+								$cash->cash_type = 8;
+								$cash->type = 12;
+								$user->stack -= $user->stack;
+								$cash->user_id = $user->id;
+								$cash->amount = $model->amount;
+								$cash->total = $user->investment;
+								$cash->status = 2;
+								$created_at = $model->created_at;
+								$note = 2;
+								$this->fundTransfer($user, $cash, $model->id, $created_at, $note, $model);
+							}
+						}
+
+					}
 				}
+
 
 			}
 		}
